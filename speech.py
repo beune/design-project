@@ -6,5 +6,11 @@ with sr.Microphone() as source:
     print('Say anything')
     audio = r.listen(source)
 
-    text = r.recognize_google(audio)
-    print('You said : {}'.format(text))
+    # google_text = r.recognize_google(audio)
+    google_text = r.recognize_google(audio, language="nl-NL")
+    r.r
+    # sphinx_text = r.recognize_sphinx(audio)
+    # sphinx_text = r.recognize_sphinx(audio, language="nl-NL")
+    print('Google says : {}'.format(google_text))
+    # print('Sphinx says : {}'.format(sphinx_text))
+
