@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # github.com/Akuli/tkinter-tutorial
 # TODO dependency:
+# TODO set default floating window size
 # pacman: tk package
 
 import tkinter as tk
@@ -65,8 +66,21 @@ file_view_frame = ttk.Frame(results_frame)
 file_view_frame.grid(column=0, row=1, columnspan=2, sticky="NSEW")
 file_view_frame.columnconfigure(0, weight=1)
 file_view_frame.rowconfigure(0, weight=1)
-file_view_label = ttk.Label(file_view_frame, text="File").grid(column=0, row=0, sticky="NSEW")
-
+# TODO tree does not wrap text
+# TODO remove column bar?
+file_view_tree = ttk.Treeview(file_view_frame, displaycolumns=())
+file_view_tree.grid(column=0, row=0, sticky="NSEW")
+file_view_tree.insert('', 'end', 'i0', text ='Report: mammografie t.o.b. 12/08/2016')
+file_view_tree.insert('', 'end', 'i1', text ='Mass: Hierin beiderzijds geen haarvormige laesies')
+file_view_tree.insert('', 'end', 'i2', text ='positive_finding')
+file_view_tree.insert('', 'end', 'i3', text ='negative_finding')
+file_view_tree.insert('', 'end', 'i4', text ='O: geen maligniteitskenmerken')
+file_view_tree.insert('i0', 'end', 'i00', text ='Breast composition: mamma compositiebeeld C')
+file_view_tree.insert('i0', 'end', 'i01', text ='Negative finding')
+file_view_tree.insert('i01', 'end', 'i010', text ='Mass: Hierin beiderzijds geen haardvormige laesies')
+file_view_tree.insert('i010', 'end', 'i0100', text ='Location: beiderzijds')
+file_view_tree.insert('i01', 'end', 'i011', text ='Architectural_distorsions: Geen distorsies')
+file_view_tree.insert('i01', 'end', 'i012', text ='Mass: geen stellate laesies, geen massa\'s')
 
 if __name__ == "__main__":
     root.protocol('WM_DELETE_WINDOW', quit)
