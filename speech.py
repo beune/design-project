@@ -8,7 +8,6 @@ with sr.Microphone() as source:
 
     # google_text = r.recognize_google(audio)
     google_text = r.recognize_google(audio, language="nl-NL")
-    r.r
     # sphinx_text = r.recognize_sphinx(audio)
     # sphinx_text = r.recognize_sphinx(audio, language="nl-NL")
     print('Google says : {}'.format(google_text))
