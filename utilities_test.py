@@ -37,6 +37,9 @@ class MyTestCase(unittest.TestCase):
         second = "ho ho merry crisis"
         self.assertEqual("ho ho ho merry crisis", combine(first, second))
 
+        first = "dit is een test die de implement"
+        second = "die de implementatie laat zien van het nieuwe algoritme"
+        self.assertEqual("dit is een test die de implementatie laat zien van het nieuwe algoritme", combine(first, second))
 
 
 if __name__ == '__main__':
