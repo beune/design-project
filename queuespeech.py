@@ -94,6 +94,7 @@ class Queuespeech:
         delta = 20
         overlap = window
         uncertain = window
+        assert delta <= uncertain
         while True:
             length = len(self.frames)
             upper = max(0, length - uncertain)
