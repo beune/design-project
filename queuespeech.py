@@ -6,7 +6,7 @@ from queue import Queue  # Python 3 import
 import pyaudio
 import speech_recognition as sr
 
-from utilities import combine
+from utilities import combine, combine_word
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -24,6 +24,8 @@ class QueueSpeech:
     def __init__(self):
         self.frames = []
         self.text = ""
+        self.flag = False
+        self.complete_text = ""
 
     def listen_and_chop(self):
         stream = p.open(format=FORMAT,
@@ -40,10 +42,11 @@ class QueueSpeech:
     def recognize(self):
         last = 0
         window = 80
-        delta = 20
+        delta = 35
         uncertain = window
         assert delta <= uncertain
-        while True:
+        self.flag = True
+        while self.flag:
             length = len(self.frames)
             upper = max(0, length - uncertain)
             # lower bound: last, upper bound: upper
@@ -54,7 +57,7 @@ class QueueSpeech:
             data = b"".join(frames)
             audio = sr.AudioData(data, RATE, p.get_sample_size(FORMAT))
             try:
-                self.text = combine(self.text, r.recognize_google(audio, language="nl-NL"))
+                self.text = combine_word(self.text, r.recognize_google(audio, language="nl-NL"))
                 print("text: " + self.text)
             except sr.UnknownValueError:
                 # print("Google Speech Recognition could not understand audio")
@@ -63,7 +66,15 @@ class QueueSpeech:
             except sr.RequestError as e:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
             last = upper  # (upper)
-            # time.sleep(0.25)
+            time.sleep(2)
+        self.stop()
+
+    def stop(self):
+        data = b"".join(self.frames)
+        audio = sr.AudioData(data, RATE, p.get_sample_size(FORMAT))
+        self.complete_text = r.recognize_google(audio, language="nl-NL")
+        print(self.complete_text)
+        print("End of transcription")
 
     def startup(self):
         # start a new thread to recognize audio, while this thread focuses on listening
@@ -71,6 +82,8 @@ class QueueSpeech:
         listen_thread.start()
         recognize_thread = Thread(target=self.recognize, daemon=True)
         recognize_thread.start()
+        time.sleep(25)
+        self.flag = False
 
 
 if __name__ == "__main__":
