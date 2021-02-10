@@ -25,6 +25,8 @@ class Queuespeech:
 
     def __init__(self):
         self.frames = []
+        self.text = ""
+        self.processed = 0
 
     def listen_and_chop(self):
         stream = p.open(format=FORMAT,
@@ -38,29 +40,51 @@ class Queuespeech:
                 data = stream.read(CHUNK)
                 self.frames.append(data)
 
-
-
     def recognize_worker(self):
         # this runs in a background thread
         while True:
-            frame_data = b"".join(self.frames)  # retrieve the next audio processing job from the main thread
-            audio = sr.AudioData(frame_data, RATE, p.get_sample_size(FORMAT))
-            if audio is None:
-                print("no audio")# stop processing if the main thread is done
-            else:
-
-                # received audio data, now we'll recognize it using Google Speech Recognition
+            length = len(self.frames)
+            if self.processed < length - 20:
+                newframes = []
+                i = self.processed
+                while i < length - 20:
+                    newframes.append(self.frames[i])
+                    i += 1
+                data = b"".join(newframes)
+                audio = sr.AudioData(data, RATE, p.get_sample_size(FORMAT))
                 try:
-                    # for testing purposes, we're just using the default API key
-                    # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-                    # instead of `r.recognize_google(audio)`
-                    print(r.recognize_google(audio, language="nl-NL"))
+                    self.text = self.text + " " + r.recognize_google(audio, language="nl-NL")
+                    self.processed = i
+                    window_frames = []
+                    for j in range(self.processed, length - 1):
+                        window_frames.append(self.frames[j])
+                    window_data = b"".join(window_frames)
+                    window_audio = sr.AudioData(window_data, RATE, p.get_sample_size(FORMAT))
+                    try:
+                        print(self.text + r.recognize_google(window_audio, language="nl-NL"))
+                    except sr.UnknownValueError:
+                        print(self.text)
                 except sr.UnknownValueError:
-                    # print("Google Speech Recognition could not understand audio")
                     pass
-                except sr.RequestError as e:
-                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
-            time.sleep(0.25)
+            else:
+                frame_data = b"".join(self.frames)
+                audio = sr.AudioData(frame_data, RATE, p.get_sample_size(FORMAT))
+                if audio is None:
+                    print("no audio")# stop processing if the main thread is done
+                else:
+
+                    # received audio data, now we'll recognize it using Google Speech Recognition
+                    try:
+                        # for testing purposes, we're just using the default API key
+                        # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
+                        # instead of `r.recognize_google(audio)`
+                        print(self.text + r.recognize_google(audio, language="nl-NL"))
+                    except sr.UnknownValueError:
+                        # print("Google Speech Recognition could not understand audio")
+                        pass
+                    except sr.RequestError as e:
+                        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            time.sleep(0.5)
 
     def startup(self):
         # start a new thread to recognize audio, while this thread focuses on listening
