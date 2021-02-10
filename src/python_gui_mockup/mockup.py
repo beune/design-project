@@ -7,6 +7,7 @@ import sys
 import os
 from tkinter import ttk, messagebox
 from xml_viewer import XML_Viewer
+from file_viewer import File_Viewer
 
 root = tk.Tk()
 root.geometry("1280x720")
@@ -91,6 +92,8 @@ if __name__ == "__main__":
               xml = f.read()
             xml_view_tree = XML_Viewer(xml_view_frame, xml)
             xml_view_tree.grid(column=0, row=0, sticky="NSEW")
+            file_view_tree = File_Viewer(file_view_frame, xml)
+            file_view_tree.grid(column=0, row=0, sticky="NSEW")
         radio()
         root.mainloop()
     except (KeyboardInterrupt, tk.TclError):
