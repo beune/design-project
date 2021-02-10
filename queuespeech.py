@@ -86,20 +86,36 @@ class Queuespeech:
                         print("Could not request results from Google Speech Recognition service; {0}".format(e))
             time.sleep(0.5)
 
+    def recognize(self):
+        lower = 0
+        last = 0
+        window = 50
+        overlap = window
+        uncertain = window
+        while True:
+            # frames van lower naar len hebben
+            lower = max(0, last - overlap)
+            length = len(self.frames)
+            last = length - uncertain  # (upper)
+            frames = self.frames[lower:]
+            data = b"".join(frames)
+            audio = sr.AudioData(data, RATE, p.get_sample_size(FORMAT))
+            try:
+                print(r.recognize_google(audio, language="nl-NL"))
+            except sr.UnknownValueError:
+                print("Google Speech Recognition could not understand audio")
+                pass
+            except sr.RequestError as e:
+                print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            time.sleep(2)
+
     def startup(self):
         # start a new thread to recognize audio, while this thread focuses on listening
         listen_thread = Thread(target=self.listen_and_chop)
         listen_thread.start()
-        recognize_thread = Thread(target=self.recognize_worker)
-        recognize_thread.daemon = True
+        recognize_thread = Thread(target=self.recognize, daemon=True)
         recognize_thread.start()
-        # with sr.Microphone() as source:
-        #     try:
-        #         while True:  # repeatedly listen for phrases and put the resulting audio on the audio processing job queue
-        #             audio_queue.put(r.listen(source))
-        #     except KeyboardInterrupt:  # allow Ctrl + C to shut down the program
-        #         pass
-        recognize_thread.join()  # wait for the recognize_thread to actually stop
+        recognize_thread.join()  # doet nu niets
 
 if __name__ == "__main__":
     qs = Queuespeech()
