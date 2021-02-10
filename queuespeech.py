@@ -117,6 +117,21 @@ class Queuespeech:
             last = upper  # (upper)
             time.sleep(2)
 
+    def combine(self, new_text):
+        first_char = new_text[0]
+        length = len(self.text)
+        minlength = max(0, length - len(new_text))
+        for index in range(minlength, length):
+            if self.text[index] == first_char:
+                for o, n in zip(self.text[index:], new_text):
+                    if o != n:
+                        break
+                else:
+                    self.text = self.text[:index] + new_text
+                    return
+        print('warn: niets herkend')
+        self.text = self.text + " " + new_text
+
     def startup(self):
         # start a new thread to recognize audio, while this thread focuses on listening
         listen_thread = Thread(target=self.listen_and_chop)
