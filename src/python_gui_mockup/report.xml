@@ -1,0 +1,18 @@
+<report> <O> Mammografie t.o.v. 12/08/2016 </O>
+    <breast_composition>Mamma compositiebeeld C,</breast_composition>
+    <O>Geen wijziging in de verdeling van het mamaklierweefsel,</O>
+    <negative_finding>
+        <mass>Hierin <location>beiderzijds</location> geen haardvormige laesies</mass>
+        <architectural_distortion>Geen distorsies,</architectural_distortion>
+        <mass>geen <margin>stellate</margin> laesies, geen massa's, </mass> 
+    </negative_finding>
+    <positive_finding>
+        <calcification>bekende verkalking <location>links</location></calcification>
+    </positive_finding>
+    <negative_finding>
+        <calcification>Geen <distribution>clusters</distribution>
+            <morphology>microkalk,</morphology> 
+        </calcification>
+    </negative_finding>
+    <O>geen maligniteitskenmerken</O>
+</report>
