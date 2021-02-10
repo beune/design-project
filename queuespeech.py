@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
-# NOTE: this example requires PyAudio because it uses the Microphone class
 import time
 from threading import Thread
 from queue import Queue  # Python 3 import
-# except ImportError:
-#     from Queue import Queue  # Python 2 import
 import pyaudio
-import wave
-
 import speech_recognition as sr
+
+from utilities import combine
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -21,7 +18,8 @@ WAVE_OUTPUT_FILENAME = "_testing_file.wav"
 r = sr.Recognizer()
 audio_queue = Queue()
 
-class Queuespeech:
+
+class QueueSpeech:
 
     def __init__(self):
         self.frames = []
@@ -70,7 +68,7 @@ class Queuespeech:
                 frame_data = b"".join(self.frames)
                 audio = sr.AudioData(frame_data, RATE, p.get_sample_size(FORMAT))
                 if audio is None:
-                    print("no audio")# stop processing if the main thread is done
+                    print("no audio")  # stop processing if the main thread is done
                 else:
 
                     # received audio data, now we'll recognize it using Google Speech Recognition
@@ -107,7 +105,7 @@ class Queuespeech:
             data = b"".join(frames)
             audio = sr.AudioData(data, RATE, p.get_sample_size(FORMAT))
             try:
-                self.combine(r.recognize_google(audio, language="nl-NL"))
+                self.text = combine(self.text, r.recognize_google(audio, language="nl-NL"))
                 print("text: " + self.text)
             except sr.UnknownValueError:
                 # print("Google Speech Recognition could not understand audio")
@@ -118,21 +116,6 @@ class Queuespeech:
             last = upper  # (upper)
             time.sleep(2)
 
-    def combine(self, new_text):
-        first_char = new_text[0]
-        length = len(self.text)
-        minlength = max(0, length - len(new_text))
-        for index in range(minlength, length):
-            if self.text[index] == first_char:
-                for o, n in zip(self.text[index:], new_text):
-                    if o != n:
-                        break
-                else:
-                    self.text = self.text[:index] + new_text
-                    return
-        print('warn: niets herkend')
-        self.text = self.text + " " + new_text
-
     def startup(self):
         # start a new thread to recognize audio, while this thread focuses on listening
         listen_thread = Thread(target=self.listen_and_chop)
@@ -141,6 +124,7 @@ class Queuespeech:
         recognize_thread.start()
         recognize_thread.join()  # doet nu niets
 
+
 if __name__ == "__main__":
-    qs = Queuespeech()
+    qs = QueueSpeech()
     qs.startup()
