@@ -89,24 +89,32 @@ class Queuespeech:
     def recognize(self):
         lower = 0
         last = 0
-        window = 50
+        upper = 0
+        window = 80
+        delta = 20
         overlap = window
         uncertain = window
         while True:
-            # frames van lower naar len hebben
-            lower = max(0, last - overlap)
             length = len(self.frames)
-            last = length - uncertain  # (upper)
-            frames = self.frames[lower:]
+            upper = max(0, length - uncertain)
+            # lower bound: last, upper bound: upper
+            # take delta on both sides to keep context
+            min_frame = max(0, last - delta)
+            max_frame = min(upper + delta, length)
+            frames = self.frames[min_frame:max_frame]
+
             data = b"".join(frames)
             audio = sr.AudioData(data, RATE, p.get_sample_size(FORMAT))
             try:
-                print(r.recognize_google(audio, language="nl-NL"))
+                self.combine(r.recognize_google(audio, language="nl-NL"))
+                print("text: " + self.text)
             except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
+                # print("Google Speech Recognition could not understand audio")
+                print("text: " + self.text)
                 pass
             except sr.RequestError as e:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            last = upper  # (upper)
             time.sleep(2)
 
     def startup(self):
