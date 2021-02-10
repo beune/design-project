@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # github.com/Akuli/tkinter-tutorial
 # TODO dependency: pacman: tk package
-# TODO set default floating window size
 
 import tkinter as tk
 import sys
@@ -10,6 +9,7 @@ from tkinter import ttk, messagebox
 from xml_viewer import XML_Viewer
 
 root = tk.Tk()
+root.geometry("1280x720")
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
