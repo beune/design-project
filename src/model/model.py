@@ -57,4 +57,5 @@ class Model:
         """
         Store the report in the database
         """
-        self.db_connector.create()
+        # self.db.create()
+        pass
