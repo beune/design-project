@@ -1,7 +1,7 @@
 """
 Imports
 """
-from Model import Model
+from src.model.model import Model
 from UIAutomation import NPUIAutomation
 from View import View
 

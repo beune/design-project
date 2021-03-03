@@ -37,6 +37,13 @@ class NPUIAutomation:
         """
         self.app.kill()
 
+    def get_text(self) -> str:
+        """
+        Method used to retrieve the current text from the UIAutomation
+        :return: The current text
+        """
+        return self.text
+
     def start(self):
         """
         Starts the thread which continuously checks the G2 speech
