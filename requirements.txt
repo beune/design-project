@@ -11,3 +11,7 @@ pyparsing==2.4.7
 whichcraft==0.6.1
 zope.event==4.5.0
 zope.interface==5.2.0
+
+mysql~=0.0.2
+mysql-connector-python~=8.0.23
+pywinauto~=0.6.8
