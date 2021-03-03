@@ -15,3 +15,9 @@ class Controller:
         self.view = View()
         self.UIAutomation = NPUIAutomation()
         self.UIAutomation.start()
+
+    def update_model_text(self) -> None:
+        """
+        Method used to update the text in the model based on new text in the G2 speech window
+        """
+        self.model.update_text(self.UIAutomation.get_text())

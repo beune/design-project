@@ -14,7 +14,8 @@ class Model:
         self.text = ""
         self.current_env = None
         self.envs = {}
-        self.DBConnector = DBConnector()
+        self.db = DBConnector()
+        self.replacer = Replacer()
 
     def switch_env(self, new_env: str):
         """
