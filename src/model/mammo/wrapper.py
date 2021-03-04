@@ -15,15 +15,25 @@ class Wrapper(NLP):
     """
     Class used to connect Shreyasi's python2 algorithm to python 3
     """
-    COMMAND = "python --version"
+    COMMAND = 'cd "{}" \n{}\npython2 "{}"\n'
+    # PATH = "../nlpbreastcancer/"
+    PATH = "C:/Users/voetb/OneDrive/Documenten/Mod11/nlpbreastcancer/"
+    WIN_VENV = ".\\venv\\Scripts\\activate"
+    LINUX_VENV = "source ./venv/bin/activate"
 
-    @classmethod
-    def process(cls, text):
+    SCRIPT = "./AutomaticStructuring/CRF MODEL A/predict_labels.py"
+
+    INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
+    OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
+
+    def process(self, text):
         """
         Method used to process the new incoming text
         :param text: The new text of the model
         """
-        return os.system(cls.COMMAND)
+        self.make_input(text)
+        self.run()
+        return self.format(self.get_list())
 
     def make_input(self, text: str) -> None:
         """
