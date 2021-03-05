@@ -12,7 +12,7 @@ class Replacer(object):
     def __init__(self):
         self.replacements = {}
 
-    def set_replacement(self, key: str, replacement: str) -> None:
+    def add_replacement(self, key: str, replacement: str) -> None:
         """
         Function used to
         :param key: The standard string which needs to be replaced
@@ -33,9 +33,12 @@ class Replacer(object):
         :param text: The text of a label
         """
         new_text = ""
-        for key in self.replacements.keys():
-            new_text = re.sub(key.lower(), self.replacements[key], text.lower())
-        return new_text
+        if self.replacements.keys():
+            for key in self.replacements.keys():
+                new_text = re.sub(key, self.replacements[key], text, flags=re.I)
+            return new_text
+        else:
+            return text
 
     def switch_replacements(self, reps: dict) -> None:
         """
@@ -43,3 +46,21 @@ class Replacer(object):
         :param reps: the new replacements
         """
         self.replacements = reps
+
+    def remove_replacement(self, key):
+        """
+        Method used to remove a replacement
+        :param key: The key of the replacement which needs to be removed
+        """
+        try:
+            del self.replacements[key]
+        except KeyError:
+            pass
+
+
+if __name__ == "__main__":
+    x = Replacer()
+    x.add_replacement("Uitslag besproken", "Uitslag telefonisch doorgebeld")
+    print(x.replace("uitslag besproken, Alles goedgegaan"))
+    x.remove_replacement("Uitslag besproken")
+    print(x.replace("uitslag besproken, Alles goedgegaan"))

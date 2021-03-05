@@ -53,6 +53,21 @@ class Model:
         """
         self.current_env.process(self.text)
 
+    def add_replacement(self, key: str, replacement: str) -> None:
+        """
+        Method used to set a new standard replacement
+        :param key: The new key which should always be replaced
+        :param replacement: The new string for which the key should be replaced
+        """
+        self.replacer.add_replacement(key, replacement)
+
+    def remove_replacement(self, key: str) -> None:
+        """
+        Method used to remove a standard replacement
+        :param key: The key of the replacement which needs to be removed
+        """
+        self.replacer.remove_replacement(key)
+
     def store_report(self) -> None:
         """
         Store the report in the database
