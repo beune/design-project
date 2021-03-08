@@ -20,9 +20,8 @@
         </md-toolbar>
 
         <md-list>
-          <!-- NB: md-offset gives prop warning but this has to be fixed in the upstream, I have filed an issue on GitHub https://github.com/vuematerial/vue-material/issues/2315 -->
           <md-list-item>
-            <md-menu md-align-trigger md-size="auto" md-offset-x="127" :md-offset-y="-36">
+            <md-menu md-align-trigger md-size="auto" :md-offset-x="mdOffsetX" :md-offset-y="mdOffsetY">
               <md-button md-menu-trigger><md-icon>save</md-icon> Bestand</md-button>
               <md-menu-content>
                 <md-menu-item>Nieuw</md-menu-item>
@@ -37,13 +36,13 @@
           </md-list-item>
 
           <md-list-item>
-            <md-menu md-align-trigger md-size="auto" md-offset-x="127" :md-offset-y="-36">
+            <md-menu md-align-trigger md-size="auto" :md-offset-x="mdOffsetX" :md-offset-y="mdOffsetY">
               <md-button md-menu-trigger><md-icon>fit_screen</md-icon> Beeld</md-button>
             </md-menu>
           </md-list-item>
 
           <md-list-item>
-            <md-menu md-align-trigger md-size="auto" md-offset-x="127" :md-offset-y="-36">
+            <md-menu md-align-trigger md-size="auto" :md-offset-x="mdOffsetX" :md-offset-y="mdOffsetY">
               <md-button md-menu-trigger><md-icon>help</md-icon> Help</md-button>
             </md-menu>
           </md-list-item>
@@ -77,6 +76,8 @@ export default {
   },
   name: 'Normal',
   data: () => ({
+    mdOffsetX: 127,
+    mdOffsetY: -36
   }),
   methods: {
     test_function () {
