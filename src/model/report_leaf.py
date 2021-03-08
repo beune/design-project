@@ -13,7 +13,6 @@ class ReportLeaf:
         self._certainty = certainty
         self._hint = hint
 
-
     def __repr__(self):
         return 'Leaf("{}", {}, {})'.format(self._text, self._label, self._certainty)
 
@@ -42,9 +41,9 @@ class ReportLeaf:
         return self._certainty
 
     @property
-    def certainty(self):
+    def hint(self):
         """
 
-        :return:
+        :return: Returns the hint of the leaf
         """
-        return self._certainty
+        return self._hint

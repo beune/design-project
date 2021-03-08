@@ -7,12 +7,17 @@ class ReportNode:
     """
     Class used to represent Nodes
     """
-    def __init__(self, label: str):
+    def __init__(self, label: str, expects: list = None):
         self._label = label
         self._children = []
+        self._expects = expects
 
     def __repr__(self):
         return 'Node({})'.format(self._label)
+
+    def __iter__(self):
+        for child in self._children:
+            yield child
 
     @property
     def label(self) -> str:
