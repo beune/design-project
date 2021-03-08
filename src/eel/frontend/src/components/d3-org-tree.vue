@@ -1,6 +1,24 @@
 <template>
         <!--TODO make tree view fit to entire width and height-->
-        <div class="svgContainer"></div>
+        <div>
+          <div class="svgContainer"></div>
+          <md-dialog :md-active.sync="showEditNodeLabelDialog">
+            <md-dialog-title>Label wijzigen</md-dialog-title>
+            <md-dialog-content>
+              <md-field>
+                <label>Label</label>
+                <!--https://github.com/vuematerial/vue-material/issues/2285 -->
+                <md-select v-model="chosenNodeLabelAlternative">
+                  <md-option v-for="alternative in nodeLabelAlternatives" :key="alternative" :value="alternative">{{ alternative }}</md-option>
+                </md-select>
+              </md-field>
+            </md-dialog-content>
+            <md-dialog-actions>
+              <md-button class="md-primary" @click="showEditNodeLabelDialog = false">Annuleer</md-button>
+              <md-button class="md-primary" @click="editNodeLabel">Opslaan</md-button>
+            </md-dialog-actions>
+          </md-dialog>
+        </div>
 </template>
 <style lang="scss">
     .domStyle {
@@ -25,6 +43,10 @@ import data from './data.json'
             chartReference: null,
             displayArrow: true,
             straightLink: false,
+            showEditNodeLabelDialog: false,
+            nodeLabelAlternatives: ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"],
+            chosenNodeLabelAlternative: undefined,
+            clickedNodeId: undefined
         }),
         watch: {
             data(value) {
@@ -36,6 +58,20 @@ import data from './data.json'
             this.chartReference.transformLayout("left-to-right")
         },
         methods: {
+            toggleEditNodeLabelDialog(){
+              this.showEditNodeLabelDialog = !this.showEditNodeLabelDialog;
+            },
+            editNodeLabel(){
+              this.toggleEditNodeLabelDialog()
+              let self = this
+              data.forEach(function(object){
+                if (object.nodeId === self.clickedNodeId) {
+                  object.template = "<div class=\"domStyle\">\n<span>" + self.chosenNodeLabelAlternative + "</span></div>"
+                }
+              });
+              this.renderChart(data)
+              this.chosenNodeLabelAlternative = undefined;
+            },
             renderChart(data) {
                 if (!this.chartReference) {
                     this.chartReference = new OrgTree();
@@ -64,7 +100,8 @@ import data from './data.json'
                     .straightLink(this.straightLink)
                     .collapsible(false)
                     .onNodeClick(d => {
-                        console.log(d + " node clicked")
+                        this.toggleEditNodeLabelDialog();
+                        this.clickedNodeId = d;
                     })
                     .onNodeAdd(d => {
                         console.log(d + " node added")
