@@ -49,3 +49,11 @@ class ReportNode:
         :param child: The new child that needs to be added to the children list
         """
         self._children.append(child)
+
+    def get_or_create(self, label):
+        for child in self.children:
+            if isinstance(child, ReportNode) and child.label == label:
+                return child
+        new = ReportNode(label)
+        self.add_child(new)
+        return new
