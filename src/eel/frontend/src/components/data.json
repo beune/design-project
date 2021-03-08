@@ -1,0 +1,122 @@
+[
+  {
+    "nodeId": "O-1",
+    "parentNodeId": null,
+    "width": 325,
+    "height": 139,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\">\n<span>Ben</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-2",
+    "parentNodeId": "O-1",
+    "width": 319,
+    "height": 134,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Honey</span></div>",
+    "expanded": true,
+    "added": true,
+    "removed": true
+  },
+  {
+    "nodeId": "O-3",
+    "parentNodeId": "O-1",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Tony</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-4",
+    "parentNodeId": "O-2",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Lucy</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-5",
+    "parentNodeId": "O-2",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Tom</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  }
+]
