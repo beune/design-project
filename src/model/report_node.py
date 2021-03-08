@@ -22,6 +22,22 @@ class ReportNode:
         """
         return self._label
 
+    @property
+    def children(self) -> list:
+        """
+
+        :return:
+        """
+        return self._children
+
+    @property
+    def expects(self) -> list:
+        """
+
+        :return:
+        """
+        return self._expects
+
     def add_child(self, child):
         """
         Method used to update the children of a ReportNode
