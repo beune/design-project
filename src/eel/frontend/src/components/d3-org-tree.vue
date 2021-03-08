@@ -22,10 +22,8 @@ import data from './data.json'
     export default {
         name: "Chart",
         data: () => ({
-            //TODO FIX ORIENTATION
             chartReference: null,
             straights: [{text: "straight", value: true}, {text: "curve", value: false}],
-            orientation: {value: 'left-to-right'},
             straight: {text: "curve", value: false},
             displayArrow: true,
             straightLink: false,
@@ -37,6 +35,7 @@ import data from './data.json'
         },
         mounted() {
             this.renderChart(data)
+            this.chartReference.transformLayout("left-to-right")
         },
         methods: {
             renderChart(data) {
