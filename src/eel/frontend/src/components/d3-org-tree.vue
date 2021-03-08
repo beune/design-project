@@ -23,8 +23,6 @@ import data from './data.json'
         name: "Chart",
         data: () => ({
             chartReference: null,
-            straights: [{text: "straight", value: true}, {text: "curve", value: false}],
-            straight: {text: "curve", value: false},
             displayArrow: true,
             straightLink: false,
         }),
@@ -44,10 +42,7 @@ import data from './data.json'
                 }
                 this.chartReference
                     .container('.svgContainer')
-                    //.svgWidth(800)
-                    //.svgHeight(600)
                     .data(data)
-                    //.marginLeft(-50)
                     .highlight({
                         "borderWidth": 1,
                         "borderRadius": 15,
@@ -64,7 +59,7 @@ import data from './data.json'
                             "alpha": 1
                         }
                     })
-                    //.current('O-2')
+                    .duration(0)
                     .displayArrow(this.displayArrow)
                     .straightLink(this.straightLink)
                     .collapsible(false)
@@ -79,28 +74,7 @@ import data from './data.json'
                         this.chartReference.removeNode(d)
                     })
                     .render();
-
-
-                /*
-                //mock trigger click
-                setTimeout(() => {
-                    d3.select('#O-3').dispatch('click')
-                }, 2000)*/
-
-            },
-
-            transformLayout(direction) {
-                this.chartReference.transformLayout(direction)
-            },
-
-            transformStraightLink(straight) {
-                this.chartReference.transformStraightLink(straight)
-            },
-
-            toggleArrow(displayArrow) {
-                this.chartReference.toggleArrow(displayArrow)
             }
         }
     }
-
 </script>
