@@ -79,6 +79,7 @@ import data from './data.json'
                 this.chartReference
                     .container('.svgContainer')
                     .data(data)
+                    .backgroundColor('#ffffff')
                     .highlight({
                         "borderWidth": 1,
                         "borderRadius": 15,
