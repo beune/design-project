@@ -18,13 +18,13 @@
       "blue": 90,
       "alpha": 0.5
     },
-    "template": "<div class=\"domStyle\">\n<span>Ben</span></div>",
+    "template": "<div class=\"domStyle\">\n<span>BIRADS</span></div>",
     "expanded": false,
     "added": false,
     "removed": false
   },
   {
-    "nodeId": "O-2",
+    "nodeId": "O-11",
     "parentNodeId": "O-1",
     "width": 319,
     "height": 134,
@@ -42,13 +42,37 @@
       "blue": 90,
       "alpha": 0.5
     },
-    "template": "<div class=\"domStyle\"><span>Honey</span></div>",
+    "template": "<div class=\"domStyle\"><span>Breast composition</span></div>",
     "expanded": true,
-    "added": true,
-    "removed": true
+    "added": false,
+    "removed": false
   },
   {
-    "nodeId": "O-3",
+    "nodeId": "O-111",
+    "parentNodeId": "O-11",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>C</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-12",
     "parentNodeId": "O-1",
     "width": 347,
     "height": 147,
@@ -66,14 +90,14 @@
       "blue": 90,
       "alpha": 0.5
     },
-    "template": "<div class=\"domStyle\"><span>Tony</span></div>",
+    "template": "<div class=\"domStyle\"><span>Mass</span></div>",
     "expanded": false,
     "added": false,
     "removed": false
   },
   {
-    "nodeId": "O-4",
-    "parentNodeId": "O-2",
+    "nodeId": "O-13",
+    "parentNodeId": "O-1",
     "width": 347,
     "height": 147,
     "borderWidth": 1,
@@ -90,14 +114,14 @@
       "blue": 90,
       "alpha": 0.5
     },
-    "template": "<div class=\"domStyle\"><span>Lucy</span></div>",
+    "template": "<div class=\"domStyle\"><span>Asymmetry</span></div>",
     "expanded": false,
     "added": false,
     "removed": false
   },
   {
-    "nodeId": "O-5",
-    "parentNodeId": "O-2",
+    "nodeId": "O-14",
+    "parentNodeId": "O-1",
     "width": 347,
     "height": 147,
     "borderWidth": 1,
@@ -114,7 +138,151 @@
       "blue": 90,
       "alpha": 0.5
     },
-    "template": "<div class=\"domStyle\"><span>Tom</span></div>",
+    "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-141",
+    "parentNodeId": "O-14",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Morphology</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-142",
+    "parentNodeId": "O-14",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Distribution</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-121",
+    "parentNodeId": "O-12",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Shape</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-1211",
+    "parentNodeId": "O-121",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Oval</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-122",
+    "parentNodeId": "O-12",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Margin</span></div>",
+    "expanded": false,
+    "added": false,
+    "removed": false
+  },
+  {
+    "nodeId": "O-122",
+    "parentNodeId": "O-12",
+    "width": 347,
+    "height": 147,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {
+      "red": 15,
+      "green": 140,
+      "blue": 121,
+      "alpha": 0.5
+    },
+    "backgroundColor": {
+      "red": 0,
+      "green": 81,
+      "blue": 90,
+      "alpha": 0.5
+    },
+    "template": "<div class=\"domStyle\"><span>Density</span></div>",
     "expanded": false,
     "added": false,
     "removed": false
