@@ -32,8 +32,6 @@ class Wrapper(NLP):
     INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
     OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
 
-    # TODO: Create init met path als argument?
-
     def process(self, text):
         """
         Method used to process the new incoming text
@@ -105,10 +103,7 @@ def after(label_after: str, label_before: str) -> bool:
     :param label_before: the label that comes first
     :return: true if the label can come afterwards
     """
-    # TODO: The second check is probably obsolete; All labels need to start with B- or I-
-    # TODO: Do we need to check if the label_before has enough characters?
-    return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:] \
-        or not label_after.startswith('B-') and label_after == label_before
+    return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:]
 
 
 def clean(unfiltered: str) -> str:
