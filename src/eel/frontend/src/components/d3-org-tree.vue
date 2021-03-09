@@ -1,5 +1,4 @@
 <template>
-        <!--TODO make tree view fit to entire width and height-->
         <div>
           <div class="svgContainer"></div>
           <md-dialog :md-active.sync="showEditNodeLabelDialog">
@@ -21,6 +20,10 @@
         </div>
 </template>
 <style lang="scss">
+    .svgContainer {
+    /* Because d3-org-tree fits to as much width as possible when a width is not specified, the width is not specified here. */
+      height: 87.9vh;
+    }
     .domStyle {
         display: flex;
         justify-content: center;
