@@ -7,31 +7,13 @@ import platform
 
 from src.model.nlp import NLP
 import os
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
 from src.model.report_node import ReportNode
 from src.model.report_leaf import ReportLeaf
 
 import re
-
-
-# def split_on_common(new, old):
-#     if not old or not new:
-#         return [], new
-#     for (i, (new_label, old_label)) in enumerate(zip(new, old)):
-#         if new_label != old_label:
-#             return new[:i], new[i:]
-#     return new[:i+1], new[i+1:]
-#
-# def split(new, old):
-#     if not new or not old or new[0] != old[0]:
-#         return 0
-#     else:
-#     # elif new[0] == old[0]:
-#         return 1 + split(new[1:], old[1:])
-#     # else:
-#     #     return 1
 
 
 class Wrapper(NLP):
@@ -49,6 +31,8 @@ class Wrapper(NLP):
     INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
     OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
 
+    # TODO: Create init met path als argument?
+
     def process(self, text):
         """
         Method used to process the new incoming text
@@ -56,17 +40,17 @@ class Wrapper(NLP):
         """
         self.make_input(text)
         self.run()
-        return self.format(self.get_list())
+        return make_tree([], self.get_list())
 
     def make_input(self, text: str) -> None:
         """
         Method used to transform the current string into the correct XML format for the classifying algorithm
         :param text: The current string of the report
         """
-        top = ET.Element('radiology_reports')
-        child = ET.SubElement(top, 'report')
+        top = ElementTree.Element('radiology_reports')
+        child = ElementTree.SubElement(top, 'report')
         child.text = text
-        xmlstr = minidom.parseString(ET.tostring(top)).toprettyxml()
+        xmlstr = minidom.parseString(ElementTree.tostring(top)).toprettyxml()
         with open(os.path.normpath(self.PATH + self.INPUT_FILE), "w") as f:
             f.write(xmlstr)
 
@@ -95,77 +79,86 @@ class Wrapper(NLP):
             problist = json.load(file)
         return problist
 
-    def format(self, problist) -> ReportNode:
-        """
-        Structure 1 to structure 2 converter
-        :param problist:
-        :return:
-        """
-        def filter(unfiltered: str) -> str:
-            """
-            Function for standardising labels
-            :param unfiltered: string containing B and I flags
-            :return: the filtered string
-            """
-            return re.sub(r'(I-|B-)', '', unfiltered)
 
-        # convert to a linear form
-        # unlabeled text is removed and consecutive words with the same labels are combined
-        agg_text, last_label, sum_conf, count = '', None, 0, 1  # default values
-        linear = []
-        for (text, label_text, conf) in problist:
-            top_label = label_text.split('/')[-1]
-            if top_label.startswith('I-'):
-                # aggregate
-                agg_text += ' ' + text
-                sum_conf += conf
-                count += 1
-            elif top_label != 'O':
-                # add
-                if last_label is not None:
-                    agg_conf = sum_conf / count
-                    linear.append((agg_text, last_label, agg_conf))
-                # reset
-                last_label = filter(label_text)
-                agg_text, sum_conf = text, conf
-                count = 1
-        # final add
-        agg_conf = sum_conf / count
-        linear.append((agg_text, last_label, agg_conf))
+def has_base(labels, base) -> bool:
+    """
+    Check if the labels are a descendant from base.
+    :param labels: the labels that is checked to have a base.
+    :param base: the base to be compared with.
+    :return: true if all labels came after base. See after for what is defined as after.
+    """
+    if len(labels) < len(base):
+        return False
+    for label_a, label_b in zip(labels, base):
+        if not after(label_a, label_b):
+            return False
+    return True
 
-        # convert linear form to a tree
-        root = ReportNode("root")
-        for (text, label_text, conf) in linear:
-            node = root
-            labels = label_text.split("/")
-            for label in labels[:-1]:
-                node = node.get_or_create(label)
-            node.add_child(ReportLeaf(text, labels[-1], conf))
-        # TODO: B/I only works for top_label
-        return root
 
-    def maketree(self, labels, text, node: ReportNode, conf):
-        """
+def after(label_after: str, label_before: str) -> bool:
+    """
+    Check if label_after is indeed expected after label_before.
+    These labels cannot start with B- and, apart from flag, should be equal
+    :param label_after: the label that comes afterwards
+    :param label_before: the label that comes first
+    :return: true if the label can come afterwards
+    """
+    # TODO: The second check is probably obsolete; All labels need to start with B- or I-
+    # TODO: Do we need to check if the label_before has enough characters?
+    return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:] \
+        or not label_after.startswith('B-') and label_after == label_before
 
-        :param labels:
-        :param text:
-        :param node:
-        :param conf:
-        """
-        if len(labels) <= 2:
-            node.add_child(ReportLeaf(text, labels[0], conf))
+
+def clean(unfiltered: str) -> str:
+    """
+    Function for standardising labels
+    :param unfiltered: string containing B and I flags
+    :return: the filtered string without the flags
+    """
+    return re.sub(r"(I-|B-)", '', unfiltered)
+
+
+def make_tree(base: list[str], items: list):
+    """
+    Make a tree based on a linear list of items.
+    :param base:
+    :param items: items left for processing. Will be mutated!
+    :return:
+    """
+    base_length = len(base)
+    agg_text = []
+    sum_conf = 0
+    children = []
+    first = True
+    # loop while items exist and the current label descents from the base (break statement)
+    while items:
+        (text, label_text, conf) = items[0]
+        labels = label_text.split("/")
+        # break if the label has a new base
+        if not first and not has_base(labels, base):
+            break
+        # make sure that only the first B-flag is ignored
+        first = False
+
+        # the base equals the labels, collect all the text and confidences
+        if base_length == len(labels):
+            agg_text.append(text)
+            sum_conf += conf
+            items.pop(0)
+        # the new label should not be ignored
+        elif labels[base_length] != 'O':
+            # make a new tree that has a base that goes one label deeper
+            child = make_tree(labels[:base_length + 1], items)
+            children.append(child)
+        # the new label should be ignored
         else:
-            flag, label = labels[0].split('-', 1)
-            # if there was no flag
-            if label is None:
-                flag, label = label, flag
-            # if flag == 'I':
-            #     self._recent[label].add2(labels[1:], text, conf)
-            else:
-                newnode = ReportNode(label)
-                self.maketree(labels[1:], text, newnode, conf)
-                node.add_child(newnode)
-                # self._recent[label] = newnode
+            items.pop(0)
+
+    report_label = clean(base[-1]) if base else 'root'
+    # if text has been found create a Leaf, otherwise a node
+    if agg_text:
+        return ReportLeaf(' '.join(agg_text), report_label, sum_conf / len(agg_text))
+    return ReportNode(report_label, children)
 
 
 if __name__ == "__main__":
@@ -175,10 +168,7 @@ if __name__ == "__main__":
     #                 "klierweefsel,  In en rondom de laesie geen microcalcificaties, In de rechtermamma voor zover te "
     #                 "beoordelen geen aanwijzingen voor maligniteit, Axillair beiderzijds geen pathologische "
     #                 "lymfeklieren zichtbaar")
-    # print(out)
-    # print(split_on_common([1, 2, 4], []))
-    # print(split([1, 2, 4], [1, 2, 4]))
     with open("..\\out.json", "r") as file:
         problist = json.load(file)
-    out = w.format(problist)
-    print("Succes")
+    out = make_tree([], problist)
+    print(out)

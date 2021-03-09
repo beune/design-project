@@ -7,9 +7,9 @@ class ReportNode:
     """
     Class used to represent Nodes
     """
-    def __init__(self, label: str, expects: list = None):
+    def __init__(self, label: str, children: list = None, expects: list = None):
         self._label = label
-        self._children = []
+        self._children = [] if children is None else children
         self._expects = expects
 
     def __repr__(self):
@@ -49,11 +49,3 @@ class ReportNode:
         :param child: The new child that needs to be added to the children list
         """
         self._children.append(child)
-
-    def get_or_create(self, label):
-        for child in self.children:
-            if isinstance(child, ReportNode) and child.label == label:
-                return child
-        new = ReportNode(label)
-        self.add_child(new)
-        return new
