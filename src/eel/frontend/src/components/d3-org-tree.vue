@@ -84,15 +84,15 @@ import data from './data.json'
                         "borderWidth": 1,
                         "borderRadius": 15,
                         "borderColor": {
-                            "red": 50,
-                            "green": 255,
-                            "blue": 30,
+                            "red": 70,
+                            "green": 130,
+                            "blue": 180,
                             "alpha": 1
                         },
                         "backgroundColor": {
-                            "red": 20,
-                            "green": 100,
-                            "blue": 40,
+                            "red": 70,
+                            "green": 130,
+                            "blue": 180,
                             "alpha": 1
                         }
                     })
