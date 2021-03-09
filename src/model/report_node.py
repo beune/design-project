@@ -19,6 +19,11 @@ class ReportNode:
         for child in self._children:
             yield child
 
+    def __eq__(self, other):
+        return type(self) == type(other) \
+               and self.label == other.label \
+               and self.children == other.children
+
     @property
     def label(self) -> str:
         """

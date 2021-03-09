@@ -13,8 +13,6 @@ from xml.dom import minidom
 from src.model.report_node import ReportNode
 from src.model.report_leaf import ReportLeaf
 
-import re
-
 
 class Wrapper(NLP):
     """
@@ -112,7 +110,9 @@ def clean(unfiltered: str) -> str:
     :param unfiltered: string containing B and I flags
     :return: the filtered string without the flags
     """
-    return re.sub(r"(I-|B-)", '', unfiltered)
+    if unfiltered.startswith("I-") or unfiltered.startswith("B-"):
+        return unfiltered[2:]
+    return unfiltered
 
 
 def make_tree(base: list[str], items: list):

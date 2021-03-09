@@ -16,6 +16,12 @@ class ReportLeaf:
     def __repr__(self):
         return 'Leaf("{}", {}, {})'.format(self._text, self._label, self._certainty)
 
+    def __eq__(self, other):
+        return type(self) == type(other) \
+               and self.text == other.text \
+               and self.label == other.label \
+               and self.certainty == other.certainty
+
     @property
     def text(self):
         """
