@@ -20,7 +20,8 @@ class Wrapper(NLP):
     """
     Class used to connect Shreyasi's python2 algorithm to python 3
     """
-    COMMAND = 'cd "{}" \n{}\npython2 "{}"\n'
+    WIN_COMMAND = 'cd "{}" & {} & python2 "{}"'
+    LIN_COMMAND = 'cd "{}" ; {} ; python2 "{}"'
     # PATH = "../nlpbreastcancer/"
     PATH = "C:/Users/voetb/OneDrive/Documenten/Mod11/nlpbreastcancer/"
     WIN_VENV = ".\\venv\\Scripts\\activate"
@@ -60,14 +61,15 @@ class Wrapper(NLP):
         """
         path = os.path.normpath(self.PATH)
         system = platform.system()
+        script = os.path.normpath(self.SCRIPT)
         if system == 'Windows':
             venv = self.WIN_VENV
+            command = self.WIN_COMMAND.format(path, venv, script)
         elif system == 'Linux':
             venv = self.LINUX_VENV
+            command = self.LIN_COMMAND.format(path, venv, script)
         else:
             raise Exception('Unsupported OS')
-        script = os.path.normpath(self.SCRIPT)
-        command = self.COMMAND.format(path, venv, script)
         os.system(command)
 
     def get_list(self) -> List[Tuple[str, str, float]]:
