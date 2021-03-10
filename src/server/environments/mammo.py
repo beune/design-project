@@ -5,13 +5,12 @@ from typing import List, Tuple
 import json
 import platform
 
-from src.model.nlp import NLP
 import os
 import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
-from src.model.report_node import ReportNode
-from src.model.report_leaf import ReportLeaf
+from src.report_node import ReportNode
+from src.report_leaf import ReportLeaf
 
 """
 Class used to connect Shreyasi's python2 algorithm to python 3

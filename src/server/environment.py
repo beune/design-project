@@ -1,7 +1,7 @@
 """
 Imports
 """
-from src.model.report_node import ReportNode
+from src.report_node import ReportNode
 from src.server.environments import hersen, mammo
 from src.server.hinter import Hinter
 from typing import Callable
