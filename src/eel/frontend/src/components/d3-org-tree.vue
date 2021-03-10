@@ -61,6 +61,16 @@ import data from './data.json'
             this.chartReference.transformLayout("left-to-right")
         },
         methods: {
+            fetchNodeAlternatives(){
+              let self = this
+              let alternatives;
+              data.forEach(function(object){
+                if (object.nodeId === self.clickedNodeId) {
+                  alternatives = object.alternatives
+                }
+              });
+              return alternatives
+            },
             toggleEditNodeLabelDialog(){
               this.showEditNodeLabelDialog = !this.showEditNodeLabelDialog;
             },
@@ -104,8 +114,11 @@ import data from './data.json'
                     .straightLink(this.straightLink)
                     .collapsible(false)
                     .onNodeClick(d => {
-                        this.toggleEditNodeLabelDialog();
                         this.clickedNodeId = d;
+                        this.nodeLabelAlternatives = this.fetchNodeAlternatives()
+                        if (this.nodeLabelAlternatives.length !== 0){
+                          this.toggleEditNodeLabelDialog();
+                        }
                     })
                     .onNodeAdd(d => {
                         console.log(d + " node added")
