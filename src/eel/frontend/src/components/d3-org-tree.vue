@@ -47,7 +47,7 @@ import data from './data.json'
             displayArrow: true,
             straightLink: false,
             showEditNodeLabelDialog: false,
-            nodeLabelAlternatives: ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"],
+            nodeLabelAlternatives: undefined,
             chosenNodeLabelAlternative: undefined,
             clickedNodeId: undefined
         }),
