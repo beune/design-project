@@ -1,28 +1,12 @@
 <template>
-        <div>
-          <div class="svgContainer"></div>
-          <md-dialog :md-active.sync="showEditNodeLabelDialog">
-            <md-dialog-title>Label wijzigen</md-dialog-title>
-            <md-dialog-content>
-              <md-field>
-                <label>Label</label>
-                <!--https://github.com/vuematerial/vue-material/issues/2285 -->
-                <md-select v-model="chosenNodeLabelAlternative">
-                  <md-option v-for="alternative in nodeLabelAlternatives" :key="alternative" :value="alternative">{{ alternative }}</md-option>
-                </md-select>
-              </md-field>
-            </md-dialog-content>
-            <md-dialog-actions>
-              <md-button class="md-primary" @click="showEditNodeLabelDialog = false">Annuleer</md-button>
-              <md-button class="md-primary" @click="editNodeLabel">Opslaan</md-button>
-            </md-dialog-actions>
-          </md-dialog>
-        </div>
+  <div>
+    <div class="svgContainer"></div>
+  </div>
 </template>
 <style lang="scss">
     .svgContainer {
     /* Because d3-org-tree fits to as much width as possible when a width is not specified, the width is not specified here. */
-      height: 87.9vh;
+      height: 86.0vh;
     }
     .domStyle {
         display: flex;
