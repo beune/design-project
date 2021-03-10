@@ -13,69 +13,71 @@ from xml.dom import minidom
 from src.model.report_node import ReportNode
 from src.model.report_leaf import ReportLeaf
 
+"""
+Class used to connect Shreyasi's python2 algorithm to python 3
+"""
+WIN_COMMAND = 'cd "{}" & {} & python2 "{}"'
+LIN_COMMAND = 'cd "{}" ; {} ; python2 "{}"'
+# PATH = "../nlpbreastcancer/"
+PATH = "C:/Users/voetb/OneDrive/Documenten/Mod11/nlpbreastcancer/"
+WIN_VENV = ".\\venv\\Scripts\\activate"
+LINUX_VENV = "source ./venv/bin/activate"
 
-class Wrapper(NLP):
+SCRIPT = "./AutomaticStructuring/CRF MODEL A/predict_labels.py"
+
+INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
+OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
+
+
+def parse(text):
     """
-    Class used to connect Shreyasi's python2 algorithm to python 3
+    Method used to process the new incoming text
+    :param text: The new text of the model
     """
-    WIN_COMMAND = 'cd "{}" & {} & python2 "{}"'
-    LIN_COMMAND = 'cd "{}" ; {} ; python2 "{}"'
-    # PATH = "../nlpbreastcancer/"
-    PATH = "C:/Users/voetb/OneDrive/Documenten/Mod11/nlpbreastcancer/"
-    WIN_VENV = ".\\venv\\Scripts\\activate"
-    LINUX_VENV = "source ./venv/bin/activate"
+    make_input(text)
+    run()
+    return make_tree([], get_list())
 
-    SCRIPT = "./AutomaticStructuring/CRF MODEL A/predict_labels.py"
 
-    INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
-    OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
+def make_input(text: str) -> None:
+    """
+    Method used to transform the current string into the correct XML format for the classifying algorithm
+    :param text: The current string of the report
+    """
+    top = ElementTree.Element('radiology_reports')
+    child = ElementTree.SubElement(top, 'report')
+    child.text = text
+    xmlstr = minidom.parseString(ElementTree.tostring(top)).toprettyxml()
+    with open(os.path.normpath(PATH + INPUT_FILE), "w") as f:
+        f.write(xmlstr)
 
-    def process(self, text):
-        """
-        Method used to process the new incoming text
-        :param text: The new text of the model
-        """
-        self.make_input(text)
-        self.run()
-        return make_tree([], self.get_list())
 
-    def make_input(self, text: str) -> None:
-        """
-        Method used to transform the current string into the correct XML format for the classifying algorithm
-        :param text: The current string of the report
-        """
-        top = ElementTree.Element('radiology_reports')
-        child = ElementTree.SubElement(top, 'report')
-        child.text = text
-        xmlstr = minidom.parseString(ElementTree.tostring(top)).toprettyxml()
-        with open(os.path.normpath(self.PATH + self.INPUT_FILE), "w") as f:
-            f.write(xmlstr)
+def run() -> None:
+    """
+    Method used to run the classifying algorithm
+    """
+    path = os.path.normpath(PATH)
+    system = platform.system()
+    script = os.path.normpath(SCRIPT)
+    if system == 'Windows':
+        venv = WIN_VENV
+        command = WIN_COMMAND.format(path, venv, script)
+    elif system == 'Linux':
+        venv = LINUX_VENV
+        command = LIN_COMMAND.format(path, venv, script)
+    else:
+        raise Exception('Unsupported OS')
+    os.system(command)
 
-    def run(self) -> None:
-        """
-        Method used to run the classifying algorithm
-        """
-        path = os.path.normpath(self.PATH)
-        system = platform.system()
-        script = os.path.normpath(self.SCRIPT)
-        if system == 'Windows':
-            venv = self.WIN_VENV
-            command = self.WIN_COMMAND.format(path, venv, script)
-        elif system == 'Linux':
-            venv = self.LINUX_VENV
-            command = self.LIN_COMMAND.format(path, venv, script)
-        else:
-            raise Exception('Unsupported OS')
-        os.system(command)
 
-    def get_list(self) -> List[Tuple[str, str, float]]:
-        """
-        Method used to get the list of words and their certainties
-        :return A list of lists in the format: [[word, label, probability]]
-        """
-        with open(os.path.normpath(self.PATH + self.OUTPUT_FILE), "r") as file:
-            problist = json.load(file)
-        return problist
+def get_list() -> List[Tuple[str, str, float]]:
+    """
+    Method used to get the list of words and their certainties
+    :return A list of lists in the format: [[word, label, probability]]
+    """
+    with open(os.path.normpath(PATH + OUTPUT_FILE), "r") as file:
+        problist = json.load(file)
+    return problist
 
 
 def has_base(labels, base) -> bool:
@@ -156,16 +158,3 @@ def make_tree(base: List[str], items: list):
     if agg_text:
         return ReportLeaf(' '.join(agg_text), report_label, sum_conf / len(agg_text))
     return ReportNode(report_label, children)
-
-
-if __name__ == "__main__":
-    w = Wrapper()
-    # out = w.process("X-mammografie beiderzijds: Een stervormige laesie laterale bovenkwadrant linkermamma, De laesie "
-    #                 "heeft een body van ongeveer 2,3 cm, De laesie is wel moeilijk af te grenzen van het normale "
-    #                 "klierweefsel,  In en rondom de laesie geen microcalcificaties, In de rechtermamma voor zover te "
-    #                 "beoordelen geen aanwijzingen voor maligniteit, Axillair beiderzijds geen pathologische "
-    #                 "lymfeklieren zichtbaar")
-    with open("..\\out.json", "r") as file:
-        problist = json.load(file)
-    out = make_tree([], problist)
-    print(out)
