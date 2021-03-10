@@ -115,7 +115,7 @@ def clean(unfiltered: str) -> str:
     return unfiltered
 
 
-def make_tree(base: list[str], items: list):
+def make_tree(base: List[str], items: list):
     """
     Make a tree based on a linear list of items.
     :param base:

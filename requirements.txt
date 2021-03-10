@@ -15,3 +15,7 @@ zope.interface~=5.2.0
 mysql~=0.0.2
 mysql-connector-python~=8.0.23
 pywinauto~=0.6.8
+
+requests~=2.25.1
+jsonpickle~=2.0.0
+Flask~=1.1.2
