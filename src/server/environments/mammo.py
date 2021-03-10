@@ -39,6 +39,7 @@ expected = {
     "calcifications": ["morphology", "distribution"]
 }
 
+
 def parse(text):
     """
     Method used to process the new incoming text

@@ -3,8 +3,11 @@ Imports
 """
 from src.model.report_node import ReportNode
 
+expected = {}
+hints = {}
 
-def parse(text):
+
+def parse(text: str) -> ReportNode:
     """
     Method used to process hersen text
     :param text: Text that needs processing
