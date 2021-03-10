@@ -28,6 +28,16 @@ SCRIPT = "./AutomaticStructuring/CRF MODEL A/predict_labels.py"
 INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
 OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
 
+hints = {
+    "shape": "oval-round-irregular",
+    "margin": "The margin of the mass",
+    "density": "fat-low-equal-high",
+}
+
+expected = {
+    "mass": ["shape", "margin", "density"],
+    "calcifications": ["morphology", "distribution"]
+}
 
 def parse(text):
     """

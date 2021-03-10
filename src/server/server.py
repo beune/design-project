@@ -3,8 +3,8 @@ Imports
 """
 import jsonpickle
 from flask import Flask, request
-from flask_restful import Resource, Api, reqparse, abort
-from environments.environment import envs
+from flask_restful import Api, abort
+from src.server.environment import envs
 
 app = Flask(__name__)
 api = Api(app)
