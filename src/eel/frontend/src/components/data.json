@@ -5,7 +5,7 @@
     "width": 325,
     "height": 139,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"material-icons\">mode</span>",
+    "template": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>",
     "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"]
   },
   {
@@ -23,7 +23,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>C</span></div><span class=\"material-icons\">mode</span><span class=\"confidence\">70%</span>",
+    "template": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>",
     "alternatives": ["Circumscribed", "Indistinct", "Spiculated"]
   },
   {
@@ -41,7 +41,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"material-icons\">mode</span>",
+    "template": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>",
     "alternatives": ["Spiculated"]
   },
   {
@@ -50,7 +50,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"material-icons\">mode</span>",
+    "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>",
     "alternatives": ["FooBar", "BazBar", "Indistinct"]
   },
   {
@@ -68,7 +68,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"material-icons\">mode</span>",
+    "template": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>",
     "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"]
   },
   {
@@ -86,7 +86,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"material-icons\">mode</span><span class=\"confidence\">95%</span>",
+    "template": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>",
     "alternatives": ["Microlobulated"]
   },
   {
@@ -95,7 +95,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"material-icons\">mode</span>",
+    "template": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>",
     "alternatives": ["Circumscribed"]
   },
   {
