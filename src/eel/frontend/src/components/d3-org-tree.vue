@@ -27,6 +27,14 @@
             <v-list-item-title>Edit</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="undoNodeLabelEdit">
+          <v-list-item-icon>
+            <v-icon>undo</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Undo</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item>
           <v-list-item-icon>
             <v-icon>report_off</v-icon>
@@ -148,6 +156,15 @@ import data from './data.json'
               "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(data)
               this.chosenNodeLabelAlternative = undefined;
+            },
+            undoNodeLabelEdit(){
+              let self = this
+              data.forEach(function(object){
+                if (object.nodeId === self.clickedNodeId) {
+                  object.template = object.originalTemplate
+                }
+              });
+              this.renderChart(data)
             },
             deleteNodeLabel(){
               this.changeTemplate(this.clickedNodeId, 
