@@ -11,7 +11,6 @@ from src.server.hinter import Hinter
 
 class MyTestCase(unittest.TestCase):
     def test_hint(self):
-        # TODO: declarations naar setup?
         expected = {
             'a': ['b', 'e', 'f']
         }
@@ -26,10 +25,10 @@ class MyTestCase(unittest.TestCase):
         ])
 
         hinter.hint(tree)
-        self.assertEqual("hint", tree.children[1].hint)  # TODO: misschien een mooiere getter op nodes?
+        self.assertEqual("hint", tree.get_child(1).hint)
         self.assertEqual(['b', 'e', 'f'], tree.expects)
-        self.assertIsNone(tree.children[0].expects)  # TODO: is None hier mooi? of liever een lege list?
-        self.assertIsNone(tree.children[0].children[0].hint)  # TODO: is None hier mooi? of liever een lege string?
+        self.assertEqual(tree.get_child(0).expects, [])
+        self.assertIsNone(tree.get_child(0).get_child(0).hint)
 
 
 if __name__ == '__main__':
