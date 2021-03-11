@@ -8,9 +8,10 @@
       :position-y="contextMenuY"
     >
     <!-- TODO: when the user clicks away from the menu, the menu flashes where the user has clicked. Prevent this. -->
+    <!-- TODO: only allow value nodes to be removed. -->
     <v-list dense>
       <v-subheader>OPTIES</v-subheader>
-        <v-list-item>
+        <v-list-item @click="deleteNodeLabel">
           <v-list-item-icon>
             <v-icon>delete</v-icon>
           </v-list-item-icon>
@@ -147,6 +148,11 @@ import data from './data.json'
               "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(data)
               this.chosenNodeLabelAlternative = undefined;
+            },
+            deleteNodeLabel(){
+              this.changeTemplate(this.clickedNodeId, 
+              "<div class=\"domStyle\"><span>" + "?" + "</div></span><span class=\"material-icons\">mode</span>")
+              this.renderChart(data)
             },
             renderChart(data) {
                 if (!this.chartReference) {
