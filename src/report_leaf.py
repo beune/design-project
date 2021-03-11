@@ -5,7 +5,7 @@ Imports
 
 class ReportLeaf:
     """
-    Class used to represent Nodes
+    Class used to represent Leaves
     """
     def __init__(self, text: str, label: str, certainty: float, hint: str = None):
         self.text = text

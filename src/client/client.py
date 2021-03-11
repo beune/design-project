@@ -21,4 +21,5 @@ def connect():
     # print("OUTPUT FROM HERSEN:", hersenlist)
 
 
-connect()
+if __name__ == '__main__':
+    connect()
