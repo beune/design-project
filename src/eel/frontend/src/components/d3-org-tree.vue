@@ -1,6 +1,42 @@
 <template>
-  <div>
-    <div class="svgContainer"></div>
+  <div style="width: 100vw">
+    <v-menu
+      v-model="contextMenuVisible"
+      absolute
+      offset-y
+      :position-x="contextMenuX"
+      :position-y="contextMenuY"
+    >
+    <!-- TODO: when the user clicks away from the menu, the menu flashes where the user has clicked. Prevent this. -->
+    <v-list dense>
+      <v-subheader>OPTIES</v-subheader>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon>delete</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Remove</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon>mode</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Edit</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon>report_off</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Ignore warning</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+    </v-list>
+    </v-menu>
+    <v-container @click="getClickCoordinates" class="svgContainer"/>
   </div>
 </template>
 <style lang="scss">
@@ -27,6 +63,9 @@ import data from './data.json'
     export default {
         name: "Chart",
         data: () => ({
+            contextMenuVisible: false,
+            contextMenuX: 0,
+            contextMenuY: 0,
             chartReference: null,
             displayArrow: true,
             straightLink: false,
@@ -45,6 +84,13 @@ import data from './data.json'
             this.chartReference.transformLayout("left-to-right")
         },
         methods: {
+            toggleContextMenu () {
+                this.contextMenuVisible = !this.contextMenuVisible;
+            },
+            getClickCoordinates (e) {
+              this.contextMenuX = e.clientX
+              this.contextMenuY = e.clientY
+            },
             fetchNodeAlternatives(){
               let self = this
               let alternatives;
@@ -98,6 +144,7 @@ import data from './data.json'
                     .straightLink(this.straightLink)
                     .collapsible(false)
                     .onNodeClick(d => {
+                        this.toggleContextMenu()
                         this.clickedNodeId = d;
                         this.nodeLabelAlternatives = this.fetchNodeAlternatives()
                         if (this.nodeLabelAlternatives.length !== 0){
