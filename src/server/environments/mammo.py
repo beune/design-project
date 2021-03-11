@@ -50,9 +50,6 @@ options = {
 
 alternatives = {label: {alternative: 0 for alternative in option_list} for label, option_list in options.items()}
 
-# for label, option_list in options.items():
-#     alternatives[label] = {alternative: 0 for alternative in option_list}
-
 
 def parse(text):
     """
@@ -182,6 +179,7 @@ def make_tree(base: List[str], items: list):
     # if text has been found create a Leaf, otherwise a node
     if agg_text:
         conf = sum_conf / len(agg_text)
-        alternative = {' '.join(agg_text): conf, **alternatives[report_label]}
-        return ReportLeaf(report_label, alternative)
+        # agg_text is seen as a real label, the other labels are added with confidence 0
+        values = {' '.join(agg_text): conf, **alternatives[report_label]}
+        return ReportLeaf(report_label, values)
     return ReportNode(report_label, children)
