@@ -38,6 +38,21 @@ expected = {
     "calcifications": ["morphology", "distribution"]
 }
 
+options = {
+    "shape": ["oval", "round", "irregular"],
+    "margin": ["circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"],
+    "density": ["fat", "low", "equal", "high"],
+    "asymmetry": ["asymmetry", "global", "focal", "developing"],
+    "morphology": ["typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
+                                                                                                 "linear branching"],
+    "distribution": ["diffuse", "regional", "grouped", "linear", "segmental"],
+}
+
+alternatives = {label: {alternative: 0 for alternative in option_list} for label, option_list in options.items()}
+
+# for label, option_list in options.items():
+#     alternatives[label] = {alternative: 0 for alternative in option_list}
+
 
 def parse(text):
     """
@@ -166,5 +181,7 @@ def make_tree(base: List[str], items: list):
     report_label = clean(base[-1]) if base else 'root'
     # if text has been found create a Leaf, otherwise a node
     if agg_text:
-        return ReportLeaf(' '.join(agg_text), report_label, sum_conf / len(agg_text))
+        conf = sum_conf / len(agg_text)
+        alternative = {' '.join(agg_text): conf, **alternatives[report_label]}
+        return ReportLeaf(report_label, alternative)
     return ReportNode(report_label, children)
