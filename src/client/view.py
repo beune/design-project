@@ -1,7 +1,6 @@
 """
 Imports
 """
-from src.client.controller import get_parsed_text
 from src.report_node import ReportNode
 from src.report_leaf import ReportLeaf
 import json
@@ -45,7 +44,8 @@ def get_tree(text: str):
     :param text: The input text that is sent
     :return: A ReportNode containing the desired structure.
     """
-    return get_parsed_text("", text)    # fixme controller weet dondersgoed wat er staat in environment en de text
+    # tree = Controller.c.get_parsed_text_temp('', '')    # fixme controller weet dondersgoed wat er staat in environment en de text
+    return ReportNode("")
 
 
 def traverse(root: ReportNode, id_count: IdCounter, nodes: Nodes, parent_id: int = None):
