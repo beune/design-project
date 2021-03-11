@@ -1,7 +1,7 @@
 """
 Imports
 """
-from typing import Dict
+from typing import Dict, Tuple
 
 
 class ReportLeaf:
@@ -20,3 +20,12 @@ class ReportLeaf:
         return type(self) == type(other) \
                and self.label == other.label \
                and self.values == other.values
+
+    @property
+    def best_value_pair(self) -> Tuple[str, float]:
+        """
+        Return the value with the highest confidence and the confidence
+        :return:
+        """
+        value = max(self.values, key=self.values.get)
+        return value, self.values[value]
