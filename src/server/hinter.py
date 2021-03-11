@@ -11,7 +11,7 @@ class Hinter:
     Generic Class for addition of hints to NLP outcome
     """
 
-    def __init__(self, expected: Dict[str, List[str]], hints: Dict[str, List[str]]):
+    def __init__(self, expected: Dict[str, List[str]], hints: Dict[str, str]): 
         self.expected = expected
         self.hints = hints
 

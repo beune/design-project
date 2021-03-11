@@ -30,4 +30,5 @@ def connect():
     print("check")
 
 
-connect()
+if __name__ == '__main__':
+    connect()
