@@ -134,14 +134,17 @@ import data from './data.json'
                 this.showNoNodeLabelAlternativesAvailableSnackbar = true;
               }
             },
-            editNodeLabel(){
-              this.toggleEditNodeLabelDialog()
-              let self = this
+            changeTemplate(nodeId, template){
               data.forEach(function(object){
-                if (object.nodeId === self.clickedNodeId) {
-                  object.template = "<div class=\"domStyle\">\n<span>" + self.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>"
+                if (object.nodeId === nodeId) {
+                  object.template = template
                 }
               });
+            },
+            editNodeLabel(){
+              this.toggleEditNodeLabelDialog()
+              this.changeTemplate(this.clickedNodeId, 
+              "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(data)
               this.chosenNodeLabelAlternative = undefined;
             },
