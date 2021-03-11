@@ -24,6 +24,3 @@ class HTTPTest(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         pr.terminate()
         pr.join()
-
-
-
