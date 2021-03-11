@@ -1,0 +1,110 @@
+[
+  {
+    "nodeId": "O-1",
+    "parentNodeId": null,
+    "width": 325,
+    "height": 139,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>",
+    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"]
+  },
+  {
+    "nodeId": "O-11",
+    "parentNodeId": "O-1",
+    "width": 319,
+    "height": 134,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Breast composition</span></div>",
+    "alternatives": []
+  },
+  {
+    "nodeId": "O-111",
+    "parentNodeId": "O-11",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>",
+    "alternatives": ["Circumscribed", "Indistinct", "Spiculated"]
+  },
+  {
+    "nodeId": "O-12",
+    "parentNodeId": "O-1",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Mass</span></div>",
+    "alternatives": []
+  },
+  {
+    "nodeId": "O-13",
+    "parentNodeId": "O-1",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>",
+    "alternatives": ["Spiculated"]
+  },
+  {
+    "nodeId": "O-14",
+    "parentNodeId": "O-1",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>",
+    "alternatives": ["FooBar", "BazBar", "Indistinct"]
+  },
+  {
+    "nodeId": "O-141",
+    "parentNodeId": "O-14",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Morphology</span></div>",
+    "alternatives": []
+  },
+  {
+    "nodeId": "O-142",
+    "parentNodeId": "O-14",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>",
+    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"]
+  },
+  {
+    "nodeId": "O-121",
+    "parentNodeId": "O-12",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Shape</span></div>",
+    "alternatives": []
+  },
+  {
+    "nodeId": "O-1211",
+    "parentNodeId": "O-121",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>",
+    "alternatives": ["Microlobulated"]
+  },
+  {
+    "nodeId": "O-122",
+    "parentNodeId": "O-12",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>",
+    "alternatives": ["Circumscribed"]
+  },
+  {
+    "nodeId": "O-123",
+    "parentNodeId": "O-12",
+    "width": 347,
+    "height": 147,
+    "borderRadius": 15,
+    "template": "<div class=\"domStyle\"><span>Density</span></div>",
+    "alternatives": []
+  }
+]
