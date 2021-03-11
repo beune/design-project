@@ -10,6 +10,13 @@ app = Flask(__name__)
 api = Api(app)
 
 
+def run():
+    """
+    Method used to run the server
+    """
+    app.run()
+
+
 @app.route("/")
 def home():
     """
@@ -36,4 +43,5 @@ def get(environment):
     return {"Response": 200, "Data": ret}
 
 
-app.run()
+if __name__ == "__main__":
+    run()
