@@ -11,9 +11,9 @@ class MyTestCase(unittest.TestCase):
     def test_make_tree(self):
         json = [('dit', 'B-a', 1), ('is', 'I-a', 1), ('een', 'I-a', 1), ('test', 'I-a', 1)]
         actual = make_tree([], json)
-        expected = ReportLeaf("dit is een test", 'a', 1.0)
+        expected = ReportLeaf("dit is een test", {'a': 1.0})
         self.assertIsInstance(actual, ReportNode)
-        self.assertEqual("root", actual.label)
+        self.assertEqual("root", actual.category)
         self.assertEqual(expected, actual.children[0])
 
         json = [('dit', 'B-a', 1), ('is', 'B-a', 1), ('een', 'B-a', 1), ('test', 'B-a', 1)]
@@ -27,14 +27,14 @@ class MyTestCase(unittest.TestCase):
         json = [('niet', 'O', 1), ('kan', 'B-a', 1), ('niet', 'O', 1), ('dit', 'I-a', 1), ('niet', 'O', 1),
                 ('ook?', 'I-a', 1), ('niet', 'O', 1)]
         actual = make_tree([], json)
-        expected = ReportLeaf("kan dit ook?", 'a', 1.0)
+        expected = ReportLeaf("kan dit ook?", {'a': 1.0})
         self.assertNotEqual(expected, actual.children[0])
 
         json = [('nested', 'B-a/B-b/B-c', 1), ('attribute', 'I-a/I-b/B-d', 1), ('too', 'I-a/I-e', 1)]
         actual = make_tree(["B-a"], json)
         expected = ReportNode('a', [
-            ReportNode('b', [ReportLeaf("nested", 'c', 1), ReportLeaf("attribute", 'd', 1)]),
-            ReportLeaf("too", 'e', 1)
+            ReportNode('b', [ReportLeaf("nested", {'c': 1}), ReportLeaf("attribute", {'d': 1})]),
+            ReportLeaf("too", {'e': 1})
         ])
         self.assertEqual(expected, actual)
 

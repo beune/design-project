@@ -7,13 +7,13 @@ class ReportNode:
     """
     Class used to represent Nodes
     """
-    def __init__(self, label: str, children: list = None, expects: list = None):
-        self.label = label
+    def __init__(self, category: str, children: list = None, expects: list = None):
+        self.category = category
         self.children = [] if children is None else children
         self.expects = [] if expects is None else expects
 
     def __repr__(self):
-        return 'Node({})'.format(self.label)
+        return 'Node({})'.format(self.category)
 
     def __iter__(self):
         for child in self.children:
@@ -21,7 +21,7 @@ class ReportNode:
 
     def __eq__(self, other):
         return type(self) == type(other) \
-               and self.label == other.label \
+               and self.category == other.category \
                and self.children == other.children
 
     def get_child(self, index):

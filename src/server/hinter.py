@@ -20,8 +20,8 @@ class Hinter:
         Method used recursively to add hints and expectations to nodes in the node structure
         :param node: The node for which the hints and expectations should be added
         """
-        if node.label in self.expected:
-            node.expects = self.expected[node.label]
+        if node.category in self.expected:
+            node.expects = self.expected[node.category]
         for child in node:
             if isinstance(child, ReportNode):
                 self.hint(child)
