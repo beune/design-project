@@ -9,8 +9,8 @@ from src.report_node import ReportNode
 class ReportNodeTest(unittest.TestCase):
     def test_init(self):
         child = ReportNode("labelchild", [], [])
-        node = ReportNode("label", [child], ["Mass"])
-        self.assertEqual(node.label, "label")
+        node = ReportNode("category", [child], ["Mass"])
+        self.assertEqual(node.category, "category")
         self.assertEqual(node.children[0], child)
         self.assertEqual(node.expects, ["Mass"])
 
