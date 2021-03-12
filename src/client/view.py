@@ -16,7 +16,7 @@ def get_tree(text: str):
     :return: A ReportNode containing the desired structure.
     """
     c = Controller()                         # TODO Establish correct connection between view and controller
-    tree = c.get_parsed_text_temp("", "")    # fixme controller weet dondersgoed wat er staat in environment en de text
+    tree = c.get_parsed_text_temp("", "")
     return tree
 
 
