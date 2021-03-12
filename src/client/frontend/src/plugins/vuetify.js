@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuetify from 'src/client/frontend/src/plugins/vuetify'
+import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify)
