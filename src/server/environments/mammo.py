@@ -38,6 +38,18 @@ expected = {
     "calcifications": ["morphology", "distribution"]
 }
 
+options = {
+    "shape": ["oval", "round", "irregular"],
+    "margin": ["circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"],
+    "density": ["fat", "low", "equal", "high"],
+    "asymmetry": ["asymmetry", "global", "focal", "developing"],
+    "morphology": ["typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
+                                                                                                 "linear branching"],
+    "distribution": ["diffuse", "regional", "grouped", "linear", "segmental"],
+}
+
+alternatives = {key: {label: 0 for label in option_list} for key, option_list in options.items()}
+
 
 def parse(text):
     """
@@ -46,7 +58,9 @@ def parse(text):
     """
     make_input(text)
     run()
-    return make_tree([], get_list())
+    tree = make_tree([], get_list())
+    add_labels(tree)
+    return tree
 
 
 def make_input(text: str) -> None:
@@ -86,8 +100,8 @@ def get_list() -> List[Tuple[str, str, float]]:
     :return A list of lists in the format: [[word, label, probability]]
     """
     with open(os.path.normpath(PATH + OUTPUT_FILE), "r") as file:
-        problist = json.load(file)
-    return problist
+        data = json.load(file)
+    return data
 
 
 def has_base(labels, base) -> bool:
@@ -149,7 +163,7 @@ def make_tree(base: List[str], items: list):
         # make sure that only the first B-flag is ignored
         first = False
 
-        # the base equals the labels, collect all the text and confidences
+        # the base equals the alternatives, collect all the text and confidences
         if base_length == len(labels):
             agg_text.append(text)
             sum_conf += conf
@@ -163,8 +177,21 @@ def make_tree(base: List[str], items: list):
         else:
             items.pop(0)
 
-    report_label = clean(base[-1]) if base else 'root'
+    category = clean(base[-1]) if base else 'root'
     # if text has been found create a Leaf, otherwise a node
     if agg_text:
-        return ReportLeaf(' '.join(agg_text), report_label, sum_conf / len(agg_text))
-    return ReportNode(report_label, children)
+        conf = sum_conf / len(agg_text)
+        return ReportLeaf(' '.join(agg_text), category, conf)
+    return ReportNode(category, children)
+
+
+def add_labels(node: ReportNode):
+    """
+    Add labels with confidences to the leaves in the tree.
+    :type node: ReportNode
+    """
+    for child in node:
+        if isinstance(child, ReportNode):
+            add_labels(child)
+        elif isinstance(child, ReportLeaf) and child.key in alternatives:
+            child.labels = alternatives[child.key]
