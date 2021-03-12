@@ -15,7 +15,7 @@ class Controller:
     Also has connection to the server and the UIAutomation
     """
 
-    def __init__(self, ui_automation: UIAutomation):
+    def __init__(self, ui_automation: UIAutomation = None):
         self.ui_automation = ui_automation
         # self.ui_automation.start()
 
