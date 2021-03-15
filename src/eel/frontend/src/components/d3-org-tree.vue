@@ -9,41 +9,41 @@
     >
     <!-- TODO: when the user clicks away from the menu, the menu flashes where the user has clicked. Prevent this. -->
     <!-- TODO: only allow value nodes to be removed. -->
-    <v-list dense>
-      <v-subheader>OPTIES</v-subheader>
-        <v-list-item @click="deleteNodeLabel">
-          <v-list-item-icon>
-            <v-icon>delete</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Remove</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item @click="toggleEditNodeLabelDialog">
-          <v-list-item-icon>
-            <v-icon>mode</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Edit</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item @click="undoNodeLabelEdit">
-          <v-list-item-icon>
-            <v-icon>undo</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Undo</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>report_off</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Ignore warning</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-    </v-list>
+      <v-list dense>
+        <v-subheader>OPTIES</v-subheader>
+          <v-list-item @click="deleteNodeLabel">
+            <v-list-item-icon>
+              <v-icon>delete</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Remove</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="toggleEditNodeLabelDialog">
+            <v-list-item-icon>
+              <v-icon>mode</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Edit</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="undoNodeLabelEdit">
+            <v-list-item-icon>
+              <v-icon>undo</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Undo</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>report_off</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Ignore warning</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+      </v-list>
     </v-menu>
 
     <v-dialog v-model="showEditNodeLabelDialog" width="500" >
@@ -64,10 +64,9 @@
       </v-card>
     </v-dialog>
 
-   <v-snackbar v-model="showNoNodeLabelAlternativesAvailableSnackbar" >
-      Er zijn geen alternatieven beschikbaar.
-   </v-snackbar>
-
+    <v-snackbar v-model="showNoNodeLabelAlternativesAvailableSnackbar" >
+       Er zijn geen alternatieven beschikbaar.
+    </v-snackbar>
 
     <v-container @click="getClickCoordinates" class="svgContainer"/>
   </div>
