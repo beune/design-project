@@ -6,13 +6,13 @@ from pywinauto.application import Application
 import time
 
 
-class NPUIAutomation:
+class UIAutomation:
     """
     Class which retrieves the text from the G2 speech window(Notepad for now)
     """
     def __init__(self):
-        self.app = Application().start("notepad.exe")
-        self.textfield = self.app.UntitledNotepad.Edit
+        self.app = None
+        self.textfield = None
         self.text = ""
 
     def updateg2(self):
@@ -49,5 +49,7 @@ class NPUIAutomation:
         Starts the thread which continuously checks the G2 speech
         window for new text
         """
+        self.app = Application().start("notepad.exe")
+        self.textfield = self.app.UntitledNotepad.Edit
         update_thread = threading.Thread(target=self.updateg2)
         update_thread.start()
