@@ -6,7 +6,6 @@
         </v-card-title>
         <v-row no-gutters>
           <v-col cols="4">
-            <v-navigation-drawer permanent>
               <v-list dense nav >
                 <v-list-item-group v-model="selectedItem" color="primary" >
                 <v-list-item v-for="item in items" :key="item.title" link @click="navigate(item.routerPath)">
@@ -20,7 +19,6 @@
                 </v-list-item>
                 </v-list-item-group>
               </v-list>
-            </v-navigation-drawer>
           </v-col>
           <v-col>
             <v-container>
