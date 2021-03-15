@@ -38,6 +38,17 @@ class MyTestCase(unittest.TestCase):
         ])
         self.assertEqual(expected, actual)
 
+    def test_other(self):
+        json = [('wat?', 'B-a/O', 1), ('dit', 'I-a/B-b', 1), ('is', 'I-a/I-b', 1),
+                ('een', 'I-a/O', 1), ('test', 'I-a/O', 1)]
+        actual = make_tree(["B-a"], json)
+        expected = ReportNode('a', [
+            ReportLeaf("wat?", 'O', 1),
+            ReportLeaf("dit is", 'b', 1),
+            ReportLeaf("een test", 'O', 1),
+        ])
+        self.assertEqual(expected, actual)
+
     def test_after(self):
         self.assertTrue(after("I-a", "B-a"))
         self.assertFalse(after("B-a", "B-a"), "This is a new category")
@@ -45,6 +56,8 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue(after("I-a", "I-a"))
         self.assertFalse(after("B-b", "B-a"), "Different category")
         self.assertFalse(after("I-b", "B-a"), "Different category")
+        self.assertTrue(after("O", "O"))
+        self.assertFalse(after("I-a", "O"))
 
     def test_has_base(self):
         self.assertTrue(has_base([], []))

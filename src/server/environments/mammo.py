@@ -127,7 +127,8 @@ def after(label_after: str, label_before: str) -> bool:
     :param label_before: the label that comes first
     :return: true if the label can come afterwards
     """
-    return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:]
+    return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:] \
+        or label_before == label_after == 'O'
 
 
 def clean(unfiltered: str) -> str:
@@ -169,13 +170,11 @@ def make_tree(base: List[str], items: list):
             sum_conf += conf
             items.pop(0)
         # the new label should not be ignored
-        elif labels[base_length] != 'O':
+        else:
             # make a new tree that has a base that goes one label deeper
             child = make_tree(labels[:base_length + 1], items)
             children.append(child)
         # the new label should be ignored
-        else:
-            items.pop(0)
 
     category = clean(base[-1]) if base else 'root'
     # if text has been found create a Leaf, otherwise a node
