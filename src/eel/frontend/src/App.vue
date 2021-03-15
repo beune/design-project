@@ -1,4 +1,5 @@
 <template>
+  <div>
   <v-app>
     <v-app-bar :elevation="0" dense>
       <v-list-item>
@@ -24,6 +25,8 @@
       </v-container>
     </v-main>
   </v-app>
+  <PreferencesDialog @closePreferencesDialog="closePreferencesDialog" :showPreferencesDialog="showPreferencesDialog"/>
+  </div>
 </template>
 
 <style lang="scss">
@@ -32,17 +35,27 @@
 
 <script>
 import d3orgtree from "./components/d3-org-tree.vue"
+import PreferencesDialog from "./components/PreferencesDialog.vue"
 export default {
   components: {
     d3orgtree,
+    PreferencesDialog
   },
-  name: 'Normal',
+  name: 'App',
   data: () => ({
   }),
   methods: {
+    closePreferencesDialog () {
+      this.$router.push({ path: '/' })
+    },
     test_function () {
       window.eel.test("test");
     }
   },
+  computed: {
+    showPreferencesDialog() {
+      return this.$route.path.includes("preferences")
+    }
+  }
 }
 </script>

@@ -47,6 +47,7 @@
     </v-menu>
 
     <v-dialog v-model="showEditNodeLabelDialog" width="500" >
+    <!-- TODO show confidence of alternatives-->
       <v-card>
         <v-card-title class="headline">
           Label wijzigen
