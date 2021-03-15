@@ -100,8 +100,6 @@ import data from './data.json'
             contextMenuX: 0,
             contextMenuY: 0,
             chartReference: null,
-            displayArrow: true,
-            straightLink: false,
             showEditNodeLabelDialog: false,
             showNoNodeLabelAlternativesAvailableSnackbar: false,
             nodeLabelAlternatives: undefined,
@@ -197,8 +195,8 @@ import data from './data.json'
                         }
                     })
                     .duration(0)
-                    .displayArrow(this.displayArrow)
-                    .straightLink(this.straightLink)
+                    .displayArrow(true)
+                    .straightLink(false)
                     .collapsible(false)
                     .onNodeClick(d => {
                         this.toggleContextMenu()
