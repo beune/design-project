@@ -79,7 +79,7 @@
     </v-app-bar>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
-        <d3orgtree/>
+        <d3orgtree :treeData="treeData"/>
       </v-container>
     </v-main>
   </v-app>
@@ -107,6 +107,7 @@ export default {
   },
   name: 'App',
   data: () => ({
+    treeData: null
   }),
   methods: {
     closePreferencesDialog () {

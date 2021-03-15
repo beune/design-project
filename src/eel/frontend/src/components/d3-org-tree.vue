@@ -105,8 +105,14 @@ import data from './data.json'
             chosenNodeLabelAlternative: undefined,
             clickedNodeId: undefined
         }),
+        props: {
+          treeData: {
+            type: Object,
+            default: null
+          }
+        },
         watch: {
-            data(value) {
+            treeData: function(value) {
                 this.renderChart(value);
             }
         },
