@@ -6,7 +6,8 @@
     "height": 139,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>",
-    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"]
+    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"],
+    "originalTemplate": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>"
   },
   {
     "nodeId": "O-11",
@@ -15,7 +16,8 @@
     "height": 134,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Breast composition</span></div>",
-    "alternatives": []
+    "alternatives": [],
+    "originalTemplate": "<div class=\"domStyle\"><span>Breast composition</span></div>"
   },
   {
     "nodeId": "O-111",
@@ -23,8 +25,9 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>",
-    "alternatives": ["Circumscribed", "Indistinct", "Spiculated"]
+    "template": "<div class=\"domStyle\"><span>C</span></div>",
+    "alternatives": ["Circumscribed", "Indistinct", "Spiculated"],
+    "originalTemplate": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>"
   },
   {
     "nodeId": "O-12",
@@ -33,7 +36,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Mass</span></div>",
-    "alternatives": []
+    "alternatives": [],
+    "originalTemplate": "<div class=\"domStyle\"><span>Mass</span></div>"
   },
   {
     "nodeId": "O-13",
@@ -42,7 +46,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>",
-    "alternatives": ["Spiculated"]
+    "alternatives": ["Spiculated"],
+    "originalTemplate": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>"
   },
   {
     "nodeId": "O-14",
@@ -51,7 +56,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>",
-    "alternatives": ["FooBar", "BazBar", "Indistinct"]
+    "alternatives": ["FooBar", "BazBar", "Indistinct"],
+    "originalTemplate": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>"
   },
   {
     "nodeId": "O-141",
@@ -60,7 +66,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Morphology</span></div>",
-    "alternatives": []
+    "alternatives": [],
+    "originalTemplate": "<div class=\"domStyle\"><span>Morphology</span></div>"
   },
   {
     "nodeId": "O-142",
@@ -69,7 +76,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>",
-    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"]
+    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"],
+    "originalTemplate": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>"
   },
   {
     "nodeId": "O-121",
@@ -78,7 +86,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Shape</span></div>",
-    "alternatives": []
+    "alternatives": [],
+    "originalTemplate": "<div class=\"domStyle\"><span>Shape</span></div>"
   },
   {
     "nodeId": "O-1211",
@@ -87,7 +96,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>",
-    "alternatives": ["Microlobulated"]
+    "alternatives": ["Microlobulated"],
+    "originalTemplate": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>"
   },
   {
     "nodeId": "O-122",
@@ -96,7 +106,8 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>",
-    "alternatives": ["Circumscribed"]
+    "alternatives": ["Circumscribed"],
+    "originalTemplate": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>"
   },
   {
     "nodeId": "O-123",
@@ -105,6 +116,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Density</span></div>",
-    "alternatives": []
+    "alternatives": [],
+    "originalTemplate": "<div class=\"domStyle\"><span>Density</span></div>"
   }
 ]

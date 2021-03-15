@@ -8,36 +8,46 @@
       :position-y="contextMenuY"
     >
     <!-- TODO: when the user clicks away from the menu, the menu flashes where the user has clicked. Prevent this. -->
-    <v-list dense>
-      <v-subheader>OPTIES</v-subheader>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>delete</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Remove</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item @click="toggleEditNodeLabelDialog">
-          <v-list-item-icon>
-            <v-icon>mode</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Edit</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>report_off</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Ignore warning</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-    </v-list>
+    <!-- TODO: only allow value nodes to be removed. -->
+      <v-list dense>
+        <v-subheader>OPTIES</v-subheader>
+          <v-list-item @click="deleteNodeLabel">
+            <v-list-item-icon>
+              <v-icon>delete</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Remove</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="toggleEditNodeLabelDialog">
+            <v-list-item-icon>
+              <v-icon>mode</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Edit</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="undoNodeLabelEdit">
+            <v-list-item-icon>
+              <v-icon>undo</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Undo</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>report_off</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Ignore warning</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+      </v-list>
     </v-menu>
 
     <v-dialog v-model="showEditNodeLabelDialog" width="500" >
+    <!-- TODO show confidence of alternatives-->
       <v-card>
         <v-card-title class="headline">
           Label wijzigen
@@ -54,10 +64,9 @@
       </v-card>
     </v-dialog>
 
-   <v-snackbar v-model="showNoNodeLabelAlternativesAvailableSnackbar" >
-      Er zijn geen alternatieven beschikbaar.
-   </v-snackbar>
-
+    <v-snackbar v-model="showNoNodeLabelAlternativesAvailableSnackbar" >
+       Er zijn geen alternatieven beschikbaar.
+    </v-snackbar>
 
     <v-container @click="getClickCoordinates" class="svgContainer"/>
   </div>
@@ -90,16 +99,20 @@ import data from './data.json'
             contextMenuX: 0,
             contextMenuY: 0,
             chartReference: null,
-            displayArrow: true,
-            straightLink: false,
             showEditNodeLabelDialog: false,
             showNoNodeLabelAlternativesAvailableSnackbar: false,
             nodeLabelAlternatives: undefined,
             chosenNodeLabelAlternative: undefined,
             clickedNodeId: undefined
         }),
+        props: {
+          treeData: {
+            type: Object,
+            default: null
+          }
+        },
         watch: {
-            data(value) {
+            treeData: function(value) {
                 this.renderChart(value);
             }
         },
@@ -134,16 +147,33 @@ import data from './data.json'
                 this.showNoNodeLabelAlternativesAvailableSnackbar = true;
               }
             },
+            changeTemplate(nodeId, template){
+              data.forEach(function(object){
+                if (object.nodeId === nodeId) {
+                  object.template = template
+                }
+              });
+            },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
+              this.changeTemplate(this.clickedNodeId, 
+              "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>")
+              this.renderChart(data)
+              this.chosenNodeLabelAlternative = undefined;
+            },
+            undoNodeLabelEdit(){
               let self = this
               data.forEach(function(object){
                 if (object.nodeId === self.clickedNodeId) {
-                  object.template = "<div class=\"domStyle\">\n<span>" + self.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>"
+                  object.template = object.originalTemplate
                 }
               });
               this.renderChart(data)
-              this.chosenNodeLabelAlternative = undefined;
+            },
+            deleteNodeLabel(){
+              this.changeTemplate(this.clickedNodeId, 
+              "<div class=\"domStyle\"><span>" + "?" + "</div></span><span class=\"material-icons\">mode</span>")
+              this.renderChart(data)
             },
             renderChart(data) {
                 if (!this.chartReference) {
@@ -170,8 +200,8 @@ import data from './data.json'
                         }
                     })
                     .duration(0)
-                    .displayArrow(this.displayArrow)
-                    .straightLink(this.straightLink)
+                    .displayArrow(true)
+                    .straightLink(false)
                     .collapsible(false)
                     .onNodeClick(d => {
                         this.toggleContextMenu()

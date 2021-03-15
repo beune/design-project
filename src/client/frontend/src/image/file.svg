@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" width="100px" height="100px" xmlns="http://www.w3.org/2000/svg">
+  <rect x="116.846" y="57.008" width="266.307" height="385.984" style="stroke-width: 25px; stroke: rgb(171, 182, 189); paint-order: stroke; fill: none;"/>
+  <rect x="155.193" y="169.628" width="185.938" height="29.786" style="fill: none; stroke: rgb(186, 218, 85); stroke-width: 25px;" transform="matrix(0.8981488282143406, 0, 0, 0, 15.806588206683593, 169.6280059814453)"/>
+  <line style="stroke: rgb(171, 182, 189); stroke-width: 25px;" x1="172.081" y1="122.692" x2="327.919" y2="122.692"/>
+  <line style="stroke: rgb(171, 182, 189); stroke-width: 25px;" x1="172.081" y1="373.618" x2="327.919" y2="373.618"/>
+  <line style="stroke: rgb(171, 182, 189); stroke-width: 25px;" x1="172.081" y1="203.927" x2="327.919" y2="203.927"/>
+  <line style="stroke: rgb(171, 182, 189); stroke-width: 25px;" x1="172.081" y1="288.772" x2="327.919" y2="288.772"/>
+</svg>
