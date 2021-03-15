@@ -1,0 +1,13 @@
+image: python:latest
+
+before_script:
+  - python -V  # Print out python version for debugging
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+lint-job:
+  stage: test
+  script:
+    - pip install flake8
+    - flake8 test
