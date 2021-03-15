@@ -13,6 +13,6 @@ test-job:
     - python -m unittest
 
 lint-job:
-  stage: lint
+  stage: test
   script:
     - flake8 src test
