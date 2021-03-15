@@ -54,7 +54,7 @@
           <v-divider></v-divider>
 
           <v-list>
-            <v-list-item link>
+            <v-list-item to="/preferences" link>
               <v-list-item-title>Voorkeuren...</v-list-item-title>
             </v-list-item>
           </v-list>
