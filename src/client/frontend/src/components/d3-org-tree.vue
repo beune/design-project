@@ -157,7 +157,7 @@ import data from './data.json'
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
               this.changeTemplate(this.clickedNodeId, 
-              "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative + "</div></span><span class=\"material-icons\">mode</span>")
+              "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(data)
               this.chosenNodeLabelAlternative = undefined;
             },
