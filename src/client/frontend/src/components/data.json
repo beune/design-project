@@ -6,7 +6,7 @@
     "height": 139,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>",
-    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"],
+    "alternatives": ["Circumscribed (42%)", "Microlobulated (75%)", "Indistinct (37%)", "Spiculated (83%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>"
   },
   {
@@ -26,7 +26,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>C</span></div>",
-    "alternatives": ["Circumscribed", "Indistinct", "Spiculated"],
+    "alternatives": ["Circumscribed (73%)", "Indistinct (37%)", "Spiculated (58%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>"
   },
   {
@@ -46,7 +46,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>",
-    "alternatives": ["Spiculated"],
+    "alternatives": ["Spiculated (56%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>"
   },
   {
@@ -56,7 +56,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>",
-    "alternatives": ["FooBar", "BazBar", "Indistinct"],
+    "alternatives": ["FooBar (23%)", "BazBar (48%)", "Indistinct (77%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>"
   },
   {
@@ -76,7 +76,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>",
-    "alternatives": ["Circumscribed", "Microlobulated", "Indistinct", "Spiculated"],
+    "alternatives": ["Circumscribed (33%)", "Microlobulated (65%)", "Indistinct (12%)", "Spiculated (48%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>"
   },
   {
@@ -96,7 +96,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>",
-    "alternatives": ["Microlobulated"],
+    "alternatives": ["Microlobulated (94%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>"
   },
   {
@@ -106,7 +106,7 @@
     "height": 147,
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>",
-    "alternatives": ["Circumscribed"],
+    "alternatives": ["Circumscribed (45%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>"
   },
   {
