@@ -25,7 +25,7 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>C</span></div>",
+    "template": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>",
     "alternatives": ["Circumscribed (73%)", "Indistinct (37%)", "Spiculated (58%)"],
     "originalTemplate": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>"
   },
