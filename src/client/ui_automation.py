@@ -2,6 +2,8 @@
 Imports
 """
 import threading
+from typing import Callable
+
 from pywinauto.application import Application
 import time
 
@@ -10,7 +12,8 @@ class UIAutomation:
     """
     Class which retrieves the text from the G2 speech window(Notepad for now)
     """
-    def __init__(self):
+    def __init__(self, callback: Callable[[str], None]):
+        self.callback = callback
         self.app = None
         self.textfield = None
         self.text = ""
