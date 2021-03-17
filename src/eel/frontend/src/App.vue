@@ -68,22 +68,24 @@
       </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
-    <v-main>
     <v-app-bar :elevation="0" dense>
-      <v-list-item>
-        <v-list-item-content>
+      <v-container>
           Mammografie 22-09-16
-        </v-list-item-content>
-      </v-list-item>
+      </v-container>
+      <v-spacer/>
+      <v-select style="width: 250px; padding-top: 16px;"
+        :items="environments"
+        v-model="defaultEnvironment"
+        dense
+        height="23px"
+      ></v-select>
     </v-app-bar>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
         <d3orgtree/>
       </v-container>
-    </v-main>
   </v-app>
 </template>
-
 <style lang="scss">
 #menu-bar-wrapper {
   border-bottom: black 1px;
@@ -103,6 +105,8 @@ export default {
   },
   name: 'Normal',
   data: () => ({
+    defaultEnvironment: "Mammo",
+    environments: ["Mammo", "Hersenen"]
   }),
   methods: {
     test_function () {
