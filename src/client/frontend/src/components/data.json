@@ -7,7 +7,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>",
     "alternatives": ["Circumscribed (42%)", "Microlobulated (75%)", "Indistinct (37%)", "Spiculated (83%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>BIRADS</span></div><span class=\"confidence\">60%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-11",
@@ -17,7 +18,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Breast composition</span></div>",
     "alternatives": [],
-    "originalTemplate": "<div class=\"domStyle\"><span>Breast composition</span></div>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Breast composition</span></div>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-111",
@@ -25,9 +27,10 @@
     "width": 347,
     "height": 147,
     "borderRadius": 15,
-    "template": "<div class=\"domStyle\"><span>C</span></div>",
+    "template": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>",
     "alternatives": ["Circumscribed (73%)", "Indistinct (37%)", "Spiculated (58%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>C</span></div><span class=\"confidence\">70%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-12",
@@ -37,7 +40,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Mass</span></div>",
     "alternatives": [],
-    "originalTemplate": "<div class=\"domStyle\"><span>Mass</span></div>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Mass</span></div>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-13",
@@ -47,7 +51,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>",
     "alternatives": ["Spiculated (56%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Asymmetry</span></div><span class=\"confidence\">90%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-14",
@@ -57,7 +62,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>",
     "alternatives": ["FooBar (23%)", "BazBar (48%)", "Indistinct (77%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Architectural distortion</span></div><span class=\"confidence\">77%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-141",
@@ -67,7 +73,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Morphology</span></div>",
     "alternatives": [],
-    "originalTemplate": "<div class=\"domStyle\"><span>Morphology</span></div>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Morphology</span></div>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-142",
@@ -77,7 +84,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>",
     "alternatives": ["Circumscribed (33%)", "Microlobulated (65%)", "Indistinct (12%)", "Spiculated (48%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Distribution</span></div><span class=\"confidence low-confidence\">17%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-121",
@@ -87,7 +95,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Shape</span></div>",
     "alternatives": [],
-    "originalTemplate": "<div class=\"domStyle\"><span>Shape</span></div>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Shape</span></div>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-1211",
@@ -97,7 +106,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>",
     "alternatives": ["Microlobulated (94%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Oval</span></div><span class=\"confidence\">88%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-122",
@@ -107,7 +117,8 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>",
     "alternatives": ["Circumscribed (45%)"],
-    "originalTemplate": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Margin</span></div><span class=\"confidence\">80%</span>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   },
   {
     "nodeId": "O-123",
@@ -117,6 +128,7 @@
     "borderRadius": 15,
     "template": "<div class=\"domStyle\"><span>Density</span></div>",
     "alternatives": [],
-    "originalTemplate": "<div class=\"domStyle\"><span>Density</span></div>"
+    "originalTemplate": "<div class=\"domStyle\"><span>Density</span></div>",
+    "hint": "<ul><li>foo</li><li>bar</li><li>bazZzzzzzzzzzzzzzzzzzzzzzzzzzz</li></ul>"
   }
 ]
