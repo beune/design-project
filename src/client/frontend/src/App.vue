@@ -112,7 +112,7 @@ export default {
   }),
   methods: {
     closePreferencesDialog() {
-      this.$router.push({path: '/'})
+      this.$router.push({ path: '/' })
     },
     test_function() {
       window.eel.test("test");
