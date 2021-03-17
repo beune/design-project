@@ -1,13 +1,13 @@
 <template>
   <div style="width: 100vw">
-    <v-menu
-      v-model="contextMenuVisible"
-      absolute
-      offset-y
-      :position-x="contextMenuX"
-      :position-y="contextMenuY"
-    >
-    <!-- TODO: when the user clicks away from the menu, the menu flashes where the user has clicked. Prevent this. -->
+    <v-menu v-model="hintMenuVisible" absolute offset-y :position-x="mouseX" :position-y="mouseY">
+    <v-card>
+      <v-container v-html="hintMenuContent">
+      </v-container>
+    </v-card>
+    </v-menu>
+
+    <v-menu v-model="contextMenuVisible" absolute offset-y :position-x="mouseX" :position-y="mouseY">
     <!-- TODO: only allow value nodes to be removed. -->
       <v-list dense>
         <v-subheader>OPTIES</v-subheader>
@@ -47,7 +47,6 @@
     </v-menu>
 
     <v-dialog v-model="showEditNodeLabelDialog" width="500" >
-    <!-- TODO show confidence of alternatives-->
       <v-card>
         <v-card-title class="headline">
           Label wijzigen
@@ -68,7 +67,7 @@
        Er zijn geen alternatieven beschikbaar.
     </v-snackbar>
 
-    <v-container @click="getClickCoordinates" class="svgContainer"/>
+    <v-container @mousemove="handleMouseMove" class="svgContainer"/>
   </div>
 </template>
 <style lang="scss">
@@ -95,15 +94,20 @@ import data from './data.json'
     export default {
         name: "Chart",
         data: () => ({
+            hintMenuVisible: false,
             contextMenuVisible: false,
-            contextMenuX: 0,
-            contextMenuY: 0,
+
+            mouseX: 0,
+            mouseY: 0,
+
             chartReference: null,
             showEditNodeLabelDialog: false,
             showNoNodeLabelAlternativesAvailableSnackbar: false,
             nodeLabelAlternatives: undefined,
             chosenNodeLabelAlternative: undefined,
-            clickedNodeId: undefined
+            currentNodeId: undefined,
+            vicinityMargin: 1,
+            hintMenuContent: undefined
         }),
         props: {
           treeData: {
@@ -121,18 +125,37 @@ import data from './data.json'
             this.chartReference.transformLayout("left-to-right")
         },
         methods: {
-            toggleContextMenu () {
-                this.contextMenuVisible = !this.contextMenuVisible;
+            handleHintMenu() {
+              setTimeout(() => {
+                this.hintMenuVisible = true
+              }, 500)
+              let self = this
+              data.forEach(function(object){
+                if (object.nodeId === self.currentNodeId) {
+                  self.hintMenuContent = object.hint
+                }
+              });
             },
-            getClickCoordinates (e) {
-              this.contextMenuX = e.clientX
-              this.contextMenuY = e.clientY
+            handleMouseMove(e){
+              let mouseX = e.clientX
+              let mouseY = e.clientY
+              // If the mouse is not in the vicinity of the the context or hint menu, it will not be visible anymore.
+              if (!this.between(this.mouseX, mouseX) && !this.between(this.mouseY, mouseY)){
+                this.contextMenuVisible = false
+                this.hintMenuVisible = false
+              }
+              this.mouseX = mouseX
+              this.mouseY = mouseY
+            },
+            between (previous, current) {
+              // Tests whether a number is between the specified margin
+              return current > previous - this.vicinityMargin && current < previous + this.vicinityMargin
             },
             fetchNodeAlternatives(){
               let self = this
               let alternatives;
               data.forEach(function(object){
-                if (object.nodeId === self.clickedNodeId) {
+                if (object.nodeId === self.currentNodeId) {
                   alternatives = object.alternatives
                 }
               });
@@ -156,7 +179,7 @@ import data from './data.json'
             },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
-              this.changeTemplate(this.clickedNodeId, 
+              this.changeTemplate(this.currentNodeId,
               "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(data)
               this.chosenNodeLabelAlternative = undefined;
@@ -164,14 +187,14 @@ import data from './data.json'
             undoNodeLabelEdit(){
               let self = this
               data.forEach(function(object){
-                if (object.nodeId === self.clickedNodeId) {
+                if (object.nodeId === self.currentNodeId) {
                   object.template = object.originalTemplate
                 }
               });
               this.renderChart(data)
             },
             deleteNodeLabel(){
-              this.changeTemplate(this.clickedNodeId, 
+              this.changeTemplate(this.currentNodeId,
               "<div class=\"domStyle\"><span>" + "?" + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(data)
             },
@@ -203,9 +226,15 @@ import data from './data.json'
                     .displayArrow(true)
                     .straightLink(false)
                     .collapsible(false)
+                    .onNodeHover(d => {
+                        this.currentNodeId = d
+                        this.handleHintMenu()
+                    })
                     .onNodeClick(d => {
-                        this.toggleContextMenu()
-                        this.clickedNodeId = d;
+                        this.contextMenuVisible = true;
+                        // Do not show hint menu so that both menus won't overlap.
+                        this.hintMenuVisible = false;
+                        this.currentNodeId = d
                     })
                     .onNodeAdd(d => {
                         console.log(d + " node added")
