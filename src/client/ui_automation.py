@@ -3,6 +3,7 @@ Imports
 """
 from typing import Callable
 
+import eel
 from pywinauto.application import Application
 import time
 
@@ -32,6 +33,8 @@ class UIAutomation:
                         self.text = new_text
                         self.callback(self.text)
                         flag = False
+                    eel.sleep(.01)
+            eel.sleep(.01)
 
     def stop(self):
         """
