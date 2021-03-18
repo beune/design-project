@@ -1,8 +1,8 @@
 """
 Imports
 """
-from src.report_leaf import ReportLeaf
-from src.report_node import ReportNode
+from report_tree.report_leaf import ReportLeaf
+from report_tree.report_node import ReportNode
 from typing import List, Dict
 
 

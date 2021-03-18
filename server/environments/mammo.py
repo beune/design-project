@@ -3,29 +3,24 @@ Imports
 """
 from typing import List, Tuple
 import json
-import platform
 
 import os
 import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
-from src.report_node import ReportNode
-from src.report_leaf import ReportLeaf
+from report_tree.report_node import ReportNode
+from report_tree.report_leaf import ReportLeaf
 
 """
 Class used to connect Shreyasi's python2 algorithm to python 3
 """
-WIN_COMMAND = 'cd "{}" & {} & python2 "{}"'
-LIN_COMMAND = 'cd "{}" ; {} ; python2 "{}"'
-# PATH = "../nlpbreastcancer/"
-PATH = "C:/Users/voetb/OneDrive/Documenten/Mod11/nlpbreastcancer/"
-WIN_VENV = ".\\venv\\Scripts\\activate"
-LINUX_VENV = "source ./venv/bin/activate"
+COMM = "python2 \"./nlp/AutomaticStructuring/CRF Model A/predict_labels.py\""
+PATH = "./nlp"
 
 SCRIPT = "./AutomaticStructuring/CRF MODEL A/predict_labels.py"
 
-INPUT_FILE = "./AutomaticStructuring/data/testSample_input.xml"
-OUTPUT_FILE = "./AutomaticStructuring/data/out.json"
+INPUT_FILE = "/AutomaticStructuring/data/testSample_input.xml"
+OUTPUT_FILE = "/AutomaticStructuring/data/out.json"
 
 hints = {
     "shape": "oval-round-irregular",
@@ -80,18 +75,7 @@ def run() -> None:
     """
     Method used to run the classifying algorithm
     """
-    path = os.path.normpath(PATH)
-    system = platform.system()
-    script = os.path.normpath(SCRIPT)
-    if system == 'Windows':
-        venv = WIN_VENV
-        command = WIN_COMMAND.format(path, venv, script)
-    elif system == 'Linux':
-        venv = LINUX_VENV
-        command = LIN_COMMAND.format(path, venv, script)
-    else:
-        raise Exception('Unsupported OS')
-    os.system(command)
+    os.system(os.path.normpath(COMM))
 
 
 def get_list() -> List[Tuple[str, str, float]]:

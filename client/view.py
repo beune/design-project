@@ -3,8 +3,8 @@ Imports
 """
 import eel
 
-from src.report_node import ReportNode
-from src.report_leaf import ReportLeaf
+from report_tree.report_node import ReportNode
+from report_tree.report_leaf import ReportLeaf
 
 
 def generate_tree(tree: ReportNode):

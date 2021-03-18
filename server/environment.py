@@ -1,9 +1,9 @@
 """
 Imports
 """
-from src.report_node import ReportNode
-from src.server.environments import hersen, mammo
-from src.server.hinter import Hinter
+from report_tree.report_node import ReportNode
+from .environments import hersen, mammo
+from .hinter import Hinter
 from typing import Callable
 
 

@@ -6,6 +6,7 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
   - pip install -r test-lint-requirements.txt
+  - pip install -e treepackage
 
 test-job:
   stage: test
@@ -15,4 +16,4 @@ test-job:
 lint-job:
   stage: test
   script:
-    - flake8 src test
+    - flake8 client server test treepackage

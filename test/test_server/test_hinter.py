@@ -4,9 +4,9 @@ imports
 
 import unittest
 
-from src.report_leaf import ReportLeaf
-from src.report_node import ReportNode
-from src.server.hinter import Hinter
+from report_tree.report_leaf import ReportLeaf
+from report_tree.report_node import ReportNode
+from server.hinter import Hinter
 
 
 class MyTestCase(unittest.TestCase):
