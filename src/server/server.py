@@ -4,7 +4,7 @@ Imports
 import jsonpickle
 from flask import Flask, request
 from flask_restful import Api, abort
-from src.server.environment import envs
+from environment import envs
 
 app = Flask(__name__)
 api = Api(app)
@@ -14,7 +14,7 @@ def run():
     """
     Method used to run the server
     """
-    app.run()
+    app.run(port=8000, host="0.0.0.0")
 
 
 @app.route("/")
