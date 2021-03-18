@@ -35,7 +35,13 @@ lint_backend:
 lint_frontend:
   stage: test
   image: node
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
   script:
     - cd client/frontend
-    - npm install
+    - npm install eslint
     - node_modules/eslint/bin/eslint.js .
