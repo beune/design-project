@@ -23,7 +23,7 @@ class Model:
 
     def retrieve_tree(self):
         """
-        Use
+        Send the text to the server to retrieve the new tree.
         """
         data = {"text": self.text}
         response = requests.get(ENDPOINT + self.environment, json=data)
