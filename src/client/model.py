@@ -27,7 +27,7 @@ class Model:
         """
         import pickle
         with open("TESTPICKLE.pkl", "rb") as file:
-            return pickle.load(file)
+            self.tree = pickle.load(file)
         data = {"text": self.text}
         response = requests.get(ENDPOINT + self.environment, json=data)
         self.tree = jsonpickle.decode(response.json()["Data"])
