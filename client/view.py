@@ -2,8 +2,8 @@
 Imports
 """
 from client.controller import Controller
-from src.report_node import ReportNode
-from src.report_leaf import ReportLeaf
+from report_tree.report_node import ReportNode
+from report_tree.report_leaf import ReportLeaf
 import json
 
 import pprint

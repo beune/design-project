@@ -6,7 +6,7 @@ import jsonpickle
 import requests
 
 from client.ui_automation import UIAutomation
-from src.report_node import ReportNode
+from report_tree.report_node import ReportNode
 
 
 class Controller:
