@@ -1,19 +1,41 @@
-image: python:latest
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
-before_script:
-  - python -V  # Print out python version for debugging
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
-  - pip install -r test-lint-requirements.txt
-  - pip install -e treepackage
+.before_script_template: &backend
+  before_script:
+    - python -V
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r test-lint-requirements.txt
+    - pip install -e treepackage
 
-test-job:
+test_backend:
   stage: test
+  image: python:latest
+  <<: *backend
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
   script:
     - python -m unittest
 
-lint-job:
+lint_backend:
   stage: test
+  image: python:latest
+  <<: *backend
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
   script:
     - flake8 client server test treepackage
+
+lint_frontend:
+  stage: test
+  image: node
+  script:
+    - cd client/frontend
+    - npm install
+    - node_modules/eslint/bin/eslint.js .
