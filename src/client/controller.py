@@ -10,7 +10,7 @@ model = Model(view.notify)
 
 
 @eel.expose
-def update_environment(new_environment):
+def update_environment(new_environment) -> None:
     """
     Update the model using the new_environment
     :param new_environment:
@@ -18,7 +18,7 @@ def update_environment(new_environment):
     model.set_environment(new_environment)
 
 
-def update_text(new_text):
+def update_text(new_text) -> None:
     """
     Update the model using the new_text
     :param new_text: The updated text
