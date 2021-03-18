@@ -120,7 +120,7 @@ export default {
     changeState(data) {
       this.tree = data.tree;
       this.environment = data.environment;
-      this.text = data.text;
+      // this.text = data.text;
     }
   },
   computed: {
@@ -129,7 +129,7 @@ export default {
     }
   },
   mounted: function() {
-    eel.expose(this.setTreeData, "change_state");
+    eel.expose(this.changeState, "change_state");
   }
 
 }
