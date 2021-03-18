@@ -15,4 +15,4 @@ test-job:
 lint-job:
   stage: test
   script:
-    - flake8 src test
+    - flake8 client server test treepackage
