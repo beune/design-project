@@ -41,6 +41,11 @@ def get_tree2(tree: ReportNode):
         nodes.append(make_node(new_id, parent_id, root.category))
         parent = new_id
         new_id += 1
+
+        for expects_label in root.expects:  # add expects nodes
+            nodes.append(make_node(new_id, parent_id, expects_label))
+            new_id += 1
+
         for child in root:
             if isinstance(child, ReportLeaf):
                 process_leaf(child, parent)
@@ -54,13 +59,14 @@ def get_tree2(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, leaf.key, leaf.conf))
+        nodes.append(make_node(new_id, parent_id, leaf.key))
         old_id = new_id
         new_id += 1
 
-        label, conf = leaf.best_label_conf_pair
-        nodes.append(make_node(new_id, old_id, label, conf))
-        new_id += 1
+        if leaf.key != 'O':
+            label, conf = leaf.best_label_conf_pair
+            nodes.append(make_node(new_id, old_id, label, leaf.text, conf))
+            new_id += 1
 
     traverse(tree)
     return nodes
@@ -69,6 +75,7 @@ def get_tree2(tree: ReportNode):
 def make_node(identifier: int, parent_id: int, label: str, text: str = None, prob: float = None):
     """
     Adds a node and its corresponding information to the nodes list, in json/dictionary format
+    :param text: The input plain text that resulted in this label
     :param identifier: The id given to the node/leaf currently being added, giving this node the currently highest index
     :param parent_id: The id of the parent of the node/leaf currently being added
     :param label: The name of the node/leaf currently being added
@@ -81,7 +88,6 @@ def make_node(identifier: int, parent_id: int, label: str, text: str = None, pro
                    + str(cert) + "%</span>"
     else:
         original_template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
-
 
     node = {"nodeId": str(identifier),
             "parentNodeId": str(parent_id),
