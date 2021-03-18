@@ -6,6 +6,7 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
   - pip install -r test-lint-requirements.txt
+  - pip install -e treepackage
 
 test-job:
   stage: test
