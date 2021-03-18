@@ -207,27 +207,6 @@ import data from './data.json'
                 this.chartReference
                     .container('.svgContainer')
                     .data(data)
-                    .backgroundColor('#ffffff')
-                    .highlight({
-                        "borderWidth": 1,
-                        "borderRadius": 15,
-                        "borderColor": {
-                            "red": 70,
-                            "green": 130,
-                            "blue": 180,
-                            "alpha": 1
-                        },
-                        "backgroundColor": {
-                            "red": 70,
-                            "green": 130,
-                            "blue": 180,
-                            "alpha": 1
-                        }
-                    })
-                    .duration(0)
-                    .displayArrow(true)
-                    .straightLink(false)
-                    .collapsible(false)
                     .onNodeHover(d => {
                         this.currentNodeId = d
                         this.handleHintMenu()
@@ -237,13 +216,6 @@ import data from './data.json'
                         // Do not show hint menu so that both menus won't overlap.
                         this.hintMenuVisible = false;
                         this.currentNodeId = d
-                    })
-                    .onNodeAdd(d => {
-                        console.log(d + " node added")
-                    })
-                    .onNodeRemove(d => {
-                        console.log(d + " node removed")
-                        this.chartReference.removeNode(d)
                     })
                     .render();
             }
