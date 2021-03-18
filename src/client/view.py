@@ -65,7 +65,7 @@ def get_tree2(tree: ReportNode):
     return nodes
 
 
-def make_node(identifier: int, parent_id: int, label: str, prob: float = None):
+def make_node(identifier: int, parent_id: int, label: str, text: str = None, prob: float = None):
     """
     Adds a node and its corresponding information to the nodes list, in json/dictionary format
     :param identifier: The id given to the node/leaf currently being added, giving this node the currently highest index
@@ -76,10 +76,14 @@ def make_node(identifier: int, parent_id: int, label: str, prob: float = None):
 
     if prob:
         cert = round(prob * 100)
-        template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
+        original_template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
                    + str(cert) + "%</span>"
     else:
-        template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
+        original_template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
+
+    hashed = "The hashed object/ The hashed id of the object"
+    model = "Cannot actually access model from view"
+    template = model.changes[hashed] if hashed in model.changes.keys() else original_template
 
     node = {"nodeId": str(identifier),
             "parentNodeId": str(parent_id),
@@ -88,7 +92,9 @@ def make_node(identifier: int, parent_id: int, label: str, prob: float = None):
             "borderRadius": 15,
             "template": template,
             "alternatives": None,
-            "label": str(label)}
+            "originalTemplate": original_template,
+            "hintTemplate": None,
+            "text": text}
 
     return node
 
