@@ -127,7 +127,9 @@ import data from './data.json'
         methods: {
             handleHintMenu() {
               setTimeout(() => {
-                this.hintMenuVisible = true
+                if (!this.contextMenuVisible) {
+                  this.hintMenuVisible = true
+                }
               }, 500)
               let self = this
               data.forEach(function(object){
