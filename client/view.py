@@ -1,26 +1,13 @@
 """
 Imports
 """
-from client.controller import Controller
+import eel
+
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import ReportLeaf
-import json
-
-import pprint
 
 
-def get_tree(text: str):
-    """
-    Sends the input text to and the gets the tree from the controller.
-    :param text: The input text that is sent
-    :return: A ReportNode containing the desired structure.
-    """
-    c = Controller()                         # TODO Establish correct connection between view and controller
-    tree = c.get_parsed_text_temp("", "")
-    return tree
-
-
-def get_tree2(tree: ReportNode):
+def generate_tree(tree: ReportNode):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
@@ -38,7 +25,7 @@ def get_tree2(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, root.label))
+        nodes.append(make_node(new_id, parent_id, root.category))
         parent = new_id
         new_id += 1
         for child in root:
@@ -54,11 +41,12 @@ def get_tree2(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, leaf.label, leaf.certainty))
+        nodes.append(make_node(new_id, parent_id, leaf.key, leaf.conf))
         old_id = new_id
         new_id += 1
 
-        nodes.append(make_node(new_id, old_id, leaf.label))
+        label, conf = leaf.best_label_conf_pair
+        nodes.append(make_node(new_id, old_id, label, conf))
         new_id += 1
 
     traverse(tree)
@@ -93,19 +81,9 @@ def make_node(identifier: int, parent_id: int, label: str, prob: float = None):
     return node
 
 
-def send_to_front(nodes: list):
+def notify(model):
     """
-    Sends the desired json structure to the UI
+    Reflect the changes to the model in the front-end
     """
-    # TODO: This is a temporary
-    with open('Place your file here folks', 'w') as outfile:
-        json.dump(list, outfile)
-
-    return list
-
-
-if __name__ == "__main__":
-    test_tree = get_tree("cheese")
-    json_file = get_tree2(test_tree)
-    print(json_file)
-    pprint.PrettyPrinter().pprint(json_file)
+    linear_tree = generate_tree(model.tree)
+    eel.change_state(linear_tree, model.environment, model.text)

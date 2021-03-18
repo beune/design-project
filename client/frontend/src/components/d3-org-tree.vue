@@ -83,7 +83,6 @@
 
         * {
             display: inline-block;
-            font-weight: bold;
             font-size: 40px;
         }
     }
@@ -107,7 +106,8 @@ import data from './data.json'
             chosenNodeLabelAlternative: undefined,
             currentNodeId: undefined,
             vicinityMargin: 1,
-            hintMenuContent: undefined
+            hintMenuContent: undefined,
+            mouseHoveredOutside: false
         }),
         props: {
           treeData: {
@@ -122,13 +122,13 @@ import data from './data.json'
         },
         mounted() {
             this.renderChart(data)
-            this.chartReference.transformLayout("left-to-right")
         },
         methods: {
             handleHintMenu() {
               setTimeout(() => {
-                if (!this.contextMenuVisible) {
+                if (!this.contextMenuVisible && !this.mouseHoveredOutside) {
                   this.hintMenuVisible = true
+                  this.mouseHoveredOutside = false
                 }
               }, 500)
               let self = this
@@ -207,7 +207,11 @@ import data from './data.json'
                 this.chartReference
                     .container('.svgContainer')
                     .data(data)
+                    .onNodeHoverOut(() => {
+                        this.mouseHoveredOutside = true;
+                    })
                     .onNodeHover(d => {
+                        this.mouseHoveredOutside = false
                         this.currentNodeId = d
                         this.handleHintMenu()
                     })

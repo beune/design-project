@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <script type='text/javascript' src='http://localhost:8000/eel.js'></script>
+    <script type='text/javascript' src='/eel.js'></script>
   </head>
   <body>
     <noscript>
@@ -57,12 +57,6 @@
           position: absolute;
           bottom: 0;
           left: 0;
-      }
-      .low-confidence {
-          /* Make the percentage stand out! Also make sure to apply the confidence class for the proper positioning */
-          color: orange;
-          font-size: 45px;
-          font-weight: bold;
       }
   </style>
 </html>
