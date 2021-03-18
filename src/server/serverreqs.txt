@@ -1,0 +1,6 @@
+mysql~=0.0.2
+mysql-connector-python~=8.0.23
+requests~=2.25.1
+jsonpickle~=2.0.0
+Flask~=1.1.2
+Flask-RESTful~=0.3.8
