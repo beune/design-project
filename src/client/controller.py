@@ -31,8 +31,8 @@ def main():
     Main loop of the controller
     """
     eel.init('web')
-    ui_automation = UIAutomation(update_text)
-    eel.spawn(ui_automation.start)
+    # ui_automation = UIAutomation(update_text)
+    # eel.spawn(ui_automation.start)
     eel.start('index.html', size=(600, 400))
 
 

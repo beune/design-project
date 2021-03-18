@@ -1,7 +1,6 @@
 """
 Imports
 """
-import threading
 from typing import Callable
 
 from pywinauto.application import Application
@@ -31,7 +30,7 @@ class UIAutomation:
                     new_text = self.textfield.window_text()
                     if len(new_text) > 0 and (new_text[-1] == ' ' or time.time() - start_time > 2):
                         self.text = new_text
-                        print(self.text)
+                        self.callback(self.text)
                         flag = False
 
     def stop(self):
@@ -54,5 +53,4 @@ class UIAutomation:
         """
         self.app = Application().start("notepad.exe")
         self.textfield = self.app.UntitledNotepad.Edit
-        update_thread = threading.Thread(target=self.updateg2)
-        update_thread.start()
+        self.updateg2()
