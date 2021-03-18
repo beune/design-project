@@ -38,7 +38,7 @@ def get_tree2(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, root.label))
+        nodes.append(make_node(new_id, parent_id, root.category))
         parent = new_id
         new_id += 1
         for child in root:
@@ -54,11 +54,12 @@ def get_tree2(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, leaf.label, leaf.certainty))
+        nodes.append(make_node(new_id, parent_id, leaf.key, leaf.conf))
         old_id = new_id
         new_id += 1
 
-        nodes.append(make_node(new_id, old_id, leaf.label))
+        label, conf = leaf.best_label_conf_pair
+        nodes.append(make_node(new_id, old_id, label, conf))
         new_id += 1
 
     traverse(tree)
