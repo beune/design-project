@@ -9,8 +9,8 @@ import os
 import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
-from src.report_node import ReportNode
-from src.report_leaf import ReportLeaf
+from report_tree.report_node import ReportNode
+from report_tree.report_leaf import ReportLeaf
 
 """
 Class used to connect Shreyasi's python2 algorithm to python 3
