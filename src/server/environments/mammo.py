@@ -194,3 +194,14 @@ def add_labels(node: ReportNode):
             add_labels(child)
         elif isinstance(child, ReportLeaf) and child.key in alternatives:
             child.labels = alternatives[child.key]
+
+
+if __name__ == '__main__':
+    # Generate a pickle file containing a test tree using json as input
+    with open("out.json", "r") as json_file:
+        data = json.load(json_file)
+    tree = make_tree([], data)
+    add_labels(tree)
+    import pickle
+    with open("TESTPICKLE.pkl", "wb") as tree_file:
+        pickle.dump(tree, tree_file)
