@@ -18,7 +18,7 @@ def connect():
             "lymfeklieren zichtbaar")
     data = {"text": text}
     # r = requests.get("http://127.0.0.1:5000/mammo/", params=data)
-    r = requests.get("http://127.0.0.1:5000/mammo/", json=data)
+    r = requests.get("http://127.0.0.1:8000/mammo/", json=data)
     rootnode = jsonpickle.decode(r.json()["Data"])
     print("OUTPUT FROM MAMMO:", rootnode)
     with open('TESTPICKLE.pkl', 'wb') as f:

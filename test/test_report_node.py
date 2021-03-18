@@ -3,7 +3,7 @@ Imports
 """
 
 import unittest
-from src.report_node import ReportNode
+from report_tree.report_node import ReportNode
 
 
 class ReportNodeTest(unittest.TestCase):

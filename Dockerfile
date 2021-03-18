@@ -1,7 +1,7 @@
 FROM ubuntu
 
 WORKDIR /workdir
-COPY src/server /workdir/server
+COPY server /workdir/server
 
 ENV PYTHONPATH /workdir
 RUN apt-get update -y

@@ -5,7 +5,7 @@ import pickle
 import jsonpickle
 import requests
 
-from src.client.ui_automation import UIAutomation
+from client.ui_automation import UIAutomation
 from src.report_node import ReportNode
 
 

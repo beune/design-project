@@ -1,7 +1,7 @@
 """
 Imports
 """
-from src.client.controller import Controller
+from client.controller import Controller
 from src.report_node import ReportNode
 from src.report_leaf import ReportLeaf
 import json
