@@ -1,7 +1,7 @@
 """
 Imports
 """
-from src.report_node import ReportNode
+from report_tree.report_node import ReportNode
 
 expected = {}
 hints = {}
