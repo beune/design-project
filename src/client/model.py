@@ -1,10 +1,8 @@
 """
 Imports
 """
+import asyncio
 from typing import Callable
-
-import jsonpickle
-import requests
 
 from src.report_node import ReportNode
 
@@ -21,16 +19,17 @@ class Model:
         self.tree = ReportNode("Root")
         self.notify_view = notify
 
-    def retrieve_tree(self):
+    async def retrieve_tree(self):
         """
-        Send the text to the server to retrieve the new tree.
+        Asynchronous call for retrieving a new tree and notifying the view.
         """
         import pickle
         with open("TESTPICKLE.pkl", "rb") as file:
-            return pickle.load(file)
-        data = {"text": self.text}
-        response = requests.get(ENDPOINT + self.environment, json=data)
-        self.tree = jsonpickle.decode(response.json()["Data"])
+            self.tree = pickle.load(file)
+        # data = {"text": self.text}
+        # response = requests.get(ENDPOINT + self.environment, json=data)
+        # self.tree = jsonpickle.decode(response.json()["Data"])
+        self.notify_view(self)
 
     def set_text(self, new_text: str):
         """
@@ -38,8 +37,7 @@ class Model:
         :param new_text: the new text.
         """
         self.text = new_text
-        self.retrieve_tree()
-        self.notify_view(self)
+        asyncio.run(self.retrieve_tree())
 
     def set_environment(self, new_environment: str):
         """
@@ -47,5 +45,4 @@ class Model:
         :param new_environment: the new environment.
         """
         self.environment = new_environment
-        self.retrieve_tree()
-        self.notify_view(self)
+        asyncio.run(self.retrieve_tree())
