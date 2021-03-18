@@ -69,16 +69,13 @@ def make_node(identifier: int, parent_id: int, label: str, text: str = None, pro
     else:
         original_template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
 
-    hashed = "The hashed object/ The hashed id of the object"
-    model = "Cannot actually access model from view"
-    template = model.changes[hashed] if hashed in model.changes.keys() else original_template
 
     node = {"nodeId": str(identifier),
             "parentNodeId": str(parent_id),
             "width": 347,
             "height": 147,
             "borderRadius": 15,
-            "template": template,
+            "template": original_template,              # add
             "alternatives": None,
             "originalTemplate": original_template,
             "hintTemplate": None,
