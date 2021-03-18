@@ -6,7 +6,7 @@ setup(
     packages=['report_tree'],
     url='https://git.snt.utwente.nl/s2174294/reporttree',
     license='MIT License',
-    author='S. Ritsema',
+    author='S. Ritsema, J.S. van Assen',
     author_email='s.ritsema@student.utwente.nl',
     description='Package containing report structure of radiology reports'
 )
