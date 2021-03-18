@@ -86,4 +86,4 @@ def notify(model):
     Reflect the changes to the model in the front-end
     """
     linear_tree = generate_tree(model.tree)
-    eel.change_state(linear_tree, model.environment)
+    eel.change_state(linear_tree, model.environment, model.text)

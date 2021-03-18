@@ -117,9 +117,10 @@ export default {
     test_function() {
       window.eel.test("test");
     },
-    changeState(data) {
-      this.tree = data.tree;
-      this.environment = data.environment;
+    changeState(tree, environment, text) {
+      this.tree = tree;
+      this.environment = environment;
+      console.log(text);
       // this.text = data.text;
     }
   },
