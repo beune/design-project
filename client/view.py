@@ -1,7 +1,12 @@
 """
 Imports
 """
-import eel
+from src.client.controller import Controller
+from src.report_node import ReportNode
+from src.report_leaf import ReportLeaf
+import json
+
+import pprint
 
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import ReportLeaf
@@ -25,12 +30,12 @@ def generate_tree(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, root.category))
+        nodes.append(make_node(root, new_id, parent_id))
         parent = new_id
         new_id += 1
 
         for expects_label in root.expects:  # add expects nodes
-            nodes.append(make_node(new_id, parent_id, expects_label))
+            nodes.append(json_node_template(new_id, parent, expects_label))
             new_id += 1
 
         for child in root:
@@ -46,38 +51,68 @@ def generate_tree(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, leaf.key))
-        old_id = new_id
-        new_id += 1
-
-        if leaf.key != 'O':
-            label, conf = leaf.best_label_conf_pair
-            nodes.append(make_node(new_id, old_id, label, leaf.text, conf))
-            new_id += 1
+        if leaf.key != 'O':  # 'Other' leaves are currently excluded
+            nodes.extend(make_leaf(leaf, new_id, parent_id))
+            new_id += 2  # increment with 2, since leaves contain of 2 json objects
 
     traverse(tree)
     return nodes
 
 
-def make_node(identifier: int, parent_id: int, label: str, text: str = None, prob: float = None):
+def make_node(node: ReportNode, identifier: int, parent_id: int):
     """
-    Adds a node and its corresponding information to the nodes list, in json/dictionary format
-    :param text: The input plain text that resulted in this label
-    :param identifier: The id given to the node/leaf currently being added, giving this node the currently highest index
+    Create a regular (category) node, in json/dictionary format
+    :param node: object that represents the node
+    :param identifier: The id given to the node currently being added, giving this node the currently highest index
     :param parent_id: The id of the parent of the node/leaf currently being added
-    :param label: The name of the node/leaf currently being added
-    :param prob: certainty of the label on the leaf
     """
+    node = json_node_template(identifier, parent_id, node.category)
 
-    if prob:
-        cert = round(prob * 100)
-        original_template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
-                   + str(cert) + "%</span>"
-    else:
-        original_template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
+    return node
+
+
+def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
+    """
+    Create a leaf, which consists of two json objects: the leaf key and the leaf value
+    :param leaf: object that represents the leave
+    :param identifier: The id given to the key of the leaf, the value will have the id incremented with one
+    :param parent_id: The id of the parent of the leaf currently being added
+    :return: a list containing the key and value json objects
+    """
+    leaf_key = json_node_template(identifier, parent_id, leaf.key)
+
+    label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
+    cert = round(conf * 100)  # certainty percentage
+    template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
+                        + str(cert) + "%</span>"  # generate confidence template
+    leaf_value_identifier = identifier + 1
+    leaf_value_parent = identifier
+
+    leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, label, template)
+    leaf_value["alternatives"] = ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
+    leaf_value["text"] = leaf.text
+    leaf_value["valueNode"] = True
+    leaf_value["lowConfidence"] = conf <= 0.75  # TODO implement low confindence
+
+    return [leaf_key, leaf_value]
+
+
+def json_node_template(identifier: int, parent_id: int, label: str, template: str = None):
+    """
+    Helper function that generates a basic structure for the json objects used in functions above
+    :param identifier: the id for the json object
+    :param parent_id: the id of the parent of the json object
+    :param label: the label that is used in the default HTML template of the json object
+    :param template: optional argument if a modified template is to be used
+    :return: a python dict representing the json object
+    """
+    if template is None:  # default template
+        template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
 
     node = {"nodeId": str(identifier),
             "parentNodeId": str(parent_id),
+            "valueNode": False,
+            "lowConfidence": False,
             "width": 347,
             "height": 147,
             "borderRadius": 15,
