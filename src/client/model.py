@@ -25,6 +25,9 @@ class Model:
         """
         Send the text to the server to retrieve the new tree.
         """
+        import pickle
+        with open("TESTPICKLE.pkl", "rb") as file:
+            return pickle.load(file)
         data = {"text": self.text}
         response = requests.get(ENDPOINT + self.environment, json=data)
         self.tree = jsonpickle.decode(response.json()["Data"])
