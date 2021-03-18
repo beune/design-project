@@ -83,7 +83,6 @@
 
         * {
             display: inline-block;
-            font-weight: bold;
             font-size: 40px;
         }
     }
@@ -122,7 +121,6 @@ import data from './data.json'
         },
         mounted() {
             this.renderChart(data)
-            this.chartReference.transformLayout("left-to-right")
         },
         methods: {
             handleHintMenu() {
