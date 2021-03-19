@@ -10,7 +10,7 @@ class ReportLeaf:
     """
     def __init__(self, text: str, field: str, fieldconf: float, labels: Dict[str, float] = None, hint: str = None):
         self.text = text
-        self.field = fiel
+        self.field = field
         self.fieldconf = fieldconf
         self.labels = labels if labels else {}
         self.hint = hint
