@@ -41,8 +41,6 @@ lint_frontend:
   image: node
   script:
     - cd client/frontend
-    - npm uninstall eslint
-    - npm cache clean --force
     - npm install eslint
     - node_modules/eslint/bin/eslint.js .
 
