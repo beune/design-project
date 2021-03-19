@@ -1,12 +1,7 @@
 """
 Imports
 """
-from src.client.controller import Controller
-from src.report_node import ReportNode
-from src.report_leaf import ReportLeaf
-import json
-
-import pprint
+import eel
 
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import ReportLeaf
@@ -84,7 +79,7 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
     cert = round(conf * 100)  # certainty percentage
     template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
-                        + str(cert) + "%</span>"  # generate confidence template
+               + str(cert) + "%</span>"  # generate confidence template
     leaf_value_identifier = identifier + 1
     leaf_value_parent = identifier
 
@@ -115,12 +110,11 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
             "lowConfidence": False,
             "width": 347,
             "height": 147,
-            "borderRadius": 15,
-            "template": original_template,              # add
+            "template": template,  # add
             "alternatives": None,
-            "originalTemplate": original_template,
+            "originalTemplate": template,
             "hintTemplate": None,
-            "text": text}
+            "text": None}
 
     return node
 
