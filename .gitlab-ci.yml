@@ -34,22 +34,7 @@ lint_backend:
       - .cache/pip
       - venv/
   script:
-    - flake8 client server test treepackage
-
-lint_frontend:
-  stage: test
-  image: node
-  cache:
-    key:
-      files:
-        - client/frontend/package-lock.json
-    paths:
-      - client/frontend/node_modules
-  script:
-    - cd client/frontend
-    - npm install eslint
-    - node_modules/eslint/bin/eslint.js .
-
+    - flake8 client servpackage test treepackage
 
 build_frontend:
   stage: build
@@ -61,6 +46,7 @@ build_frontend:
     paths:
       - client/frontend/node_modules
   script:
+    - npm config set registry http://registry.npmjs.eu
     - cd client/frontend
     - npm install
     - npm run build

@@ -4,7 +4,8 @@ Imports
 import jsonpickle
 from flask import Flask, request
 from flask_restful import Api, abort
-from . import environment
+
+from servpackage import environment
 
 app = Flask(__name__)
 api = Api(app)

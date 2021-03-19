@@ -41,7 +41,7 @@ def generate_tree(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        nodes.append(make_node(new_id, parent_id, leaf.key, leaf.conf))
+        nodes.append(make_node(new_id, parent_id, leaf.field, leaf.fieldconf))
         old_id = new_id
         new_id += 1
 

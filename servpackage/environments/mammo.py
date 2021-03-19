@@ -176,8 +176,8 @@ def add_labels(node: ReportNode):
     for child in node:
         if isinstance(child, ReportNode):
             add_labels(child)
-        elif isinstance(child, ReportLeaf) and child.key in alternatives:
-            child.labels = alternatives[child.key]
+        elif isinstance(child, ReportLeaf) and child.field in alternatives:
+            child.labels = alternatives[child.field]
 
 
 if __name__ == '__main__':
