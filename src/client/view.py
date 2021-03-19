@@ -15,7 +15,7 @@ def get_tree(text: str):
     :param text: The input text that is sent
     :return: A ReportNode containing the desired structure.
     """
-    c = Controller()                         # TODO Establish correct connection between view and controller
+    c = Controller()  # TODO Establish correct connection between view and controller
     tree = c.get_parsed_text_temp("", "")
     return tree
 
@@ -92,7 +92,7 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
     cert = round(conf * 100)  # certainty percentage
     template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
-                        + str(cert) + "%</span>"  # generate confidence template
+               + str(cert) + "%</span>"  # generate confidence template
     leaf_value_identifier = identifier + 1
     leaf_value_parent = identifier
 
@@ -123,7 +123,7 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
             "lowConfidence": False,
             "width": 347,
             "height": 147,
-            "template": template,              # add
+            "template": template,  # add
             "alternatives": None,
             "originalTemplate": template,
             "hintTemplate": None,
