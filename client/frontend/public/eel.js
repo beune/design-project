@@ -1,3 +1,4 @@
+/* eslint-disable */
 eel = {
     _host: window.location.origin,
 
