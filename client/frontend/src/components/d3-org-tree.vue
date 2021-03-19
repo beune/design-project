@@ -128,7 +128,6 @@
     }
 </style>
 <script>
-import data from './data.json'
     import OrgTree from "d3-org-tree";
     export default {
         name: "Chart",
@@ -161,7 +160,7 @@ import data from './data.json'
             }
         },
         mounted() {
-            this.renderChart(data)
+            this.renderChart(this.treeData)
         },
         methods: {
             handleHintMenu() {
@@ -172,7 +171,7 @@ import data from './data.json'
                 }
               }, 500)
               let self = this
-              data.forEach(function(object){
+              this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   self.hintMenuContent = object.hint
                 }
@@ -196,7 +195,7 @@ import data from './data.json'
             fetchNodeAlternatives(){
               let self = this
               let alternatives;
-              data.forEach(function(object){
+              this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   alternatives = object.alternatives
                 }
@@ -213,7 +212,7 @@ import data from './data.json'
               }
             },
             changeTemplate(nodeId, template){
-              data.forEach(function(object){
+              this.treeData.forEach(function(object){
                 if (object.nodeId === nodeId) {
                   object.template = template
                 }
@@ -223,22 +222,22 @@ import data from './data.json'
               this.toggleEditNodeLabelDialog()
               this.changeTemplate(this.currentNodeId,
               "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>")
-              this.renderChart(data)
+              this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
             },
             undoNodeLabelEdit(){
               let self = this
-              data.forEach(function(object){
+              this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   object.template = object.originalTemplate
                 }
               });
-              this.renderChart(data)
+              this.renderChart(this.treeData)
             },
             deleteNodeLabel(){
               this.changeTemplate(this.currentNodeId,
               "<div class=\"domStyle\"><span>" + "?" + "</div></span><span class=\"material-icons\">mode</span>")
-              this.renderChart(data)
+              this.renderChart(this.treeData)
             },
             renderChart(data) {
                 if (!this.chartReference) {
