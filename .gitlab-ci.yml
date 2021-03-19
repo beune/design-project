@@ -39,12 +39,6 @@ lint_backend:
 lint_frontend:
   stage: test
   image: node
-  cache:
-    key:
-      files:
-        - client/frontend/package-lock.json
-    paths:
-      - client/frontend/node_modules
   script:
     - cd client/frontend
     - npm install eslint
