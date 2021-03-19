@@ -34,7 +34,7 @@ lint_backend:
       - .cache/pip
       - venv/
   script:
-    - flake8 client server test treepackage
+    - flake8 client servpackage test treepackage
 
 lint_frontend:
   stage: test
