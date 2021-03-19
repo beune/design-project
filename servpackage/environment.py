@@ -2,8 +2,8 @@
 Imports
 """
 from report_tree.report_node import ReportNode
-from .environments import hersen, mammo
-from .hinter import Hinter
+from servpackage.environments import hersen, mammo
+from servpackage.hinter import Hinter
 from typing import Callable
 
 
