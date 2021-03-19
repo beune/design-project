@@ -16,4 +16,4 @@ test-job:
 lint-job:
   stage: test
   script:
-    - flake8 client server test treepackage
+    - flake8 client servpackage test treepackage
