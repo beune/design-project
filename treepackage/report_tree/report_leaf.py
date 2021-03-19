@@ -8,10 +8,10 @@ class ReportLeaf:
     """
     Class used to represent Leaves
     """
-    def __init__(self, text: str, key: str, conf: float, labels: Dict[str, float] = None, hint: str = None):
+    def __init__(self, text: str, field: str, fieldconf: float, labels: Dict[str, float] = None, hint: str = None):
         self.text = text
-        self.key = key
-        self.conf = conf
+        self.field = fiel
+        self.fieldconf = fieldconf
         self.labels = labels if labels else {}
         self.hint = hint
 
