@@ -1,5 +1,5 @@
 .\venv\Scripts\activate
-Set-Location -Path src\client\frontend
+Set-Location -Path client\frontend
 npm install
 npm run build
 Set-Location -Path ..
