@@ -36,8 +36,8 @@ lint_frontend:
   stage: test
   image: node
   script:
-    - npm uninstall eslint
-    - npm cache clean
     - cd client/frontend
+    - npm uninstall eslint
+    - npm cache clean --force
     - npm install eslint
     - node_modules/eslint/bin/eslint.js .
