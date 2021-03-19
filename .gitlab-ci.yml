@@ -36,16 +36,6 @@ lint_backend:
   script:
     - flake8 client servpackage test treepackage
 
-lint_frontend:
-  stage: test
-  image: node
-  script:
-    - npm config set registry http://registry.npmjs.eu
-    - cd client/frontend
-    - npm install eslint
-    - node_modules/eslint/bin/eslint.js .
-
-
 build_frontend:
   stage: build
   image: node
