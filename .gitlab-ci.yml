@@ -38,10 +38,24 @@ lint_frontend:
   cache:
     key:
       files:
-        - package-lock.json
+        - client/frontend/package-lock.json
     paths:
-      - node_modules
+      - client/frontend/node_modules
   script:
     - cd client/frontend
     - npm install eslint
     - node_modules/eslint/bin/eslint.js .
+
+
+build_frontend:
+  stage: build
+  image: node
+  cache:
+    key:
+      files:
+        - client/frontend/package-lock.json
+    paths:
+      - client/frontend/node_modules
+  script:
+    - npm install
+    - npm run build
