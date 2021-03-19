@@ -14,7 +14,7 @@ class ReportLeafTest(unittest.TestCase):
         labels = {"label": 0.85}
         hint = "hint"
         leaf = ReportLeaf(text, key, conf, labels, hint)
-        self.assertEqual(leaf.key, key)
+        self.assertEqual(leaf.field, key)
         self.assertEqual(leaf.labels, labels)
         self.assertEqual(leaf.hint, hint)
 

@@ -33,5 +33,5 @@ class Hinter:
         Method used to add hints to leafs
         :param leaf: The leaf for which the hint needs to be added
         """
-        if leaf.key in self.hints:
-            leaf.hint = self.hints[leaf.key]
+        if leaf.field in self.hints:
+            leaf.hint = self.hints[leaf.field]

@@ -1,76 +1,116 @@
 <template>
   <div style="width: 100vw">
-    <v-menu v-model="hintMenuVisible" absolute offset-y :position-x="mouseX" :position-y="mouseY">
-    <v-card>
-      <v-container v-html="hintMenuContent">
-      </v-container>
-    </v-card>
+    <v-menu
+      v-model="hintMenuVisible"
+      absolute
+      offset-y
+      :position-x="mouseX"
+      :position-y="mouseY"
+    >
+      <v-card>
+        <v-container class="show-white-space">
+          {{ hintMenuContent }}
+        </v-container>
+      </v-card>
     </v-menu>
 
-    <v-menu v-model="contextMenuVisible" absolute offset-y :position-x="mouseX" :position-y="mouseY">
-    <!-- TODO: only allow value nodes to be removed. -->
+    <v-menu
+      v-model="contextMenuVisible"
+      absolute
+      offset-y
+      :position-x="mouseX"
+      :position-y="mouseY"
+    >
+      <!-- TODO: only allow value nodes to be removed. -->
       <v-list dense>
         <v-subheader>OPTIES</v-subheader>
-          <v-list-item @click="deleteNodeLabel">
-            <v-list-item-icon>
-              <v-icon>delete</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Remove</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="toggleEditNodeLabelDialog">
-            <v-list-item-icon>
-              <v-icon>mode</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Edit</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="undoNodeLabelEdit">
-            <v-list-item-icon>
-              <v-icon>undo</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Undo</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>report_off</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Ignore warning</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+        <v-list-item @click="deleteNodeLabel">
+          <v-list-item-icon>
+            <v-icon>delete</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Remove</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="toggleEditNodeLabelDialog">
+          <v-list-item-icon>
+            <v-icon>mode</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Edit</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="undoNodeLabelEdit">
+          <v-list-item-icon>
+            <v-icon>undo</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Undo</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon>report_off</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Ignore warning</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-menu>
 
-    <v-dialog v-model="showEditNodeLabelDialog" width="500" >
+    <v-dialog
+      v-model="showEditNodeLabelDialog"
+      width="500"
+    >
       <v-card>
         <v-card-title class="headline">
           Label wijzigen
         </v-card-title>
         <v-card-text>
-          <v-select v-model="chosenNodeLabelAlternative" :items="nodeLabelAlternatives" label="Label"></v-select>
+          <v-select
+            v-model="chosenNodeLabelAlternative"
+            :items="nodeLabelAlternatives"
+            label="Label"
+          />
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="showEditNodeLabelDialog = false">Annuleer</v-btn>
-          <v-btn color="primary" text @click="editNodeLabel">Wijzigen</v-btn>
+          <v-spacer />
+          <v-btn
+            color="primary"
+            text
+            @click="showEditNodeLabelDialog = false"
+          >
+            Annuleer
+          </v-btn>
+          <v-btn
+            color="primary"
+            text
+            @click="editNodeLabel"
+          >
+            Wijzigen
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-snackbar v-model="showNoNodeLabelAlternativesAvailableSnackbar" >
-       Er zijn geen alternatieven beschikbaar.
+    <v-snackbar
+      v-model="showNoNodeLabelAlternativesAvailableSnackbar"
+    >
+      Er zijn geen alternatieven beschikbaar.
     </v-snackbar>
 
-    <v-container @mousemove="handleMouseMove" class="svgContainer"/>
+    <v-container
+      class="svgContainer"
+      @mousemove="handleMouseMove"
+    />
   </div>
 </template>
 <style lang="scss">
+    .show-white-space {
+        white-space: pre-wrap;
+    }
     .svgContainer {
     /* Because d3-org-tree fits to as much width as possible when a width is not specified, the width is not specified here. */
       height: 86.0vh;
@@ -92,6 +132,12 @@ import data from './data.json'
     import OrgTree from "d3-org-tree";
     export default {
         name: "Chart",
+        props: {
+          treeData: {
+            type: Array,
+            default: null
+          }
+        },
         data: () => ({
             hintMenuVisible: false,
             contextMenuVisible: false,
@@ -109,12 +155,6 @@ import data from './data.json'
             hintMenuContent: undefined,
             mouseHoveredOutside: false
         }),
-        props: {
-          treeData: {
-            type: Object,
-            default: null
-          }
-        },
         watch: {
             treeData: function(value) {
                 this.renderChart(value);

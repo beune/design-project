@@ -1,6 +1,10 @@
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
+stages:
+  - test
+  - build
+
 .before_script_template: &backend
   before_script:
     - python -V
@@ -30,18 +34,19 @@ lint_backend:
       - .cache/pip
       - venv/
   script:
-    - flake8 client server test treepackage
+    - flake8 client servpackage test treepackage
 
-lint_frontend:
-  stage: test
+build_frontend:
+  stage: build
   image: node
   cache:
     key:
       files:
-        - package-lock.json
+        - client/frontend/package-lock.json
     paths:
-      - node_modules
+      - client/frontend/node_modules
   script:
+    - npm config set registry http://registry.npmjs.eu
     - cd client/frontend
-    - npm install eslint
-    - node_modules/eslint/bin/eslint.js .
+    - npm install
+    - npm run build

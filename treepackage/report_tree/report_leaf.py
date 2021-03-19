@@ -8,21 +8,21 @@ class ReportLeaf:
     """
     Class used to represent Leaves
     """
-    def __init__(self, text: str, key: str, conf: float, labels: Dict[str, float] = None, hint: str = None):
+    def __init__(self, text: str, field: str, fieldconf: float, labels: Dict[str, float] = None, hint: str = None):
         self.text = text
-        self.key = key
-        self.conf = conf
+        self.field = field
+        self.fieldconf = fieldconf
         self.labels = labels if labels else {}
         self.hint = hint
 
     def __repr__(self):
-        return 'Leaf {}: {} {}'.format(self.key, self.text, self.labels.keys())
+        return 'Leaf {}: {} {}'.format(self.field, self.text, self.labels.keys())
 
     def __eq__(self, other):
         return type(self) == type(other) \
                and self.text == other.text \
-               and self.key == other.key \
-               and self.conf == other.conf \
+               and self.field == other.field \
+               and self.fieldconf == other.fieldconf \
                and self.labels == other.labels
 
     @property
