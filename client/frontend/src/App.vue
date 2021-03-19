@@ -157,6 +157,7 @@ export default {
       this.tree = tree;
       this.environment = environment;
       console.log(text);
+      console.log(tree);
       // this.text = data.text;
     }
   },

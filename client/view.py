@@ -46,7 +46,7 @@ def generate_tree(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        if leaf.key != 'O':  # 'Other' leaves are currently excluded
+        if leaf.field != 'O':  # 'Other' leaves are currently excluded
             nodes.extend(make_leaf(leaf, new_id, parent_id))
             new_id += 2  # increment with 2, since leaves contain of 2 json objects
 
@@ -74,9 +74,11 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     :param parent_id: The id of the parent of the leaf currently being added
     :return: a list containing the key and value json objects
     """
-    leaf_key = json_node_template(identifier, parent_id, leaf.key)
-
-    label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
+    leaf_key = json_node_template(identifier, parent_id, leaf.field)
+    if leaf.labels:
+        label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
+    else:
+        label, conf = "other", 0
     cert = round(conf * 100)  # certainty percentage
     template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
                + str(cert) + "%</span>"  # generate confidence template
@@ -124,4 +126,5 @@ def notify(model):
     Reflect the changes to the model in the front-end
     """
     linear_tree = generate_tree(model.tree)
+    print(linear_tree)
     eel.change_state(linear_tree, model.environment, model.text)
