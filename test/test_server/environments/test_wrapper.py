@@ -2,7 +2,7 @@
 imports
 """
 import unittest
-from server.environments.mammo import make_tree, after, has_base, clean
+from servpackage.environments.mammo import make_tree, after, has_base, clean
 from report_tree.report_leaf import ReportLeaf
 from report_tree.report_node import ReportNode
 

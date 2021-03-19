@@ -6,7 +6,7 @@ import unittest
 
 from report_tree.report_leaf import ReportLeaf
 from report_tree.report_node import ReportNode
-from server.hinter import Hinter
+from servpackage.hinter import Hinter
 
 
 class MyTestCase(unittest.TestCase):
