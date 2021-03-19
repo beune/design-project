@@ -1,6 +1,10 @@
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
+stages:
+  - test
+  - build
+
 .before_script_template: &backend
   before_script:
     - python -V
@@ -57,5 +61,6 @@ build_frontend:
     paths:
       - client/frontend/node_modules
   script:
+    - cd client/frontend
     - npm install
     - npm run build
