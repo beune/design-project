@@ -2,30 +2,30 @@
   <v-form>
     <v-container fluid>
       <v-row>
-          <v-text-field
-            v-model="databaseURL"
-            :rules="[rules.required]"
-            :type="'text'"
-            name="input-10-1"
-            label="Database URL"
-          ></v-text-field>
-          <v-text-field
-            v-model="databaseUsername"
-            :rules="[rules.required]"
-            :type="'text'"
-            name="input-10-1"
-            label="Gebruikersnaam"
-          ></v-text-field>
-          <v-text-field
-            v-model="databasePassword"
-            :append-icon="showPassword ? 'visibility' : 'visibility_off'"
-            :rules="[rules.required]"
-            :type="showPassword ? 'text' : 'password'"
-            name="input-10-1"
-            label="Wachtwoord"
-            counter
-            @click:append="showPassword = !showPassword"
-          ></v-text-field>
+        <v-text-field
+          v-model="databaseURL"
+          :rules="[rules.required]"
+          :type="'text'"
+          name="input-10-1"
+          label="Database URL"
+        />
+        <v-text-field
+          v-model="databaseUsername"
+          :rules="[rules.required]"
+          :type="'text'"
+          name="input-10-1"
+          label="Gebruikersnaam"
+        />
+        <v-text-field
+          v-model="databasePassword"
+          :append-icon="showPassword ? 'visibility' : 'visibility_off'"
+          :rules="[rules.required]"
+          :type="showPassword ? 'text' : 'password'"
+          name="input-10-1"
+          label="Wachtwoord"
+          counter
+          @click:append="showPassword = !showPassword"
+        />
       </v-row>
     </v-container>
   </v-form>
