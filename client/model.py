@@ -2,6 +2,9 @@
 Imports
 """
 from typing import Callable
+
+import jsonpickle
+import requests
 from report_tree.report_node import ReportNode
 
 ENDPOINT = "http://127.0.0.1:5000/"
@@ -21,12 +24,9 @@ class Model:
         """
         Send the text to the server to retrieve the new tree.
         """
-        import pickle
-        with open("TESTPICKLE.pkl", "rb") as file:
-            self.tree = pickle.load(file)
-        # data = {"text": self.text}
-        # response = requests.get(ENDPOINT + self.environment, json=data)
-        # self.tree = jsonpickle.decode(response.json()["Data"])
+        data = {"text": self.text}
+        response = requests.get(ENDPOINT + self.environment, json=data)
+        self.tree = jsonpickle.decode(response.json()["Data"])
         self.notify_view(self)
 
     def set_text(self, new_text: str):
