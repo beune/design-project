@@ -28,10 +28,16 @@ def generate_tree(tree: ReportNode):
         nodes.append(make_node(root, new_id, parent_id))
         parent = new_id
         new_id += 1
-
         for expects_label in root.expects:  # add expects nodes
-            nodes.append(json_node_template(new_id, parent, expects_label))
-            new_id += 1
+            flag = True
+            for child in root.children:
+                if type(child) == ReportLeaf:
+                    if expects_label == child.field:
+                        flag = False
+                        break
+            if flag:
+                nodes.append(json_node_template(new_id, parent, expects_label))
+                new_id += 1
 
         for child in root:
             if isinstance(child, ReportLeaf):
