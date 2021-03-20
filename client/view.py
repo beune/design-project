@@ -80,7 +80,7 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     :param parent_id: The id of the parent of the leaf currently being added
     :return: a list containing the key and value json objects
     """
-    leaf_key = json_node_template(identifier, parent_id, leaf.field)
+    leaf_key = json_node_template(identifier, parent_id, leaf.field, hint=leaf.hint)
     fieldcert = round(leaf.fieldconf * 100)  # certainty percentage
     template = "<div class=\"domStyle\"><span>" + leaf.text + "</span></div><span class=\"confidence\">" \
                + str(fieldcert) + "%</span>"  # generate confidence template
@@ -97,9 +97,10 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     return [leaf_key, leaf_value]
 
 
-def json_node_template(identifier: int, parent_id: int, label: str, template: str = None):
+def json_node_template(identifier: int, parent_id: int, label: str, template: str = None, hint: str = None):
     """
     Helper function that generates a basic structure for the json objects used in functions above
+    :param hint: The hint, if it is a key node
     :param identifier: the id for the json object
     :param parent_id: the id of the parent of the json object
     :param label: the label that is used in the default HTML template of the json object
@@ -123,7 +124,7 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
             "template": template,  # add
             "alternatives": None,
             "originalTemplate": template,
-            "hint": None,
+            "hint": hint,
             "text": None}
 
     return node
