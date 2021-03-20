@@ -28,10 +28,16 @@ def generate_tree(tree: ReportNode):
         nodes.append(make_node(root, new_id, parent_id))
         parent = new_id
         new_id += 1
-
         for expects_label in root.expects:  # add expects nodes
-            nodes.append(json_node_template(new_id, parent, expects_label))
-            new_id += 1
+            flag = True
+            for child in root.children:
+                if type(child) == ReportLeaf:
+                    if expects_label == child.field:
+                        flag = False
+                        break
+            if flag:
+                nodes.append(json_node_template(new_id, parent, expects_label))
+                new_id += 1
 
         for child in root:
             if isinstance(child, ReportLeaf):
@@ -46,7 +52,7 @@ def generate_tree(tree: ReportNode):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
         nonlocal new_id
-        if leaf.key != 'O':  # 'Other' leaves are currently excluded
+        if leaf.field != 'O':  # 'Other' leaves are currently excluded
             nodes.extend(make_leaf(leaf, new_id, parent_id))
             new_id += 2  # increment with 2, since leaves contain of 2 json objects
 
@@ -74,27 +80,27 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     :param parent_id: The id of the parent of the leaf currently being added
     :return: a list containing the key and value json objects
     """
-    leaf_key = json_node_template(identifier, parent_id, leaf.key)
-
-    label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
-    cert = round(conf * 100)  # certainty percentage
-    template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
-               + str(cert) + "%</span>"  # generate confidence template
+    leaf_key = json_node_template(identifier, parent_id, leaf.field, hint=leaf.hint)
+    fieldcert = round(leaf.fieldconf * 100)  # certainty percentage
+    template = "<div class=\"domStyle\"><span>" + leaf.text + "</span></div><span class=\"confidence\">" \
+               + str(fieldcert) + "%</span>"  # generate confidence template
     leaf_value_identifier = identifier + 1
     leaf_value_parent = identifier
 
-    leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, label, template)
-    leaf_value["alternatives"] = ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
+    leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, leaf.text, template)
+    leaf_value["alternatives"] = ["{} ({}%)".format(leaf.text, fieldcert)] + \
+                                 ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
-    leaf_value["lowConfidence"] = conf <= 0.75  # TODO implement low confindence
+    leaf_value["lowConfidence"] = fieldcert <= 75  # TODO implement low confindence
 
     return [leaf_key, leaf_value]
 
 
-def json_node_template(identifier: int, parent_id: int, label: str, template: str = None):
+def json_node_template(identifier: int, parent_id: int, label: str, template: str = None, hint: str = None):
     """
     Helper function that generates a basic structure for the json objects used in functions above
+    :param hint: The hint, if it is a key node
     :param identifier: the id for the json object
     :param parent_id: the id of the parent of the json object
     :param label: the label that is used in the default HTML template of the json object
@@ -104,8 +110,13 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
     if template is None:  # default template
         template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
 
+    if parent_id is not None:
+        par = str(parent_id)
+    else:
+        par = None
+
     node = {"nodeId": str(identifier),
-            "parentNodeId": str(parent_id),
+            "parentNodeId": par,
             "valueNode": False,
             "lowConfidence": False,
             "width": 347,
@@ -113,7 +124,7 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
             "template": template,  # add
             "alternatives": None,
             "originalTemplate": template,
-            "hintTemplate": None,
+            "hint": hint,
             "text": None}
 
     return node
@@ -124,4 +135,5 @@ def notify(model):
     Reflect the changes to the model in the front-end
     """
     linear_tree = generate_tree(model.tree)
+    print(linear_tree)
     eel.change_state(linear_tree, model.environment, model.text)

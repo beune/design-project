@@ -169,7 +169,7 @@
                   this.hintMenuVisible = true
                   this.mouseHoveredOutside = false
                 }
-              }, 500)
+              }, 1000)
               let self = this
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
