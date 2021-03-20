@@ -75,21 +75,18 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     :return: a list containing the key and value json objects
     """
     leaf_key = json_node_template(identifier, parent_id, leaf.field)
-    if leaf.labels:
-        label, conf = leaf.best_label_conf_pair  # get label, confidence pair with highest confidence
-    else:
-        label, conf = "other", 0
-    cert = round(conf * 100)  # certainty percentage
-    template = "<div class=\"domStyle\"><span>" + label + "</span></div><span class=\"confidence\">" \
-               + str(cert) + "%</span>"  # generate confidence template
+    fieldcert = round(leaf.fieldconf * 100)  # certainty percentage
+    template = "<div class=\"domStyle\"><span>" + leaf.text + "</span></div><span class=\"confidence\">" \
+               + str(fieldcert) + "%</span>"  # generate confidence template
     leaf_value_identifier = identifier + 1
     leaf_value_parent = identifier
 
-    leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, label, template)
-    leaf_value["alternatives"] = ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
+    leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, leaf.text, template)
+    leaf_value["alternatives"] = ["{} ({}%)".format(leaf.text, fieldcert)] + \
+                                 ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
-    leaf_value["lowConfidence"] = conf <= 0.75  # TODO implement low confindence
+    leaf_value["lowConfidence"] = fieldcert <= 0.75  # TODO implement low confindence
 
     return [leaf_key, leaf_value]
 
