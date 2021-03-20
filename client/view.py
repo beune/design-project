@@ -86,7 +86,7 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
                                  ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
-    leaf_value["lowConfidence"] = fieldcert <= 0.75  # TODO implement low confindence
+    leaf_value["lowConfidence"] = fieldcert <= 75  # TODO implement low confindence
 
     return [leaf_key, leaf_value]
 
