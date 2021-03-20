@@ -163,9 +163,10 @@
             this.renderChart(this.treeData)
         },
         methods: {
-            handleHintMenu(value) {
+            handleHintMenu(text) {
               setTimeout(() => {
-                if (!value && !this.contextMenuVisible && !this.mouseHoveredOutside) {
+                console.log(text)
+                if (text != null && !this.contextMenuVisible && !this.mouseHoveredOutside) {
                   this.hintMenuVisible = true
                   this.mouseHoveredOutside = false
                 }
@@ -253,14 +254,14 @@
                       // console.log(d)
                       this.mouseHoveredOutside = false
                       this.currentNodeId = d
-                      let value = false
+                      let hint = null
                       this.treeData.forEach(function (object) {
                         console.log(parseInt(object.nodeId), " valueNode: ", object.valueNode, " ", d)
-                        if (object.nodeId === d && object.valueNode) {
-                          value = true
+                        if (object.nodeId === d) {
+                          hint = object.hint
                         }
                       })
-                      this.handleHintMenu(value)
+                      this.handleHintMenu(hint)
                     })
                     .onNodeClick(d => {
                       this.contextMenuVisible = true;
