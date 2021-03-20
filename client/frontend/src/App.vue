@@ -144,7 +144,7 @@ export default {
     }
   },
   mounted: function() {
-    eel.expose(this.changeState, "change_state");
+    eel.expose("changeState");
   },
   methods: {
     closePreferencesDialog() {

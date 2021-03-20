@@ -127,4 +127,4 @@ def notify(model):
     """
     linear_tree = generate_tree(model.tree)
     print(linear_tree)
-    eel.change_state(linear_tree, model.environment, model.text)
+    eel.changeState(linear_tree, model.environment, model.text)
