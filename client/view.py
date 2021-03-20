@@ -106,8 +106,13 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
     if template is None:  # default template
         template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
 
+    if parent_id is not None:
+        par = str(parent_id)
+    else:
+        par = None
+
     node = {"nodeId": str(identifier),
-            "parentNodeId": str(parent_id),
+            "parentNodeId": par,
             "valueNode": False,
             "lowConfidence": False,
             "width": 347,
@@ -115,7 +120,7 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
             "template": template,  # add
             "alternatives": None,
             "originalTemplate": template,
-            "hintTemplate": None,
+            "hint": None,
             "text": None}
 
     return node
