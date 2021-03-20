@@ -7,7 +7,8 @@ import jsonpickle
 import requests
 from report_tree.report_node import ReportNode
 
-ENDPOINT = "https://docker.beune.dev/"
+# ENDPOINT = "https://docker.beune.dev/"
+ENDPOINT = "http://127.0.0.1:5000/"
 
 
 class Model:

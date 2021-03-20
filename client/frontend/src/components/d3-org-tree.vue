@@ -163,13 +163,14 @@
             this.renderChart(this.treeData)
         },
         methods: {
-            handleHintMenu() {
+            handleHintMenu(text) {
               setTimeout(() => {
-                if (!this.contextMenuVisible && !this.mouseHoveredOutside) {
+                console.log(text)
+                if (text != null && !this.contextMenuVisible && !this.mouseHoveredOutside) {
                   this.hintMenuVisible = true
                   this.mouseHoveredOutside = false
                 }
-              }, 1000)
+              }, 800)
               let self = this
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
@@ -250,15 +251,23 @@
                         this.mouseHoveredOutside = true;
                     })
                     .onNodeHover(d => {
-                        this.mouseHoveredOutside = false
-                        this.currentNodeId = d
-                        this.handleHintMenu()
+                      // console.log(d)
+                      this.mouseHoveredOutside = false
+                      this.currentNodeId = d
+                      let hint = null
+                      this.treeData.forEach(function (object) {
+                        console.log(parseInt(object.nodeId), " valueNode: ", object.valueNode, " ", d)
+                        if (object.nodeId === d) {
+                          hint = object.hint
+                        }
+                      })
+                      this.handleHintMenu(hint)
                     })
                     .onNodeClick(d => {
-                        this.contextMenuVisible = true;
-                        // Do not show hint menu so that both menus won't overlap.
-                        this.hintMenuVisible = false;
-                        this.currentNodeId = d
+                      this.contextMenuVisible = true;
+                      // Do not show hint menu so that both menus won't overlap.
+                      this.hintMenuVisible = false;
+                      this.currentNodeId = d
                     })
                     .render();
             }

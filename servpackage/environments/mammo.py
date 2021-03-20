@@ -23,9 +23,31 @@ INPUT_FILE = "/AutomaticStructuring/data/testSample_input.xml"
 OUTPUT_FILE = "/AutomaticStructuring/data/out.json"
 
 hints = {
+    "breast composition": "In the BI-RADS edition 2013 the assignment of the breast composition is changed into a, b, c"
+                          "and d-categories followed by a description: \n"
+                          "- A The breast are almost entirely fatty. Mammography is highly sensitive in this setting.\n"
+                          "- B There are scattered areas of fibroglandular density. The term density describes the degr"
+                          "ee of x-ray attenuation of breast tissue but not discrete mammographic findings.\n"
+                          "- C The breasts are heterogeneously dense, which may obscure small masses."
+                          "Some areas in the breasts are sufficiently dense to obscure small masses.\n"
+                          "- D The breasts are extremely dense, which lowers the sensitivity of mammography",
     "shape": "oval-round-irregular",
-    "margin": "The margin of the mass",
+    # "margin": "The margin of the mass",
+    "margin": "The margin of the mass. The margin of a mass can be:\n"
+              "-Circumscribed \n"
+              "-Obscured or partially obscured\n"
+              "-Microlobulated. This implies a suspicious finding.\n"
+              "-Indistinct\n"
+              "-Spiculated with radiating lines from the mass is a very suspicious finding.\n",
+    "location": "The location of the mass",
+    "size": "The size of the mass",
     "density": "fat-low-equal-high",
+    "mass": " A Mass is a space occupying 3D lesion seen in two different projections."
+            "If a potential mass is seen in only a single projection it should be called a 'asymmetry' until its three-"
+            "dimensionality is confirmed."
+            "- Shape: oval (may include 2 or 3 lobulations), round or irregular\n"
+            "- Margins: circumscribed, obscured, microlobulated, indistinct, spiculated\n"
+            "- Density: high, equal, low or fat-containing.\n"
 }
 
 expected = {
