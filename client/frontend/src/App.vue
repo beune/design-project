@@ -98,22 +98,6 @@
 
       <!-- Sizes your content based upon application components -->
       <v-main>
-        <v-app-bar
-          :elevation="0"
-          dense
-        >
-          <v-container>
-            Mammografie 22-09-16
-          </v-container>
-          <v-spacer/>
-          <v-select style="width: 250px; padding-top: 16px;"
-                    :items="environments"
-                    v-model="environment"
-                    v-on:change="environmentChanged"
-                    dense
-                    height="23px"
-          ></v-select>
-        </v-app-bar>
         <!-- Provides the application the proper gutter -->
         <v-container fluid>
           <d3orgtree
