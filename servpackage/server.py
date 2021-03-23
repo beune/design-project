@@ -15,16 +15,17 @@ def run():
     """
     Method used to run the server
     """
-    app.run(port=8000, host="0.0.0.0")
+    app.run(port=5000, host="127.0.0.1")
 
 
 @app.route("/")
 def home():
     """
-    Stub method to test the REST API
-    :return:
+    Home endpoint
+    :return: Returns HTTPResponse with available environments as data
     """
-    return "HELLO WORLD"
+    envs = {environment.ENVS[endpoint].name: endpoint for endpoint in environment.ENVS}
+    return {"Response": 200, "Data": envs}
 
 
 @app.route("/<env_selected>/", methods=['GET'])
@@ -40,7 +41,8 @@ def get(env_selected):
     if not data['text']:
         abort(404, message="Text needed for nlp processing")
     text = data["text"]
-    ret = jsonpickle.encode(environment.envs[env_selected].process(text))
+    ret = jsonpickle.encode(environment.ENVS[env_selected].process(text))
+    print(ret)
     return {"Response": 200, "Data": ret}
 
 

@@ -130,10 +130,17 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
     return node
 
 
-def notify(model):
+def initialize(model):
+    """
+    Initialize view in frontend with initial data
+    """
+    eel.initialize_frontend(list(model.environments.keys()))
+
+
+def update(model):
     """
     Reflect the changes to the model in the front-end
     """
     linear_tree = generate_tree(model.tree)
     print(linear_tree)
-    eel.change_state(linear_tree, model.environment, model.text)
+    eel.update_frontend(linear_tree, model.environment, model.text)

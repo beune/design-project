@@ -12,9 +12,16 @@ class Environment:
     Class for environments
     """
 
-    def __init__(self, parse: Callable, hinter: Hinter = None):
+    def __init__(self, name: str, parse: Callable, hinter: Hinter = None):
+        """
+        Initialize environment object
+        :param name: the name of the environment (as it is presented in front end)
+        :param parse:
+        :param hinter:
+        """
         self.parse = parse
         self.hinter = hinter
+        self.name = name
 
     def process(self, text: str) -> ReportNode:
         """
@@ -28,7 +35,7 @@ class Environment:
         return processed
 
 
-envs = {
-    "mammo": Environment(mammo.parse, Hinter(mammo.expected, mammo.hints)),
-    "hersen": Environment(hersen.parse, Hinter(hersen.expected, hersen.hints)),
+ENVS = {
+    "mammo": Environment("Mammo", mammo.parse, Hinter(mammo.expected, mammo.hints)),
+    "hersen": Environment("Hersen", hersen.parse, Hinter(hersen.expected, hersen.hints))
 }

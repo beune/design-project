@@ -86,6 +86,14 @@
         >
           Help
         </v-btn>
+        <v-spacer/>
+        <v-select style="width: 250px; padding-top: 16px;"
+                  :items="environments"
+                  v-model="environment"
+                  v-on:change="environmentChanged"
+                  dense
+                  height="23px"
+        ></v-select>
       </v-app-bar>
 
       <!-- Sizes your content based upon application components -->
@@ -94,11 +102,17 @@
           :elevation="0"
           dense
         >
-          <v-list-item>
-            <v-list-item-content>
-              Mammografie 22-09-16
-            </v-list-item-content>
-          </v-list-item>
+          <v-container>
+            Mammografie 22-09-16
+          </v-container>
+          <v-spacer/>
+          <v-select style="width: 250px; padding-top: 16px;"
+                    :items="environments"
+                    v-model="environment"
+                    v-on:change="environmentChanged"
+                    dense
+                    height="23px"
+          ></v-select>
         </v-app-bar>
         <!-- Provides the application the proper gutter -->
         <v-container fluid>
@@ -136,7 +150,8 @@ export default {
   },
   data: () => ({
     tree: [],
-
+    environments: [],
+    environment: "",
   }),
   computed: {
     showPreferencesDialog() {
@@ -144,7 +159,8 @@ export default {
     }
   },
   mounted: function() {
-    eel.expose(this.changeState, "change_state");
+    eel.expose(this.initializeFrontend, "initialize_frontend");
+    eel.expose(this.updateFrontend, "update_frontend");
   },
   methods: {
     closePreferencesDialog() {
@@ -153,10 +169,18 @@ export default {
     test_function() {
       window.eel.test("test");
     },
-    changeState(tree, environment) {
+    //initialize frontend (called from backend)
+    initializeFrontend(environments) {
+      this.environments = environments
+    },
+    //update frontend (called from backend)
+    updateFrontend(tree, environment) {
       this.tree = tree;
       this.environment = environment;
-      console.log(tree)
+    },
+    //notifies backend of environment change
+    environmentChanged(newEnvironment) {
+      window.eel.update_environment(newEnvironment)
     }
   },
 }

@@ -5,15 +5,16 @@ import eel
 from model import Model
 import view
 from ui_automation import UIAutomation
+import requests
 
-model = Model(view.notify)
+model = Model(view.initialize, view.update)
 
 
 @eel.expose
 def update_environment(new_environment):
     """
     Update the model using the new_environment
-    :param new_environment:
+    :param new_environment: string corresponding to new environment
     """
     model.set_environment(new_environment)
 
@@ -32,6 +33,7 @@ def main():
     """
     eel.init('web')
     eel.start('index.html', block=False)
+    model.retrieve_initial_data()
     ui_automation = UIAutomation(update_text)
     ui_automation.start()
 

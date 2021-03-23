@@ -15,20 +15,38 @@ class Model:
     """
     Model contains the state of the client application.
     """
-    def __init__(self, notify: Callable[['Model'], None]):
-        self.environment = "mammo"
+
+    def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None]):
+        """
+        :param initialize_view: a callback function to initialize the view with initial data
+        :param update_view: a callback function to update the view when the model changed
+        """
+        self.initialize_view = initialize_view
+        self.update_view = update_view
+        self.environments = {}
+        self.environment = None
         self.text = ""
         self.tree = ReportNode("Root")
-        self.notify_view = notify
+
+    def retrieve_initial_data(self):
+        """
+        Retrieve initial data, i.e. data from 'home' endpoint, from the server
+        """
+        response = requests.get(ENDPOINT)
+        self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
+        self.initialize_view(self)
 
     def retrieve_tree(self):
         """
         Send the text to the server to retrieve the new tree.
         """
-        data = {"text": self.text}
-        response = requests.get(ENDPOINT + self.environment, json=data)
-        self.tree = jsonpickle.decode(response.json()["Data"])
-        self.notify_view(self)
+        if len(self.text) > 0 and self.environment:
+            data = {"text": self.text}
+            path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
+            response = requests.get(path, json=data)
+            if response.status_code == 200:  # TODO handle different status codes?
+                self.tree = jsonpickle.decode(response.json()["Data"])
+                self.update_view(self)
 
     def set_text(self, new_text: str):
         """
