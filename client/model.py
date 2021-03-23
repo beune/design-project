@@ -23,7 +23,7 @@ class Model:
         """
         self.initialize_view = initialize_view
         self.update_view = update_view
-        self.environments = {}
+        self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
         self.tree = ReportNode("Root")
