@@ -42,7 +42,6 @@ def get(env_selected):
         abort(404, message="Text needed for nlp processing")
     text = data["text"]
     ret = jsonpickle.encode(environment.ENVS[env_selected].process(text))
-    print(ret)
     return {"Response": 200, "Data": ret}
 
 
