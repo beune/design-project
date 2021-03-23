@@ -19,7 +19,7 @@ class HTTPTest(unittest.TestCase):
         data = {"text": text}
         pr = Process(target=server.run)
         pr.start()
-        response = requests.get("http://127.0.0.1:8000/hersen/", json=data)
+        response = requests.get("http://127.0.0.1:5000/env/hersen/", json=data)
         self.assertEqual(ReportNode, type(jsonpickle.decode(response.json()["Data"])))
         self.assertEqual(200, response.status_code)
         pr.terminate()
