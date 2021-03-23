@@ -152,7 +152,7 @@
             currentNodeId: undefined,
             vicinityMargin: 1,
             hintMenuContent: undefined,
-            mouseHoveredOutside: false
+            mouseHoversOnNode: true
         }),
         watch: {
             treeData: function(value) {
@@ -163,20 +163,15 @@
             this.renderChart(this.treeData)
         },
         methods: {
-            handleHintMenu(text) {
+            handleHintMenu(node) {
+              let currentNodeId = this.currentNodeId
               setTimeout(() => {
-                console.log(text)
-                if (text != null && !this.contextMenuVisible && !this.mouseHoveredOutside) {
+                if (node.hint != null && !this.contextMenuVisible && this.mouseHoversOnNode && currentNodeId === this.currentNodeId) {
                   this.hintMenuVisible = true
-                  this.mouseHoveredOutside = false
+                  this.mouseHoversOnNode = false
                 }
               }, 800)
-              let self = this
-              this.treeData.forEach(function(object){
-                if (object.nodeId === self.currentNodeId) {
-                  self.hintMenuContent = object.hint
-                }
-              });
+              this.hintMenuContent = node.hint
             },
             handleMouseMove(e){
               let mouseX = e.clientX
@@ -206,7 +201,7 @@
             toggleEditNodeLabelDialog(){
               //Only show dialog if there are alternatives available. If no alternatives available, show a snackbar that notifies the user.
               this.nodeLabelAlternatives = this.fetchNodeAlternatives()
-              if (this.nodeLabelAlternatives.length !== 0){
+              if (this.nodeLabelAlternatives !== null && this.nodeLabelAlternatives.length !== 0){
                 this.showEditNodeLabelDialog = !this.showEditNodeLabelDialog;
               }else{
                 this.showNoNodeLabelAlternativesAvailableSnackbar = true;
@@ -248,26 +243,18 @@
                     .container('.svgContainer')
                     .data(data)
                     .onNodeHoverOut(() => {
-                        this.mouseHoveredOutside = true;
+                        this.mouseHoversOnNode = false
                     })
                     .onNodeHover(d => {
-                      // console.log(d)
-                      this.mouseHoveredOutside = false
-                      this.currentNodeId = d
-                      let hint = null
-                      this.treeData.forEach(function (object) {
-                        console.log(parseInt(object.nodeId), " valueNode: ", object.valueNode, " ", d)
-                        if (object.nodeId === d) {
-                          hint = object.hint
-                        }
-                      })
-                      this.handleHintMenu(hint)
+                      this.mouseHoversOnNode = true
+                      this.currentNodeId = d.nodeId
+                      this.handleHintMenu(d)
                     })
                     .onNodeClick(d => {
                       this.contextMenuVisible = true;
                       // Do not show hint menu so that both menus won't overlap.
                       this.hintMenuVisible = false;
-                      this.currentNodeId = d
+                      this.currentNodeId = d.nodeId
                     })
                     .render();
             }
