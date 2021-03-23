@@ -156,7 +156,6 @@ export default {
     changeState(tree, environment) {
       this.tree = tree;
       this.environment = environment;
-      console.log(tree)
     }
   },
 }
