@@ -28,7 +28,7 @@ def home():
     return {"Response": 200, "Data": envs}
 
 
-@app.route("/<env_selected>/", methods=['GET'])
+@app.route("/env/<env_selected>/", methods=['GET'])
 def get(env_selected):
     """
     Method used to get the right environment
