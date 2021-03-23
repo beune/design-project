@@ -26,12 +26,12 @@ def parse(text: str) -> ReportNode:
            " as a result of seeding metastases: this can occur in medulloblastomas (PNET-MB), ependymomas, GBMs "
            "and oligodendrogliomas. Meningiomas and schwannomas can be multiple, especially in neurofibromatosis"
            " type II")
-    mass1.add_child(multifocality1)
     mass1.add_child(size1)
     neur = ReportLeaf("Neurofibromatose twee", "Neurofibromatosis II", 0.80,
                       {"meningiomas": 0.79, "ependymomas": 0.47, "choroid plexus papillomas": 0.11}, hin)
-    pos1.add_child(pos1.add_child(mass1.add_child(multifocality1.add_child(neur))))
-
+    multifocality1.add_child(neur)
+    mass1.add_child(multifocality1)
+    pos1.add_child(mass1)
     root.add_child(pos1)
 
     return root
