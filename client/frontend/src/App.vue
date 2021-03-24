@@ -3,8 +3,8 @@
     <v-app>
       <v-app-bar
         id="top-menu-bar"
+        absolute
         :elevation="0"
-        height="29px"
         dense
         color="primary"
       >
