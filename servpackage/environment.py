@@ -12,14 +12,16 @@ class Environment:
     Class for environments
     """
 
-    def __init__(self, name: str, parse: Callable, hinter: Hinter = None):
+    def __init__(self, name: str, parse: Callable, colours: dict, hinter: Hinter = None):
         """
         Initialize environment object
         :param name: the name of the environment (as it is presented in front end)
+        :param colours:
         :param parse:
         :param hinter:
         """
         self.parse = parse
+        self.colours = colours
         self.hinter = hinter
         self.name = name
 
@@ -36,6 +38,6 @@ class Environment:
 
 
 ENVS = {
-    "mammo": Environment("Mammo", mammo.parse, Hinter(mammo.expected, mammo.hints)),
-    "hersen": Environment("Hersen", hersen.parse, Hinter(hersen.expected, hersen.hints))
+    "mammo": Environment("Mammo", mammo.parse, mammo.COLOURS, Hinter(mammo.expected, mammo.hints)),
+    "hersen": Environment("Hersen", hersen.parse, {}, Hinter(hersen.expected, hersen.hints))
 }
