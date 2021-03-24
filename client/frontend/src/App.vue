@@ -3,8 +3,8 @@
     <v-app>
       <v-app-bar
         id="top-menu-bar"
+        absolute
         :elevation="0"
-        height="29px"
         dense
         color="primary"
       >
@@ -86,14 +86,18 @@
         >
           Help
         </v-btn>
-        <v-spacer/>
-        <v-select style="width: 250px; padding-top: 16px;"
-                  :items="environments"
-                  v-model="environment"
-                  v-on:change="environmentChanged"
-                  dense
-                  height="23px"
-        ></v-select>
+        <v-spacer />
+        <div style="width: 250px;">
+          <v-select
+            v-model="environment"
+            class="pt-5"
+            :dark="true"
+            :items="environments"
+            height="25px"
+            label="Environment"
+            @change="environmentChanged"
+          />
+        </div>
       </v-app-bar>
 
       <!-- Sizes your content based upon application components -->
