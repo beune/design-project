@@ -15,7 +15,7 @@ from report_tree.report_leaf import ReportLeaf
 Class used to connect Shreyasi's python2 algorithm to python 3
 """
 
-COLOURS = {"breast_composition": "E71212",
+COLOURS = {"breast_composition": "#E71212",
            "shape": "#E77C12",
            "margin": "#EDED12",
            "size": "#13EB13",
