@@ -18,6 +18,11 @@ def update_environment(new_environment):
     model.set_environment(new_environment)
 
 
+@eel.expose
+def update_tree(new_tree):
+    print("Nieuwe tree mannn!!!!")
+
+
 def update_text(new_text):
     """
     Update the model using the new_text

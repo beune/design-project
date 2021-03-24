@@ -102,6 +102,7 @@
         <v-container fluid>
           <d3orgtree
             :tree-data="tree"
+            @tree-changed="treeChanged()"
           />
         </v-container>
       </v-main>
@@ -165,6 +166,10 @@ export default {
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
+    },
+    treeChanged() {
+      console.log("Tree changed")
+      window.eel.update_tree(this.tree);
     }
   },
 }

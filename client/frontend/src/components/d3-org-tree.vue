@@ -220,6 +220,7 @@
               "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
+              this.$emit("tree-changed")
             },
             undoNodeLabelEdit(){
               let self = this
@@ -229,11 +230,13 @@
                 }
               });
               this.renderChart(this.treeData)
+              this.$emit("tree-changed")
             },
             deleteNodeLabel(){
               this.changeTemplate(this.currentNodeId,
               "<div class=\"domStyle\"><span>" + "?" + "</div></span><span class=\"material-icons\">mode</span>")
               this.renderChart(this.treeData)
+              this.$emit("tree-changed")
             },
             renderChart(data) {
                 if (!this.chartReference) {
