@@ -139,16 +139,23 @@ export default {
         {
           text: "Een",
           color: null,
+          type: "other",
         },
         {
           text: "stervormige laesie",
           color: "#E71212",
+          type: "label",
+          label: "mass/vorm"
         },
         {
           text: "laterale bovenkwadrant linkermamma,",
           color: "#FEFE7F",
+          type: "label",
+          label: "mass/location"
         },
-      ]
+      ],
+      type: "node",
+      label: "mass"
     },
   }),
   computed: {

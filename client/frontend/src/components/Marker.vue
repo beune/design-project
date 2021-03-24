@@ -1,16 +1,37 @@
 <template>
   <div
-    v-if="node.children"
+    v-if="node.type === 'node'"
     class="node"
   >
-    <marker-test v-for="child in node.children" :key="child" :node="child"/>
+    <v-tooltip
+      v-model="show"
+      top
+    >
+      <span>
+        <marker-test v-for="child in node.children" :key="child" :node="child" :parent-callback="display"/>
+      </span>
+      <span>{{ node.label }}</span>
+    </v-tooltip>
   </div>
   <div
     v-else
-    class="string"
+    :class="node.type"
     :style="testColor"
+    @mouseover="mouseOver"
+    @mouseleave="mouseOver"
   >
-    {{ node.text }}
+    <v-tooltip
+      v-model="show"
+      top
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <span
+          v-bind="attrs"
+          v-on="on"
+        >{{ node.text }}</span>
+      </template>
+      <span>{{ node.label }}</span>
+    </v-tooltip>
   </div>
 </template>
 
@@ -19,7 +40,11 @@ export default {
   name: "MarkerTest",
   props: {
     node: Object,
+    parentCallback: Function,
   },
+  data: () => ({
+    show: false,
+  }),
   computed: {
     testColor: function () {
       console.log(this.node.color);
@@ -27,6 +52,19 @@ export default {
         return '--test-color: ' + this.node.color + '4C;';
       }
       return '--test-color: transparent';
+    }
+  },
+  methods: {
+    mouseOver: function () {
+      if (this.node.type === "other") {
+        this.parentCallback();
+      } else if (this.node.type === "label") {
+        console.log("label")
+        this.display();
+      }
+    },
+    display: function () {
+      this.show = !this.show;
     }
   }
 }
@@ -38,12 +76,13 @@ export default {
   display: inline;
 }
 
-.node:hover {
-  text-decoration:underline;
-}
-
-.string{
+.label {
   background-color: var(--test-color);
   display: inline;
 }
+
+.other {
+  display: inline;
+}
+
 </style>
