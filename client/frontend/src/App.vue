@@ -86,14 +86,15 @@
         >
           Help
         </v-btn>
-        <v-spacer/>
-        <v-select style="width: 250px; padding-top: 16px;"
-                  :items="environments"
-                  v-model="environment"
-                  v-on:change="environmentChanged"
-                  dense
-                  height="23px"
-        ></v-select>
+        <v-spacer />
+        <v-select
+          v-model="environment"
+          style="width: 250px; padding-top: 16px;"
+          :items="environments"
+          dense
+          height="23px"
+          @change="environmentChanged"
+        />
       </v-app-bar>
 
       <!-- Sizes your content based upon application components -->
