@@ -154,9 +154,6 @@ export default {
     closePreferencesDialog() {
       this.$router.push({ path: '/' })
     },
-    test_function() {
-      window.eel.test("test");
-    },
     //initialize frontend (called from backend)
     initializeFrontend(environments) {
       this.environments = environments
