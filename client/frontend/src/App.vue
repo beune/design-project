@@ -99,11 +99,7 @@
       <!-- Sizes your content based upon application components -->
       <v-main>
         <!-- Provides the application the proper gutter -->
-        <v-container fluid>
-          <d3orgtree
-            :tree-data="tree"
-          />
-        </v-container>
+        <marker-test :node="text"/>
       </v-main>
     </v-app>
     <PreferencesDialog
@@ -124,18 +120,36 @@
 </style>
 
 <script>
-import d3orgtree from "./components/d3-org-tree.vue"
+// import d3orgtree from "./components/d3-org-tree.vue"
 import PreferencesDialog from "./components/PreferencesDialog.vue"
+import MarkerTest from "./components/Marker.vue"
 
 export default {
   components: {
-    d3orgtree,
-    PreferencesDialog
+    // d3orgtree,
+    PreferencesDialog,
+    MarkerTest,
   },
   data: () => ({
     tree: [],
     environments: [],
     environment: "",
+    text: {
+      children: [
+        {
+          text: "Een",
+          color: null,
+        },
+        {
+          text: "stervormige laesie",
+          color: "#E71212",
+        },
+        {
+          text: "laterale bovenkwadrant linkermamma,",
+          color: "#FEFE7F",
+        },
+      ]
+    },
   }),
   computed: {
     showPreferencesDialog() {
