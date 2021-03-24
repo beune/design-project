@@ -104,7 +104,7 @@
       <v-main>
         <!-- Provides the application the proper gutter -->
         <v-container fluid>
-          <d3orgtree
+          <d3orgtree v-if="tree.length !== 0"
             :tree-data="tree"
           />
         </v-container>
