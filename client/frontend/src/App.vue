@@ -110,6 +110,14 @@
           />
         </v-container>
       </v-main>
+      <v-snackbar
+      v-model="errorMessage"
+      :timeout="3000"
+      color="red"
+      justify="center"
+    >
+      {{ errorText }}
+    </v-snackbar>
     </v-app>
     <PreferencesDialog
       :show-preferences-dialog="showPreferencesDialog"
@@ -141,6 +149,8 @@ export default {
     tree: [],
     environments: [],
     environment: "",
+    errorMessage: false,
+    errorText: "",
   }),
   computed: {
     showPreferencesDialog() {
@@ -150,6 +160,7 @@ export default {
   mounted: function() {
     eel.expose(this.initializeFrontend, "initialize_frontend");
     eel.expose(this.updateFrontend, "update_frontend");
+    eel.expose(this.showServerError, "show_server_error")
   },
   methods: {
     closePreferencesDialog() {
@@ -167,6 +178,10 @@ export default {
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
+    },
+    showServerError(statusCode) {
+      this.errorText = "Server error: " + statusCode + ". " + "Cannot connect to the server"
+      this.errorMessage = true
     }
   },
 }
