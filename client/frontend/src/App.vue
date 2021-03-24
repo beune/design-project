@@ -89,10 +89,12 @@
         <v-spacer />
         <v-select
           v-model="environment"
-          style="width: 250px; padding-top: 16px;"
+          style="width: 10px;"
+          class="pt-5"
+          :dark="true"
           :items="environments"
-          dense
-          height="23px"
+          height="25px"
+          label="Environment"
           @change="environmentChanged"
         />
       </v-app-bar>
