@@ -7,8 +7,8 @@ import jsonpickle
 import requests
 from report_tree.report_node import ReportNode
 
-# ENDPOINT = "https://docker.beune.dev/"
-ENDPOINT = "http://127.0.0.1:5000/"
+ENDPOINT = "https://docker.beune.dev/"
+# ENDPOINT = "http://127.0.0.1:5000/"
 
 
 class Model:
@@ -26,6 +26,7 @@ class Model:
         self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
+        self.colours = {}
         self.tree = ReportNode("Root")
 
     def retrieve_initial_data(self):
@@ -48,6 +49,16 @@ class Model:
                 self.tree = jsonpickle.decode(response.json()["Data"])
                 self.update_view(self)
 
+    def retrieve_colours(self):
+        """
+        Method used to retrieve the coloring scheme for the environment
+        """
+        if self.environment:
+            path = ENDPOINT + "env/" + self.environments[self.environment] + "/colours"
+            response = requests.get(path)
+            if response.status_code == 200:
+                self.colours = jsonpickle.decode(response.json()["Data"])
+
     def set_text(self, new_text: str):
         """
         Store the new_text, update the tree and notify the view.
@@ -62,4 +73,5 @@ class Model:
         :param new_environment: the new environment.
         """
         self.environment = new_environment
+        self.retrieve_colours()
         self.retrieve_tree()
