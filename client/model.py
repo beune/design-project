@@ -7,8 +7,8 @@ import jsonpickle
 import requests
 from report_tree.report_node import ReportNode
 
-ENDPOINT = "https://docker.beune.dev/"
-# ENDPOINT = "http://127.0.0.1:5000/"
+# ENDPOINT = "https://docker.beune.dev/"
+ENDPOINT = "http://127.0.0.1:5000/"
 
 
 class Model:
@@ -16,13 +16,15 @@ class Model:
     Model contains the state of the client application.
     """
 
-    def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None]):
+    def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None],
+                 server_error: Callable[[int], None]):
         """
         :param initialize_view: a callback function to initialize the view with initial data
         :param update_view: a callback function to update the view when the model changed
         """
         self.initialize_view = initialize_view
         self.update_view = update_view
+        self.server_error = server_error
         self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
@@ -33,9 +35,16 @@ class Model:
         """
         Retrieve initial data, i.e. data from 'home' endpoint, from the server
         """
-        response = requests.get(ENDPOINT)
-        self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
-        self.initialize_view(self)
+        response = None
+        try:
+            response = requests.get(ENDPOINT)
+            self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
+            self.initialize_view(self)
+        except requests.exceptions.RequestException:
+            if response:
+                self.server_error(response.status_code)
+            else:
+                self.server_error(404)
 
     def retrieve_tree(self):
         """
@@ -44,10 +53,16 @@ class Model:
         if len(self.text) > 0 and self.environment:
             data = {"text": self.text}
             path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
-            response = requests.get(path, json=data)
-            if response.status_code == 200:  # TODO handle different status codes?
+            response = None
+            try:
+                response = requests.get(path, json=data)
                 self.tree = jsonpickle.decode(response.json()["Data"])
                 self.update_view(self)
+            except requests.exceptions.RequestException:
+                if response:
+                    self.server_error(response.status_code)
+                else:
+                    self.server_error(500)
 
     def retrieve_colours(self):
         """

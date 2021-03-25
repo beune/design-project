@@ -3,8 +3,8 @@
     <v-app>
       <v-app-bar
         id="top-menu-bar"
+        absolute
         :elevation="0"
-        height="29px"
         dense
         color="primary"
       >
@@ -86,21 +86,67 @@
         >
           Help
         </v-btn>
-        <v-spacer/>
-        <v-select style="width: 250px; padding-top: 16px;"
-                  :items="environments"
-                  v-model="environment"
-                  v-on:change="environmentChanged"
-                  dense
-                  height="23px"
-        ></v-select>
+        <v-spacer />
+        <div style="width: 250px;">
+          <v-select
+            v-model="environment"
+            class="pt-5"
+            dark
+            :items="environments"
+            height="25px"
+            label="Environment"
+            @change="environmentChanged"
+          />
+        </div>
+        <template v-slot:extension>
+          <v-tabs
+            v-model="tab"
+            align-with-title
+            grow
+            dark
+          >
+            <v-tabs-slider color="orange" />
+            <v-tab
+              v-for="tab in tabs"
+              :key="tab"
+            >
+              {{ tab }}
+            </v-tab>
+          </v-tabs>
+        </template>
       </v-app-bar>
 
       <!-- Sizes your content based upon application components -->
       <v-main>
         <!-- Provides the application the proper gutter -->
-        <marker-test :node="text"/>
+
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <div style="padding-top: 90px;">
+              <d3orgtree
+                v-if="tree.length !== 0"
+                :tree-data="tree"
+              />
+            </div>
+          </v-tab-item>
+
+          <v-tab-item>
+            <v-container fluid>
+              <div style="padding-top: 90px;">
+                <marker-test :node="text"/>
+              </div>
+            </v-container>
+          </v-tab-item>
+        </v-tabs-items>
       </v-main>
+      <v-snackbar
+        v-model="errorMessage"
+        :timeout="3000"
+        color="red"
+        justify="center"
+      >
+        {{ errorText }}
+      </v-snackbar>
     </v-app>
     <PreferencesDialog
       :show-preferences-dialog="showPreferencesDialog"
@@ -110,6 +156,10 @@
 </template>
 
 <style lang="scss">
+.v-tabs-slider-wrapper {
+  border: 3px solid #EF7104;
+}
+
 #menu-bar-wrapper {
   border-bottom: black 1px;
 }
@@ -120,20 +170,24 @@
 </style>
 
 <script>
-// import d3orgtree from "./components/d3-org-tree.vue"
+import d3orgtree from "./components/d3-org-tree.vue"
 import PreferencesDialog from "./components/PreferencesDialog.vue"
 import MarkerTest from "./components/Marker.vue"
 
 export default {
   components: {
-    // d3orgtree,
+    d3orgtree,
     PreferencesDialog,
     MarkerTest,
   },
   data: () => ({
+    tab: null,
+    tabs: ["Tree" ,"Text"],
     tree: [],
     environments: [],
     environment: "",
+    errorMessage: false,
+    errorText: "",
     text: {}
   }),
   computed: {
@@ -144,13 +198,11 @@ export default {
   mounted: function() {
     eel.expose(this.initializeFrontend, "initialize_frontend");
     eel.expose(this.updateFrontend, "update_frontend");
+    eel.expose(this.showServerError, "show_server_error")
   },
   methods: {
     closePreferencesDialog() {
       this.$router.push({ path: '/' })
-    },
-    test_function() {
-      window.eel.test("test");
     },
     //initialize frontend (called from backend)
     initializeFrontend(environments) {
@@ -165,6 +217,10 @@ export default {
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
+    },
+    showServerError(statusCode) {
+      this.errorText = "Server error: " + statusCode + ". " + "Cannot connect to the server"
+      this.errorMessage = true
     }
   },
 }

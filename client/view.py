@@ -192,3 +192,12 @@ def update(model):
     linear_tree = generate_tree(model.tree)
     visual_text = set_node_colours(model.tree, "", model.colours)
     eel.update_frontend(linear_tree, model.environment, visual_text)
+
+
+def server_error(status_code):
+    """
+    Method used to display an error in the connection to the server
+    :param status_code: The status code of the server error
+    # :param mess: The accompanying error message
+    """
+    eel.show_server_error(status_code)
