@@ -7,9 +7,11 @@
       v-model="show"
       top
     >
-      <span>
-        <marker-test v-for="child in node.children" :key="child" :node="child" :parent-callback="display"/>
-      </span>
+      <template slot="activator">
+        <span>
+          <marker-test v-for="child in node.children" :key="child" :node="child" :parent-callback="display"/>
+        </span>
+      </template>
       <span>{{ node.label }}</span>
     </v-tooltip>
   </div>
@@ -24,11 +26,8 @@
       v-model="show"
       top
     >
-      <template v-slot:activator="{ on, attrs }">
-        <span
-          v-bind="attrs"
-          v-on="on"
-        >{{ node.text }}</span>
+      <template slot="activator">
+        <span>{{ node.text }}</span>
       </template>
       <span>{{ node.label }}</span>
     </v-tooltip>

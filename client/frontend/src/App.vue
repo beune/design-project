@@ -145,7 +145,7 @@ export default {
           text: "stervormige laesie",
           color: "#E71212",
           type: "label",
-          label: "mass/vorm"
+          label: "mass/shape",
         },
         {
           text: "laterale bovenkwadrant linkermamma,",
@@ -155,7 +155,7 @@ export default {
         },
       ],
       type: "node",
-      label: "mass"
+      label: "mass",
     },
   }),
   computed: {
