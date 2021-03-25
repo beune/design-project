@@ -91,23 +91,50 @@
           <v-select
             v-model="environment"
             class="pt-5"
-            :dark="true"
+            dark
             :items="environments"
             height="25px"
             label="Environment"
             @change="environmentChanged"
           />
         </div>
+        <template v-slot:extension>
+          <v-tabs
+            v-model="tab"
+            align-with-title
+            grow
+            dark
+          >
+            <v-tabs-slider color="orange" />
+            <v-tab
+              v-for="tab in tabs"
+              :key="tab"
+            >
+              {{ tab }}
+            </v-tab>
+          </v-tabs>
+        </template>
       </v-app-bar>
 
       <!-- Sizes your content based upon application components -->
       <v-main>
         <!-- Provides the application the proper gutter -->
         <v-container fluid>
-          <d3orgtree
-            v-if="tree.length !== 0"
-            :tree-data="tree"
-          />
+          <v-tabs-items v-model="tab">
+            <v-tab-item>
+              <div style="padding-top: 90px;">
+                <d3orgtree
+                  v-if="tree.length !== 0"
+                  :tree-data="tree"
+                />
+              </div>
+            </v-tab-item>
+            <v-tab-item>
+              <div style="padding-top: 90px;">
+                Text!
+              </div>
+            </v-tab-item>
+          </v-tabs-items>
         </v-container>
       </v-main>
     </v-app>
@@ -119,6 +146,10 @@
 </template>
 
 <style lang="scss">
+.v-tabs-slider-wrapper {
+  border: 3px solid #EF7104;
+}
+
 #menu-bar-wrapper {
   border-bottom: black 1px;
 }
@@ -138,6 +169,8 @@ export default {
     PreferencesDialog
   },
   data: () => ({
+    tab: null,
+    tabs: ["Tree" ,"Text"],
     tree: [],
     environments: [],
     environment: "",
