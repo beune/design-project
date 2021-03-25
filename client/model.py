@@ -93,4 +93,3 @@ class Model:
             self.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
             self.server_error(e.args[0])
-
