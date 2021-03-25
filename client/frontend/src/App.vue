@@ -138,20 +138,20 @@ export default {
       children: [
         {
           text: "Een ",
-          color: null,
+          colour: null,
           type: "other",
         },
         {
           text: "stervormige laesie ",
-          color: "#E71212",
+          colour: "#E71212",
           type: "label",
           label: "mass/shape",
         },
         {
           text: "laterale bovenkwadrant \n linkermamma, ",
-          color: "#FEFE7F",
+          colour: "#FEFE7F",
           type: "label",
-          label: "mass/location"
+          label: "mass/location",
         },
       ],
       type: "node",
@@ -179,9 +179,10 @@ export default {
       this.environments = environments
     },
     //update frontend (called from backend)
-    updateFrontend(tree, environment) {
+    updateFrontend(tree, environment, text) {
       this.tree = tree;
       this.environment = environment;
+      this.text = text;
     },
     //notifies backend of environment change
     environmentChanged(newEnvironment) {

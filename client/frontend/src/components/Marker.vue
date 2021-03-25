@@ -46,8 +46,8 @@ export default {
   }),
   computed: {
     testColor: function () {
-      if (this.node.color) {
-        return '--test-color: ' + this.node.color + '4C;';
+      if (this.node.colour) {
+        return '--test-color: ' + this.node.colour + '4C;';
       }
       return '--test-color: transparent';
     },
