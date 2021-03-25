@@ -101,7 +101,6 @@
         <template v-slot:extension>
           <v-tabs
             v-model="tab"
-            align-with-title
             grow
             dark
           >
