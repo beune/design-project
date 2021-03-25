@@ -14,6 +14,17 @@ from report_tree.report_leaf import ReportLeaf
 """
 Class used to connect Shreyasi's python2 algorithm to python 3
 """
+
+COLOURS = {"breast_composition": "#E71212",
+           "shape": "#E77C12",
+           "margin": "#EDED12",
+           "size": "#13EB13",
+           "location": "#13EBEB",
+           "morphology": "#1313EB",
+           "associated_features": "#D981D9",
+           "distribution": "#81ADD9",
+           }
+
 COMM = "python2 \"./nlp/AutomaticStructuring/CRF Model A/predict_labels.py\""
 PATH = "./nlp"
 
@@ -66,6 +77,14 @@ options = {
 }
 
 alternatives = {key: {label: 0 for label in option_list} for key, option_list in options.items()}
+
+
+def get_colours() -> dict:
+    """
+    Method used to retrieve the colour palette of the mammo environment
+    :return: Dictionary with labels mapped to colours
+    """
+    return COLOURS
 
 
 def parse(text):
@@ -134,7 +153,7 @@ def after(label_after: str, label_before: str) -> bool:
     :return: true if the label can come afterwards
     """
     return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:] \
-        or label_before == label_after == 'O'
+           or label_before == label_after == 'O'
 
 
 def clean(unfiltered: str) -> str:
@@ -209,5 +228,6 @@ if __name__ == '__main__':
     tree = make_tree([], data)
     add_labels(tree)
     import pickle
+
     with open("TESTPICKLE.pkl", "wb") as tree_file:
         pickle.dump(tree, tree_file)
