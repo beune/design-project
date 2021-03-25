@@ -119,23 +119,26 @@
       <!-- Sizes your content based upon application components -->
       <v-main>
         <!-- Provides the application the proper gutter -->
-        <v-container fluid>
-          <v-tabs-items v-model="tab">
-            <v-tab-item>
-              <div style="padding-top: 90px;">
-                <d3orgtree
-                  v-if="tree.length !== 0"
-                  :tree-data="tree"
-                />
-              </div>
-            </v-tab-item>
-            <v-tab-item>
+
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <div style="padding-top: 90px;">
+              <d3orgtree
+                v-if="tree.length !== 0"
+                :tree-data="tree"
+              />
+            </div>
+          </v-tab-item>
+
+          <v-tab-item>
+            <v-container fluid>
               <div style="padding-top: 90px;">
                 Text!
               </div>
-            </v-tab-item>
-          </v-tabs-items>
-        </v-container>
+           </v-container>
+          </v-tab-item>
+        </v-tabs-items>
+
       </v-main>
     </v-app>
     <PreferencesDialog
