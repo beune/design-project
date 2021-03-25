@@ -133,7 +133,7 @@
           <v-tab-item>
             <v-container fluid>
               <div style="padding-top: 90px;">
-                Text!
+                <marker-test :node="text"/>
               </div>
             </v-container>
           </v-tab-item>
@@ -172,11 +172,13 @@
 <script>
 import d3orgtree from "./components/d3-org-tree.vue"
 import PreferencesDialog from "./components/PreferencesDialog.vue"
+import MarkerTest from "./components/Marker.vue"
 
 export default {
   components: {
     d3orgtree,
-    PreferencesDialog
+    PreferencesDialog,
+    MarkerTest,
   },
   data: () => ({
     tab: null,
@@ -186,6 +188,7 @@ export default {
     environment: "",
     errorMessage: false,
     errorText: "",
+    text: {}
   }),
   computed: {
     showPreferencesDialog() {
@@ -206,9 +209,10 @@ export default {
       this.environments = environments
     },
     //update frontend (called from backend)
-    updateFrontend(tree, environment) {
+    updateFrontend(tree, environment, text) {
       this.tree = tree;
       this.environment = environment;
+      this.text = text;
     },
     //notifies backend of environment change
     environmentChanged(newEnvironment) {

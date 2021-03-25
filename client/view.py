@@ -1,6 +1,8 @@
 """
 Imports
 """
+from typing import Dict
+
 import eel
 
 from report_tree.report_node import ReportNode
@@ -130,6 +132,52 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
     return node
 
 
+def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str]):
+    """
+    Method used to create the text object with colour for nodes
+    :param node: The ReportNode which needs to be formed into the right format for the frontend
+    :param parent_label: The label of the parent of the node
+    :param colours: The colourdictionary for the current environment
+    :return: Returns the object generated out the node for the frontend
+    """
+    children = []
+    label = "{}{}".format(parent_label, node.category)
+    for child in node:
+        if type(child) == ReportLeaf:
+            res = set_leaf_colours(child, label + "/", colours)
+        else:
+            res = set_node_colours(child, label + "/", colours)
+        children.append(res)
+    return {
+        "children": children,
+        "type": "node",
+        "label": label,
+    }
+
+
+def set_leaf_colours(leaf: ReportLeaf, parent_label: str, colours: Dict[str, str]):
+    """
+    Method used to create the text object with colour for the leaves
+    :param leaf: The ReportLeaf which needs to get a colour
+    :param parent_label: The label of the parent
+    :param colours: The colourdictionary for the current environment
+    :return: Returns the object needed for the frontend
+    """
+    label = "{}{}".format(parent_label, leaf.field)
+    if leaf.field == "O":
+        result_type = "other"
+        colour = None
+    else:
+        result_type = "label"
+        colour = colours[leaf.field]
+    return {
+        "text": leaf.text,
+        "colour": colour,
+        "type": result_type,
+        "label": label,
+    }
+
+
 def initialize(model):
     """
     Initialize view in frontend with initial data
@@ -142,8 +190,8 @@ def update(model):
     Reflect the changes to the model in the front-end
     """
     linear_tree = generate_tree(model.tree)
-    print(linear_tree)
-    eel.update_frontend(linear_tree, model.environment, model.text)
+    visual_text = set_node_colours(model.tree, "", model.colours)
+    eel.update_frontend(linear_tree, model.environment, visual_text)
 
 
 def server_error(status_code):
