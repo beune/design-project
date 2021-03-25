@@ -87,7 +87,7 @@
           Help
         </v-btn>
         <v-spacer />
-        <div style="width: 250px;">
+        <div style="width: 250px; padding-top: 10px;">
           <v-select
             v-model="environment"
             class="pt-5"
