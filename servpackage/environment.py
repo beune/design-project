@@ -39,5 +39,5 @@ class Environment:
 
 ENVS = {
     "mammo": Environment("Mammo", mammo.parse, mammo.COLOURS, Hinter(mammo.expected, mammo.hints)),
-    "hersen": Environment("Hersen", hersen.parse, {}, Hinter(hersen.expected, hersen.hints))
+    "hersen": Environment("Hersen", hersen.parse, hersen.COLOURS, Hinter(hersen.expected, hersen.hints))
 }
