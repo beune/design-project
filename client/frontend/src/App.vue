@@ -218,8 +218,8 @@ export default {
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
     },
-    showServerError(statusCode) {
-      this.errorText = "Server error: " + statusCode + ". " + "Cannot connect to the server"
+    showServerError(mess) {
+      this.errorText = mess
       this.errorMessage = true
     }
   },
