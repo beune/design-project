@@ -16,7 +16,7 @@ def generate_tree(tree: ReportNode):
     :return: Structured data for the front end in Json
     """
     nodes = []
-    new_id = 0
+    traversed_hashes = {}
 
     def traverse(root: ReportNode, parent_id: str = None):
         """
@@ -25,10 +25,12 @@ def generate_tree(tree: ReportNode):
         :param root: The node currently being traversed, containing all necessary information including children
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
-        nonlocal new_id
+        nonlocal nodes
+        new_id = create_hash(root.category, parent_id) if parent_id else create_hash(root.category)
+
         nodes.append(make_node(root, new_id, parent_id))
-        parent = new_id
-        new_id += 1
+        parent_id = new_id
+
         for expects_label in root.expects:  # add expects nodes
             flag = True
             for child in root.children:
@@ -52,11 +54,35 @@ def generate_tree(tree: ReportNode):
         :param leaf: The leaf currently being traversed, containing all necessary information including its text
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
         """
-        nonlocal new_id
+        nonlocal nodes
         if leaf.field != 'O':  # 'Other' leaves are currently excluded
             field_id = create_hash(leaf.field, parent_id)
             value_id = create_hash(leaf.text, field_id)
             nodes.extend(make_leaf(leaf, field_id, value_id, parent_id))
+
+    def create_hash(*args: list):
+        """
+        Creates a string from the input strings, used as id of a node/leaf,
+        Used to link user changes to a changing tree
+        :param args: Either text + label + parent_hashes  or  category + hashes
+        :return: A string concatenation of the input strings
+        """
+        nonlocal nodes, traversed_hashes
+        hash_string = ""
+        for arg in args[:-1]:
+            hash_string += str(arg) + "_"
+        hash_string += str(args[-1])
+
+        if hash_string not in traversed_hashes:
+            traversed_hashes[hash_string] = 1
+        else:
+            hash_string = hash_string + traversed_hashes[hash_string]
+            traversed_hashes[hash_string] += 1
+
+        return hash_string
+
+    traverse(tree)
+    return nodes
 
 
 def make_node(node: ReportNode, identifier: str, parent_id: str):
@@ -90,7 +116,7 @@ def make_leaf(leaf: ReportLeaf, identifier_field: str, identifier_value: str, pa
                                  ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
-    leaf_value["lowConfidence"] = fieldcert <= 75  # TODO implement low confindence
+    leaf_value["lowConfidence"] = field_cert <= 75  # TODO implement low confindence
 
     return [leaf_key, leaf_value]
 
