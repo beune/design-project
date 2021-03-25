@@ -156,7 +156,7 @@
 
 <style lang="scss">
 .v-tabs-slider-wrapper {
-  border: 3px solid #EF7104;
+  border: 4px solid #EF7104;
 }
 
 #menu-bar-wrapper {
