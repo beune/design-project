@@ -134,29 +134,7 @@ export default {
     tree: [],
     environments: [],
     environment: "",
-    text: {
-      children: [
-        {
-          text: "Een ",
-          colour: null,
-          type: "other",
-        },
-        {
-          text: "stervormige laesie ",
-          colour: "#E71212",
-          type: "label",
-          label: "mass/shape",
-        },
-        {
-          text: "laterale bovenkwadrant \n linkermamma, ",
-          colour: "#FEFE7F",
-          type: "label",
-          label: "mass/location",
-        },
-      ],
-      type: "node",
-      label: "mass",
-    },
+    text: {}
   }),
   computed: {
     showPreferencesDialog() {

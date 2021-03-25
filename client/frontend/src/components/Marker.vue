@@ -9,7 +9,7 @@
     >
       <template slot="activator">
         <span>
-          <marker-test v-for="child in node.children" :key="child" :node="child" :parent-callback="display"/>
+          <marker-test v-for="child in node.children" :key="child" :node="child" :parent-open-callback="display" :parent-close-callback="hide"/>
         </span>
       </template>
       <span>{{ node.label }}</span>
@@ -20,14 +20,14 @@
     :class="style_class"
     :style="testColor"
     @mouseover="mouseOver"
-    @mouseleave="mouseOver"
+    @mouseleave="mouseLeave"
   >
     <v-tooltip
       v-model="show"
       top
     >
       <template slot="activator">
-        <span>{{ node.text }}</span>
+        <span> {{ node.text }}</span>
       </template>
       <span>{{ node.label }}</span>
     </v-tooltip>
@@ -39,7 +39,8 @@ export default {
   name: "MarkerTest",
   props: {
     node: Object,
-    parentCallback: Function,
+    parentOpenCallback: Function,
+    parentCloseCallback: Function,
   },
   data: () => ({
     show: false,
@@ -58,13 +59,23 @@ export default {
   methods: {
     mouseOver: function () {
       if (this.node.type === "other") {
-        this.parentCallback();
+        this.parentOpenCallback();
       } else if (this.node.type === "label") {
         this.display();
       }
     },
+    mouseLeave: function () {
+      if (this.node.type === "other") {
+        this.parentCloseCallback();
+      } else if (this.node.type === "label") {
+        this.hide();
+      }
+    },
     display: function () {
-      this.show = !this.show;
+      this.show = true;
+    },
+    hide: function() {
+      this.show = false;
     }
   }
 }
