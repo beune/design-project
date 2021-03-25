@@ -17,7 +17,7 @@ class Model:
     """
 
     def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None],
-                 server_error: Callable[[int], None]):
+                 server_error: Callable[[str], None]):
         """
         :param initialize_view: a callback function to initialize the view with initial data
         :param update_view: a callback function to update the view when the model changed
@@ -35,16 +35,10 @@ class Model:
         """
         Retrieve initial data, i.e. data from 'home' endpoint, from the server
         """
-        response = None
-        try:
-            response = requests.get(ENDPOINT)
+        response = self.get_request(ENDPOINT)
+        if response:
             self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
             self.initialize_view(self)
-        except requests.exceptions.RequestException:
-            if response:
-                self.server_error(response.status_code)
-            else:
-                self.server_error(404)
 
     def retrieve_tree(self):
         """
@@ -53,16 +47,10 @@ class Model:
         if len(self.text) > 0 and self.environment:
             data = {"text": self.text}
             path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
-            response = None
-            try:
-                response = requests.get(path, json=data)
+            response = self.get_request(path, data)
+            if response:
                 self.tree = jsonpickle.decode(response.json()["Data"])
                 self.update_view(self)
-            except requests.exceptions.RequestException:
-                if response:
-                    self.server_error(response.status_code)
-                else:
-                    self.server_error(500)
 
     def retrieve_colours(self):
         """
@@ -70,8 +58,8 @@ class Model:
         """
         if self.environment:
             path = ENDPOINT + "env/" + self.environments[self.environment] + "/colours"
-            response = requests.get(path)
-            if response.status_code == 200:
+            response = self.get_request(path)
+            if response:
                 self.colours = jsonpickle.decode(response.json()["Data"])
 
     def set_text(self, new_text: str):
@@ -90,3 +78,19 @@ class Model:
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
+
+    def get_request(self, path: str, data=None):
+        """
+        Method used to create get requests
+        :param path:
+        :param data:
+        """
+        try:
+            response = requests.get(path, json=data)
+            response.raise_for_status()
+            return response
+        except requests.exceptions.ConnectionError as c:
+            self.server_error(c.args[0].args[0])
+        except requests.exceptions.RequestException as e:
+            self.server_error(e.args[0])
+
