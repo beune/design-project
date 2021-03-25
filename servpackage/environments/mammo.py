@@ -153,7 +153,7 @@ def after(label_after: str, label_before: str) -> bool:
     :return: true if the label can come afterwards
     """
     return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:] \
-           or label_before == label_after == 'O'
+       or label_before == label_after == 'O'
 
 
 def clean(unfiltered: str) -> str:
