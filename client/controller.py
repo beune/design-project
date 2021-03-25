@@ -20,7 +20,17 @@ def update_environment(new_environment):
 
 @eel.expose
 def update_tree(new_tree):
-    print("Nieuwe tree mannn!!!!")
+    old_tree = view.generate_tree(model.tree)
+    tree_changes = tree_user_changes_map(new_tree, old_tree)
+    model.set_changes_map(tree_changes)
+
+def tree_user_changes_map(new_tree, old_tree):
+    # tree_changes = {}
+    # for new_node, old_node in zip(new_tree, old_tree):
+    #     if new_node
+    #
+    # return tree_changes
+    pass
 
 
 def update_text(new_text):

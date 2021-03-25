@@ -207,17 +207,17 @@
                 this.showNoNodeLabelAlternativesAvailableSnackbar = true;
               }
             },
-            changeTemplate(nodeId, template){
+            changeLabel(nodeId, label){
               this.treeData.forEach(function(object){
                 if (object.nodeId === nodeId) {
-                  object.template = template
+                  object.label = label
+                  object.template = "<div class=\"domStyle\"><span>" + label.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>"
                 }
               });
             },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
-              this.changeTemplate(this.currentNodeId,
-              "<div class=\"domStyle\"><span>" + this.chosenNodeLabelAlternative.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>")
+              this.changeLabel(this.currentNodeId, this.chosenNodeLabelAlternative)
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
               this.$emit("tree-changed")
@@ -233,8 +233,7 @@
               this.$emit("tree-changed")
             },
             deleteNodeLabel(){
-              this.changeTemplate(this.currentNodeId,
-              "<div class=\"domStyle\"><span>" + "?" + "</div></span><span class=\"material-icons\">mode</span>")
+              this.changeLabel(this.currentNodeId, "?")
               this.renderChart(this.treeData)
               this.$emit("tree-changed")
             },

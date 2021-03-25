@@ -27,6 +27,7 @@ class Model:
         self.environment = None
         self.text = ""
         self.tree = ReportNode("Root")
+        self.tree_changes = {}
 
     def retrieve_initial_data(self):
         """
@@ -63,3 +64,6 @@ class Model:
         """
         self.environment = new_environment
         self.retrieve_tree()
+
+    def set_changes_map(self, tree_changes):
+        self.tree_changes = tree_changes

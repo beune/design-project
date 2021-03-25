@@ -2,6 +2,7 @@
 Imports
 """
 import eel
+import json
 
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import ReportLeaf
@@ -17,7 +18,7 @@ def generate_tree(tree: ReportNode):
     nodes = []
     new_id = 0
 
-    def traverse(root: ReportNode, parent_id: int = None):
+    def traverse(root: ReportNode, parent_id: str = None):
         """
         Function which traverses through tree by calling recursively calling its children,
         while calling the add_nodes function on each node.
@@ -36,16 +37,16 @@ def generate_tree(tree: ReportNode):
                         flag = False
                         break
             if flag:
-                nodes.append(json_node_template(new_id, parent, expects_label))
-                new_id += 1
+                new_id = create_hash(expects_label, parent_id)
+                nodes.append(json_node_template(new_id, parent_id, expects_label))
 
         for child in root:
             if isinstance(child, ReportLeaf):
-                process_leaf(child, parent)
+                process_leaf(child, parent_id)
             else:
-                traverse(child, parent)
+                traverse(child, parent_id)
 
-    def process_leaf(leaf: ReportLeaf, parent_id: int):
+    def process_leaf(leaf: ReportLeaf, parent_id: str):
         """
         Calls the add_nodes function on the leaves and their text, adding 2 nodes
         :param leaf: The leaf currently being traversed, containing all necessary information including its text
@@ -53,14 +54,12 @@ def generate_tree(tree: ReportNode):
         """
         nonlocal new_id
         if leaf.field != 'O':  # 'Other' leaves are currently excluded
-            nodes.extend(make_leaf(leaf, new_id, parent_id))
-            new_id += 2  # increment with 2, since leaves contain of 2 json objects
-
-    traverse(tree)
-    return nodes
+            field_id = create_hash(leaf.field, parent_id)
+            value_id = create_hash(leaf.text, field_id)
+            nodes.extend(make_leaf(leaf, field_id, value_id, parent_id))
 
 
-def make_node(node: ReportNode, identifier: int, parent_id: int):
+def make_node(node: ReportNode, identifier: str, parent_id: str):
     """
     Create a regular (category) node, in json/dictionary format
     :param node: object that represents the node
@@ -72,23 +71,22 @@ def make_node(node: ReportNode, identifier: int, parent_id: int):
     return node
 
 
-def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
+def make_leaf(leaf: ReportLeaf, identifier_field: str, identifier_value: str, parent_id: str):
     """
     Create a leaf, which consists of two json objects: the leaf key and the leaf value
     :param leaf: object that represents the leave
-    :param identifier: The id given to the key of the leaf, the value will have the id incremented with one
+    :param identifier_value: The id given to the label of the leaf
+    :param identifier_field: The id given to the key of the leaf
     :param parent_id: The id of the parent of the leaf currently being added
     :return: a list containing the key and value json objects
     """
-    leaf_key = json_node_template(identifier, parent_id, leaf.field, hint=leaf.hint)
-    fieldcert = round(leaf.fieldconf * 100)  # certainty percentage
+    leaf_key = json_node_template(identifier_field, parent_id, leaf.field, hint=leaf.hint)
+    field_cert = round(leaf.fieldconf * 100)  # certainty percentage
     template = "<div class=\"domStyle\"><span>" + leaf.text + "</span></div><span class=\"confidence\">" \
-               + str(fieldcert) + "%</span>"  # generate confidence template
-    leaf_value_identifier = identifier + 1
-    leaf_value_parent = identifier
+               + str(field_cert) + "%</span>"  # generate confidence template
 
-    leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, leaf.text, template)
-    leaf_value["alternatives"] = ["{} ({}%)".format(leaf.text, fieldcert)] + \
+    leaf_value = json_node_template(identifier_value, identifier_field, leaf.text, template)
+    leaf_value["alternatives"] = ["{} ({}%)".format(leaf.text, field_cert)] + \
                                  ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
@@ -97,7 +95,7 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     return [leaf_key, leaf_value]
 
 
-def json_node_template(identifier: int, parent_id: int, label: str, template: str = None, hint: str = None):
+def json_node_template(identifier: str, parent_id: str, label: str, template: str = None, hint: str = None):
     """
     Helper function that generates a basic structure for the json objects used in functions above
     :param hint: The hint, if it is a key node
@@ -111,11 +109,11 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
         template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
 
     if parent_id is not None:
-        par = str(parent_id)
+        par = parent_id
     else:
         par = None
 
-    node = {"nodeId": str(identifier),
+    node = {"nodeId": identifier,
             "parentNodeId": par,
             "valueNode": False,
             "lowConfidence": False,
@@ -125,6 +123,7 @@ def json_node_template(identifier: int, parent_id: int, label: str, template: st
             "alternatives": None,
             "originalTemplate": template,
             "hint": hint,
+            "label": label,
             "text": None}
 
     return node
@@ -142,5 +141,5 @@ def update(model):
     Reflect the changes to the model in the front-end
     """
     linear_tree = generate_tree(model.tree)
-    print(linear_tree)
+    print(json.dumps(linear_tree, indent=4))
     eel.update_frontend(linear_tree, model.environment, model.text)
