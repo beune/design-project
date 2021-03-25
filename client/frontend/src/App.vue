@@ -137,18 +137,18 @@ export default {
     text: {
       children: [
         {
-          text: "Een",
+          text: "Een ",
           color: null,
           type: "other",
         },
         {
-          text: "stervormige laesie",
+          text: "stervormige laesie ",
           color: "#E71212",
           type: "label",
           label: "mass/shape",
         },
         {
-          text: "laterale bovenkwadrant linkermamma,",
+          text: "laterale bovenkwadrant \n linkermamma, ",
           color: "#FEFE7F",
           type: "label",
           label: "mass/location"

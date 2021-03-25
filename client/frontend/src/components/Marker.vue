@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="node.type === 'node'"
-    class="node"
+    :class="style_class"
   >
     <v-tooltip
       v-model="show"
@@ -17,7 +17,7 @@
   </div>
   <div
     v-else
-    :class="node.type"
+    :class="style_class"
     :style="testColor"
     @mouseover="mouseOver"
     @mouseleave="mouseOver"
@@ -46,11 +46,13 @@ export default {
   }),
   computed: {
     testColor: function () {
-      console.log(this.node.color);
       if (this.node.color) {
         return '--test-color: ' + this.node.color + '4C;';
       }
       return '--test-color: transparent';
+    },
+    style_class: function() {
+      return this.node.type + (this.show ? " activated" : "");
     }
   },
   methods: {
@@ -58,7 +60,6 @@ export default {
       if (this.node.type === "other") {
         this.parentCallback();
       } else if (this.node.type === "label") {
-        console.log("label")
         this.display();
       }
     },
@@ -73,15 +74,22 @@ export default {
 
 .node {
   display: inline;
+  white-space:pre-wrap;
 }
 
 .label {
   background-color: var(--test-color);
   display: inline;
+  white-space:pre-wrap;
 }
 
 .other {
   display: inline;
+  white-space:pre-wrap;
+}
+
+.activated {
+  text-decoration: underline;
 }
 
 </style>
