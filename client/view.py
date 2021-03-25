@@ -141,12 +141,12 @@ def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str
     :return: Returns the object generated out the node for the frontend
     """
     children = []
-    label = "{}/{}".format(parent_label, node.category)
+    label = "{}{}".format(parent_label, node.category)
     for child in node:
         if type(child) == ReportLeaf:
-            res = set_leaf_colours(child, label, colours)
+            res = set_leaf_colours(child, label + "/", colours)
         else:
-            res = set_node_colours(child, label, colours)
+            res = set_node_colours(child, label + "/", colours)
         children.append(res)
     return {
         "children": children,
@@ -163,8 +163,8 @@ def set_leaf_colours(leaf: ReportLeaf, parent_label: str, colours: Dict[str, str
     :param colours: The colourdictionary for the current environment
     :return: Returns the object needed for the frontend
     """
-    label = "{}/{}".format(parent_label, leaf.field)
-    if leaf.field == "other":
+    label = "{}{}".format(parent_label, leaf.field)
+    if leaf.field == "O":
         result_type = "other"
         colour = None
     else:
