@@ -135,19 +135,18 @@
               <div style="padding-top: 90px;">
                 Text!
               </div>
-           </v-container>
+            </v-container>
           </v-tab-item>
         </v-tabs-items>
-
       </v-main>
       <v-snackbar
-      v-model="errorMessage"
-      :timeout="3000"
-      color="red"
-      justify="center"
-    >
-      {{ errorText }}
-    </v-snackbar>
+        v-model="errorMessage"
+        :timeout="3000"
+        color="red"
+        justify="center"
+      >
+        {{ errorText }}
+      </v-snackbar>
     </v-app>
     <PreferencesDialog
       :show-preferences-dialog="showPreferencesDialog"
