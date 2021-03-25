@@ -24,13 +24,13 @@ def update_tree(new_tree):
     tree_changes = tree_user_changes_map(new_tree, old_tree)
     model.set_changes_map(tree_changes)
 
+
 def tree_user_changes_map(new_tree, old_tree):
-    # tree_changes = {}
-    # for new_node, old_node in zip(new_tree, old_tree):
-    #     if new_node
-    #
-    # return tree_changes
-    pass
+    tree_changes = {}
+    for new_node, old_node in zip(new_tree, old_tree):
+        if new_node['label'] != old_node['label']:
+            tree_changes[old_node['nodeId']] = new_node['label']
+    return tree_changes
 
 
 def update_text(new_text):

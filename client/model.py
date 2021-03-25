@@ -66,4 +66,8 @@ class Model:
         self.retrieve_tree()
 
     def set_changes_map(self, tree_changes):
+        """
+        Set the tree changes map with changes from front end
+        :param tree_changes: the map containing all changes from front end
+        """
         self.tree_changes = tree_changes

@@ -210,7 +210,7 @@
             changeLabel(nodeId, label){
               this.treeData.forEach(function(object){
                 if (object.nodeId === nodeId) {
-                  object.label = label
+                  object.label = label.match(/[^(]+/i)[0]
                   object.template = "<div class=\"domStyle\"><span>" + label.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>"
                 }
               });
