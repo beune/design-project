@@ -4,7 +4,7 @@ imports
 
 import unittest
 
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import TextLeaf, LabelLeaf
 from report_tree.report_node import ReportNode
 from servpackage.hinter import Hinter
 
@@ -12,23 +12,30 @@ from servpackage.hinter import Hinter
 class MyTestCase(unittest.TestCase):
     def test_hint(self):
         expected = {
-            'a': ['b', 'e', 'f']
+            # 'a': ['b', 'e', 'f'] ReportNodes are not checked, only ReportLeaves
+            'a': ['e', 'f']
         }
-
+        labels = {
+            'f': {'l1', 'l2', 'l3'}
+        }
         hints = {
             'e': "hint"
         }
-        hinter = Hinter(expected, hints)
+        hinter = Hinter(expected, labels, hints)
         tree = ReportNode('a', [
-            ReportNode('b', [ReportLeaf("nested", 'c', 1), ReportLeaf("attribute", 'd', 1)]),
-            ReportLeaf("too", 'e', 1)
+            ReportNode('b', [TextLeaf('c', 1, "nested"), TextLeaf('d', 1, "attribute")]),
+            TextLeaf('e', 1, "too")
         ])
 
         hinter.hint(tree)
-        self.assertEqual("hint", tree.get_child(1).hint)
-        self.assertEqual(['b', 'e', 'f'], tree.expects)
-        self.assertEqual(tree.get_child(0).expects, [])
+
+        self.assertEqual(3, len(tree.children), "make sure the missing LabelLeaf is added")
+        self.assertIsInstance(tree.get_child(2), LabelLeaf)
+        self.assertEqual(labels['f'], tree.get_child(2).labels)
+
         self.assertIsNone(tree.get_child(0).get_child(0).hint)
+        self.assertIsNone(tree.get_child(0).get_child(1).hint)
+        self.assertEqual("hint", tree.get_child(1).hint)
 
 
 if __name__ == '__main__':

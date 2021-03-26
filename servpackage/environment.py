@@ -38,6 +38,16 @@ class Environment:
 
 
 ENVS = {
-    "mammo": Environment("Mammo", mammo.parse, mammo.COLOURS, Hinter(mammo.expected, mammo.hints)),
-    "hersen": Environment("Hersen", hersen.parse, hersen.COLOURS, Hinter(hersen.expected, hersen.hints))
+    "mammo": Environment(
+        name="Mammo",
+        parse=mammo.parse,
+        colours=mammo.COLOURS,
+        hinter=Hinter(mammo.expected_leaves, mammo.options, mammo.hints)
+    ),
+    "hersen": Environment(
+        name="Hersen",
+        parse=hersen.parse,
+        colours=hersen.COLOURS,
+        hinter=Hinter(hersen.expected, hersen.options, hersen.hints)
+    ),
 }
