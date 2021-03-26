@@ -3,6 +3,7 @@ Imports
 """
 import eel
 import json
+from typing import Dict
 
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import ReportLeaf
@@ -28,7 +29,11 @@ def generate_tree(tree: ReportNode):
         nonlocal nodes
         new_id = create_hash(root.category, parent_id) if parent_id else create_hash(root.category)
 
-        nodes.append(make_node(root, new_id, parent_id))
+        node = make_node(root, new_id, parent_id)
+        if new_id in tree_changes:  # check for user change
+            change_label(node, tree_changes[new_id])
+
+        nodes.append(node)
         parent_id = new_id
 
         for expects_label in root.expects:  # add expects nodes
@@ -58,7 +63,14 @@ def generate_tree(tree: ReportNode):
         if leaf.field != 'O':  # 'Other' leaves are currently excluded
             field_id = create_hash(leaf.field, parent_id)
             value_id = create_hash(leaf.text, field_id)
-            nodes.extend(make_leaf(leaf, field_id, value_id, parent_id))
+            field, value = make_leaf(leaf, field_id, value_id, parent_id)
+
+            if field_id in tree_changes:  # check for user change
+                change_label(field, tree_changes[field_id])
+            if value_id in tree_changes:  # check for user change
+                change_label(value, tree_changes[value_id])
+
+            nodes.extend([field, value])
 
     def create_hash(*args: list):
         """
@@ -117,7 +129,7 @@ def make_leaf(leaf: ReportLeaf, identifier_field: str, identifier_value: str, pa
     leaf_value["valueNode"] = True
     leaf_value["lowConfidence"] = field_cert <= 75  # TODO implement low confindence
 
-    return [leaf_key, leaf_value]
+    return leaf_key, leaf_value
 
 
 def json_node_template(identifier: str, parent_id: str, label: str, template: str = None, hint: str = None):
@@ -154,6 +166,17 @@ def json_node_template(identifier: str, parent_id: str, label: str, template: st
     return node
 
 
+def change_label(node: dict, new_label: str):
+    """
+    Helper function that is called when the node is being traversed has a stored edit.
+    Changes the label and the template before it is added to the list of json nodes.
+    :param node: The node currently being traversed, to which an edit should be applied.
+    :param new_label: The new label that should be displayed in the front-end.
+    """
+    node['label'] = new_label
+    node['template'] = "<div class=\"domStyle\"><span>" + new_label + "</div></span><span class=\"material-icons\">mode</span>"
+
+
 def initialize(model):
     """
     Initialize view in frontend with initial data
@@ -165,6 +188,6 @@ def update(model):
     """
     Reflect the changes to the model in the front-end
     """
-    linear_tree = generate_tree(model.tree)
+    linear_tree = generate_tree(model.tree, model.tree_changes)
     print(json.dumps(linear_tree, indent=4))
     eel.update_frontend(linear_tree, model.environment, model.text)

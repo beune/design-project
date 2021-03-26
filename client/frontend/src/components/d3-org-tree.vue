@@ -196,10 +196,12 @@
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   alternativeToLabel = {}
-                  for (let [key, value] of Object.entries(object.alternatives)) {
-                    let alternative = `${key} (${value}%)`
-                    alternatives.push(alternative)
-                    alternativeToLabel[alternative] = key
+                  if (object.alternatives != null) {
+                    for (let [key, value] of Object.entries(object.alternatives)) {
+                      let alternative = `${key} (${value}%)`
+                      alternatives.push(alternative)
+                      alternativeToLabel[alternative] = key
+                    }
                   }
                 }
               });
