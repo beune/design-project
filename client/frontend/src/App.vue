@@ -101,7 +101,6 @@
         <template v-slot:extension>
           <v-tabs
             v-model="tab"
-            align-with-title
             grow
             dark
           >
@@ -124,7 +123,7 @@
           <v-tab-item>
             <div style="padding-top: 90px;">
               <d3orgtree
-                v-if="tree.length !== 0"
+                v-if="tree.length > 1"
                 :tree-data="tree"
               />
             </div>
@@ -157,7 +156,7 @@
 
 <style lang="scss">
 .v-tabs-slider-wrapper {
-  border: 3px solid #EF7104;
+  border: 4px solid #EF7104;
 }
 
 #menu-bar-wrapper {
@@ -210,6 +209,7 @@ export default {
     },
     //update frontend (called from backend)
     updateFrontend(tree, environment, text) {
+      console.log(tree)
       this.tree = tree;
       this.environment = environment;
       this.text = text;
@@ -218,8 +218,8 @@ export default {
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
     },
-    showServerError(statusCode) {
-      this.errorText = "Server error: " + statusCode + ". " + "Cannot connect to the server"
+    showServerError(mess) {
+      this.errorText = mess
       this.errorMessage = true
     }
   },

@@ -212,10 +212,10 @@ def update(model):
     eel.update_frontend(linear_tree, model.environment, visual_text)
 
 
-def server_error(status_code):
+def server_error(mess: str):
     """
     Method used to display an error in the connection to the server
-    :param status_code: The status code of the server error
+    :param mess: The message of the server error
     # :param mess: The accompanying error message
     """
-    eel.show_server_error(status_code)
+    eel.show_server_error(mess)
