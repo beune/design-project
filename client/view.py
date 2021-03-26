@@ -112,8 +112,7 @@ def make_leaf(leaf: ReportLeaf, identifier_field: str, identifier_value: str, pa
                + str(field_cert) + "%</span>"  # generate confidence template
 
     leaf_value = json_node_template(identifier_value, identifier_field, leaf.text, template)
-    leaf_value["alternatives"] = ["{} ({}%)".format(leaf.text, field_cert)] + \
-                                 ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
+    leaf_value["alternatives"] = {leaf.text: field_cert, **{x: round(leaf.labels[x] * 100) for x in leaf.labels}}
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
     leaf_value["lowConfidence"] = field_cert <= 75  # TODO implement low confindence

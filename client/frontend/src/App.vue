@@ -168,7 +168,6 @@ export default {
       window.eel.update_environment(newEnvironment)
     },
     treeChanged() {
-      console.log("Tree changed")
       window.eel.update_tree(this.tree);
     }
   },

@@ -149,6 +149,7 @@
             showNoNodeLabelAlternativesAvailableSnackbar: false,
             nodeLabelAlternatives: undefined,
             chosenNodeLabelAlternative: undefined,
+            alternativeToLabel: {},
             currentNodeId: undefined,
             vicinityMargin: 1,
             hintMenuContent: undefined,
@@ -190,12 +191,19 @@
             },
             fetchNodeAlternatives(){
               let self = this
-              let alternatives;
+              let alternatives = [];
+              let alternativeToLabel = {}
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
-                  alternatives = object.alternatives
+                  alternativeToLabel = {}
+                  for (let [key, value] of Object.entries(object.alternatives)) {
+                    let alternative = `${key} (${value}%)`
+                    alternatives.push(alternative)
+                    alternativeToLabel[alternative] = key
+                  }
                 }
               });
+              this.alternativeToLabel = alternativeToLabel
               return alternatives
             },
             toggleEditNodeLabelDialog(){
@@ -210,14 +218,16 @@
             changeLabel(nodeId, label){
               this.treeData.forEach(function(object){
                 if (object.nodeId === nodeId) {
-                  object.label = label.match(/[^(]+/i)[0]
-                  object.template = "<div class=\"domStyle\"><span>" + label.match(/[^(]+/i)[0] + "</div></span><span class=\"material-icons\">mode</span>"
+                  object.label = label
+                  object.template = "<div class=\"domStyle\"><span>" + label + "</div></span><span class=\"material-icons\">mode</span>"
                 }
               });
             },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
-              this.changeLabel(this.currentNodeId, this.chosenNodeLabelAlternative)
+              let label = this.alternativeToLabel[this.chosenNodeLabelAlternative]
+              console.log(this.alternativeToLabel)
+              this.changeLabel(this.currentNodeId, label)
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
               this.$emit("tree-changed")
