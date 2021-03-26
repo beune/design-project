@@ -15,11 +15,11 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
     in the right format for the UI.
     :param tree: The report node created by the NLP, containing the entire structure
     :param tree_changes: Dictionary stored in model containing all changes made on the front end,
-            key: hash, value: new label
+            key: identifier, value: new label
     :return: Structured data for the front end in Json
     """
     nodes = []
-    traversed_hashes = {}
+    traversed_identifiers = {}
 
     def traverse(root: ReportNode, parent_id: str = None):
         """
@@ -29,7 +29,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
         nonlocal nodes
-        new_id = create_hash(root.category, parent_id) if parent_id else create_hash(root.category)
+        new_id = create_identifier(root.category, parent_id) if parent_id else create_identifier(root.category)
 
         node = make_node(root, new_id, parent_id)
         if new_id in tree_changes:  # check for user change
@@ -46,7 +46,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
                         flag = False
                         break
             if flag:
-                new_id = create_hash(expects_label, parent_id)
+                new_id = create_identifier(expects_label, parent_id)
                 nodes.append(json_node_template(new_id, parent_id, expects_label))
 
         for child in root:
@@ -63,8 +63,8 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
         """
         nonlocal nodes
         if leaf.field != 'O':  # 'Other' leaves are currently excluded
-            field_id = create_hash(leaf.field, parent_id)
-            value_id = create_hash(leaf.text, field_id)
+            field_id = create_identifier(leaf.field, parent_id)
+            value_id = create_identifier(leaf.text, field_id)
             field, value = make_leaf(leaf, field_id, value_id, parent_id)
 
             if field_id in tree_changes:  # check for user change
@@ -74,26 +74,26 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
 
             nodes.extend([field, value])
 
-    def create_hash(*args: list):
+    def create_identifier(*args: list):
         """
         Creates a string from the input strings, used as id of a node/leaf,
         Used to link user changes to a changing tree
-        :param args: Either text + label + parent_hashes  or  category + hashes
+        :param args: Either text + label + parent_id  or  category + parent_id
         :return: A string concatenation of the input strings
         """
-        nonlocal nodes, traversed_hashes
-        hash_string = ""
+        nonlocal nodes, traversed_identifiers
+        identifier_string = ""
         for arg in args[:-1]:
-            hash_string += str(arg) + "_"
-        hash_string += str(args[-1])
+            identifier_string += str(arg) + "_"
+        identifier_string += str(args[-1])
 
-        if hash_string not in traversed_hashes:
-            traversed_hashes[hash_string] = 1
+        if identifier_string not in traversed_identifiers:
+            traversed_identifiers[identifier_string] = 1
         else:
-            hash_string = hash_string + traversed_hashes[hash_string]
-            traversed_hashes[hash_string] += 1
+            identifier_string = identifier_string + traversed_identifiers[identifier_string]
+            traversed_identifiers[identifier_string] += 1
 
-        return hash_string
+        return identifier_string
 
     traverse(tree)
     return nodes
