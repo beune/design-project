@@ -12,6 +12,7 @@ class UIAutomation:
     """
     Class which retrieves the text from the G2 speech window(Notepad for now)
     """
+
     def __init__(self, callback: Callable[[str], None]):
         self.callback = callback
         self.app = None
@@ -29,7 +30,8 @@ class UIAutomation:
                 flag = True
                 while flag:
                     new_text = self.textfield.window_text()
-                    if len(new_text) > 0 and (new_text[-1] == ' ' or time.time() - start_time > 2):
+                    if (len(new_text) > 0 and (new_text[-1] == ' ' or time.time() - start_time > 2)
+                            or len(self.text) > 0 and len(new_text) == 0):
                         self.text = new_text
                         self.callback(self.text)
                         flag = False
