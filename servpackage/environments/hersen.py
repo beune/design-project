@@ -2,7 +2,7 @@
 Imports
 """
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf, LabelLeaf
+from report_tree.report_leaf import TextLeaf, LabelLeaf
 
 expected = {}
 hints = {}
@@ -35,7 +35,7 @@ def parse(text: str) -> ReportNode:
     root = ReportNode("root", [], [])
     pos1 = ReportNode("positive finding", [], [])
     mass1 = ReportNode("mass", [], ["size", "location"])
-    size1 = ReportLeaf("size", 0.75, "ongeveer 2, 3 cm", hint="The size of the mass")
+    size1 = TextLeaf("size", 0.75, "ongeveer 2, 3 cm", hint="The size of the mass")
     multifocality1 = ReportNode("Multifocality", [], [])
     hin = ("Multiple tumors in the brain usually indicate metastatic disease (figure)."
            "Primary brain tumors are typically seen in a single region, but some brain tumors like lymphomas, "

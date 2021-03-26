@@ -3,7 +3,7 @@ Imports
 """
 
 import unittest
-from report_tree.report_leaf import LabelLeaf, ReportLeaf
+from report_tree.report_leaf import LabelLeaf, TextLeaf
 
 
 class ReportLeafTest(unittest.TestCase):
@@ -20,9 +20,9 @@ class ReportLeafTest(unittest.TestCase):
         self.assertEqual(leaf.hint, hint)
 
     def test_eq(self):
-        leaf1 = ReportLeaf("field1", .7, "text1", "hint1")
-        leaf1a = ReportLeaf("field1", .7, "text1", "hint2")
-        leaf2 = ReportLeaf("field2", .8, "text2", "hint3")
+        leaf1 = TextLeaf("field1", .7, "text1", "hint1")
+        leaf1a = TextLeaf("field1", .7, "text1", "hint2")
+        leaf2 = TextLeaf("field2", .8, "text2", "hint3")
         self.assertTrue(leaf1 == leaf1a)
         self.assertTrue(leaf2 == leaf2)
         self.assertFalse(leaf1 == leaf2)
@@ -48,9 +48,9 @@ class ReportLeafTest(unittest.TestCase):
         self.assertEqual(leaf, other)
 
     def test_instance(self):
-        text = ReportLeaf("field", .7, "text", "hint")
+        text = TextLeaf("field", .7, "text", "hint")
         label = LabelLeaf("field", .7, "text", {"one", "other"}, ("label", .8), "hint")
-        self.assertIsInstance(text, ReportLeaf)
+        self.assertIsInstance(text, TextLeaf)
         self.assertNotIsInstance(text, LabelLeaf)
         self.assertIsInstance(label, LabelLeaf)
-        self.assertIsInstance(label, ReportLeaf)
+        self.assertIsInstance(label, TextLeaf)

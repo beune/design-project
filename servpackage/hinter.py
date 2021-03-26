@@ -1,7 +1,7 @@
 """
 Imports
 """
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import TextLeaf
 from report_tree.report_node import ReportNode
 from typing import List, Dict
 
@@ -25,10 +25,10 @@ class Hinter:
         for child in node:
             if isinstance(child, ReportNode):
                 self.hint(child)
-            elif isinstance(child, ReportLeaf):
+            elif isinstance(child, TextLeaf):
                 self.hint_leaf(child)
 
-    def hint_leaf(self, leaf: ReportLeaf):
+    def hint_leaf(self, leaf: TextLeaf):
         """
         Method used to add hints to leafs
         :param leaf: The leaf for which the hint needs to be added

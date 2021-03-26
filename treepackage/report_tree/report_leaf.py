@@ -4,7 +4,7 @@ Imports
 from typing import Set, Dict, Tuple
 
 
-class ReportLeaf:
+class TextLeaf:
     """
     Class used to represent Leaves
     """
@@ -24,7 +24,7 @@ class ReportLeaf:
                and self.field_conf == other.field_conf \
 
 
-class LabelLeaf(ReportLeaf):
+class LabelLeaf(TextLeaf):
     """
     Class used to represent Leaves with predefined labels
     """

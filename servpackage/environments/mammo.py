@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf, LabelLeaf
+from report_tree.report_leaf import TextLeaf, LabelLeaf
 
 """
 Class used to connect Shreyasi's python2 algorithm to python 3
@@ -208,7 +208,7 @@ def make_tree(base: List[str], items: list):
         text = ' '.join(agg_text)
         if category in options:
             return LabelLeaf(category, conf, text, options[category])
-        return ReportLeaf(category, conf, ' '.join(agg_text))
+        return TextLeaf(category, conf, ' '.join(agg_text))
     return ReportNode(category, children)
 
 

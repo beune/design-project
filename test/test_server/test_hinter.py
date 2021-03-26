@@ -4,7 +4,7 @@ imports
 
 import unittest
 
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import TextLeaf
 from report_tree.report_node import ReportNode
 from servpackage.hinter import Hinter
 
@@ -20,8 +20,8 @@ class MyTestCase(unittest.TestCase):
         }
         hinter = Hinter(expected, hints)
         tree = ReportNode('a', [
-            ReportNode('b', [ReportLeaf('c', 1, "nested"), ReportLeaf('d', 1, "attribute")]),
-            ReportLeaf('e', 1, "too")
+            ReportNode('b', [TextLeaf('c', 1, "nested"), TextLeaf('d', 1, "attribute")]),
+            TextLeaf('e', 1, "too")
         ])
 
         hinter.hint(tree)

@@ -6,7 +6,7 @@ from typing import Dict
 import eel
 
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import TextLeaf, LabelLeaf
 
 
 def generate_tree(tree: ReportNode):
@@ -33,7 +33,7 @@ def generate_tree(tree: ReportNode):
         for expects_label in root.expects:  # add expects nodes
             flag = True
             for child in root.children:
-                if type(child) == ReportLeaf:
+                if type(child) == TextLeaf:
                     if expects_label == child.field:
                         flag = False
                         break
@@ -42,12 +42,12 @@ def generate_tree(tree: ReportNode):
                 new_id += 1
 
         for child in root:
-            if isinstance(child, ReportLeaf):
+            if isinstance(child, TextLeaf):
                 process_leaf(child, parent)
             else:
                 traverse(child, parent)
 
-    def process_leaf(leaf: ReportLeaf, parent_id: int):
+    def process_leaf(leaf: TextLeaf, parent_id: int):
         """
         Calls the add_nodes function on the leaves and their text, adding 2 nodes
         :param leaf: The leaf currently being traversed, containing all necessary information including its text
@@ -74,7 +74,7 @@ def make_node(node: ReportNode, identifier: int, parent_id: int):
     return node
 
 
-def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
+def make_leaf(leaf: TextLeaf, identifier: int, parent_id: int):
     """
     Create a leaf, which consists of two json objects: the leaf key and the leaf value
     :param leaf: object that represents the leave
@@ -83,15 +83,15 @@ def make_leaf(leaf: ReportLeaf, identifier: int, parent_id: int):
     :return: a list containing the key and value json objects
     """
     leaf_key = json_node_template(identifier, parent_id, leaf.field, hint=leaf.hint)
-    fieldcert = round(leaf.fieldconf * 100)  # certainty percentage
+    fieldcert = round(leaf.field_conf * 100)  # certainty percentage
     template = "<div class=\"domStyle\"><span>" + leaf.text + "</span></div><span class=\"confidence\">" \
                + str(fieldcert) + "%</span>"  # generate confidence template
     leaf_value_identifier = identifier + 1
     leaf_value_parent = identifier
 
     leaf_value = json_node_template(leaf_value_identifier, leaf_value_parent, leaf.text, template)
-    leaf_value["alternatives"] = ["{} ({}%)".format(leaf.text, fieldcert)] + \
-                                 ["{} ({}%)".format(x, round(leaf.labels[x] * 100)) for x in leaf.labels]
+    if isinstance(leaf, LabelLeaf):
+        leaf_value["alternatives"] = leaf.labels
     leaf_value["text"] = leaf.text
     leaf_value["valueNode"] = True
     leaf_value["lowConfidence"] = fieldcert <= 75  # TODO implement low confindence
@@ -143,7 +143,7 @@ def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str
     children = []
     label = "{}{}".format(parent_label, node.category)
     for child in node:
-        if type(child) == ReportLeaf:
+        if type(child) == TextLeaf:
             res = set_leaf_colours(child, label + "/", colours)
         else:
             res = set_node_colours(child, label + "/", colours)
@@ -155,10 +155,10 @@ def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str
     }
 
 
-def set_leaf_colours(leaf: ReportLeaf, parent_label: str, colours: Dict[str, str]):
+def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str]):
     """
     Method used to create the text object with colour for the leaves
-    :param leaf: The ReportLeaf which needs to get a colour
+    :param leaf: The TextLeaf which needs to get a colour
     :param parent_label: The label of the parent
     :param colours: The colourdictionary for the current environment
     :return: Returns the object needed for the frontend
