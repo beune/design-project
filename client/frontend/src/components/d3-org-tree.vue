@@ -236,27 +236,27 @@
               this.renderChart(this.treeData)
             },
             renderChart(data) {
-                if (!this.chartReference) {
-                    this.chartReference = new OrgTree();
-                }
-                this.chartReference
-                    .container('.svgContainer')
-                    .data(data)
-                    .onNodeHoverOut(() => {
-                        this.mouseHoversOnNode = false
-                    })
-                    .onNodeHover(d => {
-                      this.mouseHoversOnNode = true
-                      this.currentNodeId = d.nodeId
-                      this.handleHintMenu(d)
-                    })
-                    .onNodeClick(d => {
-                      this.contextMenuVisible = true;
-                      // Do not show hint menu so that both menus won't overlap.
-                      this.hintMenuVisible = false;
-                      this.currentNodeId = d.nodeId
-                    })
-                    .render();
+              if (!this.chartReference) {
+                  this.chartReference = new OrgTree();
+              }
+              this.chartReference
+                  .container('.svgContainer')
+                  .data(data)
+                  .onNodeHoverOut(() => {
+                      this.mouseHoversOnNode = false
+                  })
+                  .onNodeHover(d => {
+                    this.mouseHoversOnNode = true
+                    this.currentNodeId = d.nodeId
+                    this.handleHintMenu(d)
+                  })
+                  .onNodeClick(d => {
+                    this.contextMenuVisible = true;
+                    // Do not show hint menu so that both menus won't overlap.
+                    this.hintMenuVisible = false;
+                    this.currentNodeId = d.nodeId
+                  })
+                  .render();
             }
         }
     }
