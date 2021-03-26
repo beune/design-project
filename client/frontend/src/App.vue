@@ -123,7 +123,7 @@
           <v-tab-item>
             <div style="padding-top: 90px;">
               <d3orgtree
-                v-if="tree.length !== 0"
+                v-if="tree.length > 1"
                 :tree-data="tree"
               />
             </div>
@@ -209,6 +209,7 @@ export default {
     },
     //update frontend (called from backend)
     updateFrontend(tree, environment, text) {
+      console.log(tree)
       this.tree = tree;
       this.environment = environment;
       this.text = text;
