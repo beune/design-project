@@ -61,7 +61,7 @@ hints = {
             "- Density: high, equal, low or fat-containing.\n"
 }
 
-expected = {
+expected_leaves = {
     "mass": ["shape", "margin", "density"],
     "calcifications": ["morphology", "distribution"]
 }
@@ -207,7 +207,7 @@ def make_tree(base: List[str], items: list):
         conf = sum_conf / len(agg_text)
         text = ' '.join(agg_text)
         if category in options:
-            return LabelLeaf(category, conf, text, options[category])
+            return LabelLeaf(category, options[category], conf, text)
         return TextLeaf(category, conf, ' '.join(agg_text))
     return ReportNode(category, children)
 

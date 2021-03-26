@@ -8,27 +8,29 @@ class TextLeaf:
     """
     Class used to represent Leaves
     """
-    def __init__(self, field: str, field_conf: float, text: str, hint: str = None):
+    def __init__(self, field: str, field_conf: float = 0, text: str = None, hint: str = None):
         self.field = field
         self.field_conf = field_conf
         self.text = text
         self.hint = hint
+        self.speculative = text is None
 
     def __repr__(self):
-        return 'Leaf {}: {}'.format(self.field, self.text)
+        value = "?" if self.text is None else self.text
+        return 'Leaf {}: {}'.format(self.field, value)
 
     def __eq__(self, other):
         return type(self) == type(other) \
                and self.text == other.text \
                and self.field == other.field \
-               and self.field_conf == other.field_conf \
+               and self.field_conf == other.field_conf
 
 
 class LabelLeaf(TextLeaf):
     """
     Class used to represent Leaves with predefined labels
     """
-    def __init__(self, field: str, field_conf: float, text: str, labels: Set[str], label_pair: Tuple[str, float] = (None, 0), hint: str = None):
+    def __init__(self, field: str, labels: Set[str], field_conf: float = 0, text: str = None, label_pair: Tuple[str, float] = (None, 0), hint: str = None):
         super().__init__(field, field_conf, text, hint)
         self.labels = labels
         self.label, self.label_conf = label_pair

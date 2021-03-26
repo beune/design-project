@@ -5,6 +5,7 @@ from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf, LabelLeaf
 
 expected = {}
+options = {}
 hints = {}
 
 COLOURS = {"size": "#E71212",
@@ -32,11 +33,11 @@ def parse(text: str) -> ReportNode:
     :return: For now a stub reportnode, as hinternlp is not implemented
     """
 
-    root = ReportNode("root", [], [])
-    pos1 = ReportNode("positive finding", [], [])
-    mass1 = ReportNode("mass", [], ["size", "location"])
+    root = ReportNode("root", [])
+    pos1 = ReportNode("positive finding", [])
+    mass1 = ReportNode("mass", [])
     size1 = TextLeaf("size", 0.75, "ongeveer 2, 3 cm", hint="The size of the mass")
-    multifocality1 = ReportNode("Multifocality", [], [])
+    multifocality1 = ReportNode("Multifocality", [])
     hin = ("Multiple tumors in the brain usually indicate metastatic disease (figure)."
            "Primary brain tumors are typically seen in a single region, but some brain tumors like lymphomas, "
            "multicentric glioblastomas and gliomatosis cerebri can be multifocal. Some tumors can be multifocal"
@@ -45,9 +46,14 @@ def parse(text: str) -> ReportNode:
            " type II")
     types = {"meningiomas", "ependymomas", "choroid plexus papillomas"}
     mass1.add_child(size1)
-    neur = LabelLeaf("Neurofibromatosis II", 0.80, "zichtbaar ependymomas", types, ("ependymomas", .8), hint=hin)
+    neur = LabelLeaf("Neurofibromatosis II", types, 0.80, "zichtbaar ependymomas", ("ependymomas", .8), hint=hin)
     multifocality1.add_child(neur)
     mass1.add_child(multifocality1)
+
+    # speculative child
+    location = TextLeaf("location")
+    mass1.add_child(location)
+
     pos1.add_child(mass1)
     root.add_child(pos1)
 
