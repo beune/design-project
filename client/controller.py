@@ -20,12 +20,22 @@ def update_environment(new_environment):
 
 @eel.expose
 def update_tree(new_tree):
+    """
+    Recieve tree update from front-end and update model
+    :param new_tree: the updated tree in json format
+    """
     old_tree = view.generate_tree(model.tree)
     tree_changes = tree_user_changes_map(new_tree, old_tree)
     model.set_changes_map(tree_changes)
 
 
 def tree_user_changes_map(new_tree, old_tree):
+    """
+    Generate map of changes between two trees
+    :param new_tree: the new tree in json format
+    :param old_tree: the old tree in json format
+    :return: a dictionary mapping hashes from the old nodes to labels of new nodes
+    """
     tree_changes = {}
     for new_node, old_node in zip(new_tree, old_tree):
         if new_node['label'] != old_node['label']:
