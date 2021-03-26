@@ -2,7 +2,7 @@
 Imports
 """
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import ReportLeaf, LabelLeaf
 
 expected = {}
 hints = {}
@@ -35,7 +35,7 @@ def parse(text: str) -> ReportNode:
     root = ReportNode("root", [], [])
     pos1 = ReportNode("positive finding", [], [])
     mass1 = ReportNode("mass", [], ["size", "location"])
-    size1 = ReportLeaf("ongeveer 2, 3 cm", "size", 0.75, hint="The size of the mass")
+    size1 = ReportLeaf("size", 0.75, "ongeveer 2, 3 cm", hint="The size of the mass")
     multifocality1 = ReportNode("Multifocality", [], [])
     hin = ("Multiple tumors in the brain usually indicate metastatic disease (figure)."
            "Primary brain tumors are typically seen in a single region, but some brain tumors like lymphomas, "
@@ -43,9 +43,9 @@ def parse(text: str) -> ReportNode:
            " as a result of seeding metastases: this can occur in medulloblastomas (PNET-MB), ependymomas, GBMs "
            "and oligodendrogliomas. Meningiomas and schwannomas can be multiple, especially in neurofibromatosis"
            " type II")
+    types = {"meningiomas", "ependymomas", "choroid plexus papillomas"}
     mass1.add_child(size1)
-    neur = ReportLeaf("Neurofibromatose twee", "Neurofibromatosis II", 0.80,
-                      {"meningiomas": 0.79, "ependymomas": 0.47, "choroid plexus papillomas": 0.11}, hin)
+    neur = LabelLeaf("Neurofibromatosis II", 0.80, "zichtbaar ependymomas", types, ("ependymomas", .8), hint=hin)
     multifocality1.add_child(neur)
     mass1.add_child(multifocality1)
     pos1.add_child(mass1)

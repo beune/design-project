@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import ReportLeaf, LabelLeaf
 
 """
 Class used to connect Shreyasi's python2 algorithm to python 3
@@ -67,13 +67,13 @@ expected = {
 }
 
 options = {
-    "shape": ["oval", "round", "irregular"],
-    "margin": ["circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"],
-    "density": ["fat", "low", "equal", "high"],
-    "asymmetry": ["asymmetry", "global", "focal", "developing"],
-    "morphology": ["typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
-                                                                                                 "linear branching"],
-    "distribution": ["diffuse", "regional", "grouped", "linear", "segmental"],
+    "shape": {"oval", "round", "irregular"},
+    "margin": {"circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"},
+    "density": {"fat", "low", "equal", "high"},
+    "asymmetry": {"asymmetry", "global", "focal", "developing"},
+    "morphology": {"typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
+                                                                                                 "linear branching"},
+    "distribution": {"diffuse", "regional", "grouped", "linear", "segmental"},
 }
 
 alternatives = {key: {label: 0 for label in option_list} for key, option_list in options.items()}
@@ -205,7 +205,10 @@ def make_tree(base: List[str], items: list):
     # if text has been found create a Leaf, otherwise a node
     if agg_text:
         conf = sum_conf / len(agg_text)
-        return ReportLeaf(' '.join(agg_text), category, conf)
+        text = ' '.join(agg_text)
+        if category in options:
+            return LabelLeaf(category, conf, text, options[category])
+        return ReportLeaf(category, conf, ' '.join(agg_text))
     return ReportNode(category, children)
 
 
@@ -217,8 +220,9 @@ def add_labels(node: ReportNode):
     for child in node:
         if isinstance(child, ReportNode):
             add_labels(child)
-        elif isinstance(child, ReportLeaf) and child.field in alternatives:
-            child.labels = alternatives[child.field]
+        elif isinstance(child, LabelLeaf) and child.field in options:
+            child.label = child.text
+            child.label_conf = .7
 
 
 if __name__ == '__main__':

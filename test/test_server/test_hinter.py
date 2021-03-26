@@ -20,8 +20,8 @@ class MyTestCase(unittest.TestCase):
         }
         hinter = Hinter(expected, hints)
         tree = ReportNode('a', [
-            ReportNode('b', [ReportLeaf("nested", 'c', 1), ReportLeaf("attribute", 'd', 1)]),
-            ReportLeaf("too", 'e', 1)
+            ReportNode('b', [ReportLeaf('c', 1, "nested"), ReportLeaf('d', 1, "attribute")]),
+            ReportLeaf('e', 1, "too")
         ])
 
         hinter.hint(tree)
