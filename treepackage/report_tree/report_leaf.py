@@ -1,7 +1,7 @@
 """
 Imports
 """
-from typing import Set, Dict, Tuple
+from typing import Set, Tuple
 
 
 class TextLeaf:
@@ -30,7 +30,8 @@ class LabelLeaf(TextLeaf):
     """
     Class used to represent Leaves with predefined labels
     """
-    def __init__(self, field: str, labels: Set[str], field_conf: float = 0, text: str = None, label_pair: Tuple[str, float] = (None, 0), hint: str = None):
+    def __init__(self, field: str, labels: Set[str], field_conf: float = 0, text: str = None,
+                 label_pair: Tuple[str, float] = (None, 0), hint: str = None):
         super().__init__(field, field_conf, text, hint)
         self.labels = labels
         self.label, self.label_conf = label_pair
