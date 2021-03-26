@@ -9,11 +9,13 @@ from report_tree.report_node import ReportNode
 from report_tree.report_leaf import ReportLeaf
 
 
-def generate_tree(tree: ReportNode):
+def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
-    :param tree: The reportnode created by the NLP, containing the entire structure
+    :param tree: The report node created by the NLP, containing the entire structure
+    :param tree_changes: Dictionary stored in model containing all changes made on the front end,
+            key: hash, value: new label
     :return: Structured data for the front end in Json
     """
     nodes = []
