@@ -32,7 +32,7 @@ def main():
     eel.init('web')
     eel.start('index.html', block=False)
     model.retrieve_initial_data()
-    from client.pim import Pim
+    from pim import Pim
     ui_automation = Pim(update_text)
     ui_automation.start()
 
