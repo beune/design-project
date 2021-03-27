@@ -90,8 +90,9 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
         if identifier_string not in traversed_identifiers:
             traversed_identifiers[identifier_string] = 1
         else:
-            identifier_string = identifier_string + traversed_identifiers[identifier_string]
             traversed_identifiers[identifier_string] += 1
+            identifier_string = identifier_string + str(traversed_identifiers[identifier_string])
+
 
         return identifier_string
 
