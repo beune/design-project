@@ -4,7 +4,6 @@ Presenter class
 import eel
 from model import Model
 import view
-from ui_automation import UIAutomation
 
 model = Model(view.initialize, view.update, view.server_error)
 
