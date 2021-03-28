@@ -177,7 +177,8 @@ def change_label(node: dict, new_label: str):
     """
     node['label'] = new_label
     node[
-        'template'] = "<div class=\"domStyle\"><span>" + new_label + "</div></span><span class=\"material-icons\">mode</span>"
+        'template'] = "<div class=\"domStyle\"><span>" + new_label + \
+                      "</div></span><span class=\"material-icons\">mode</span>"
 
 
 def initialize(model):
