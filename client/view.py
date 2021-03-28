@@ -94,10 +94,17 @@ def make_leaf(leaf: TextLeaf, field_id: int, parent_id: int):
             confidence=leaf.label_conf,
             hint=leaf.text,
             alternatives=list(leaf.labels),
-            value_node=True
+            value_node=True,
+            speculative=leaf.speculative
         )
     else:
-        leaf_value = json_node_template(value_id, field_id, leaf.text, value_node=True)
+        leaf_value = json_node_template(
+            identifier=value_id,
+            parent_id=field_id,
+            text=leaf.text,
+            value_node=True,
+            speculative=leaf.speculative
+        )
 
     return [leaf_field, leaf_value]
 
@@ -116,7 +123,10 @@ def json_node_template(identifier: int, parent_id: int, text: str, confidence: f
     :param speculative: whether the node is auto-generated
     :return: a python dict representing the json object
     """
+    if text is None:
+        text = "?"
     template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
+
     low_confidence = False
     if confidence:
         percentage = round(confidence * 100)
