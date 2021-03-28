@@ -28,6 +28,16 @@ def home():
     return {"Response": 200, "Data": envs}
 
 
+@app.route("/env/<env_selected>/colours", methods=['GET'])
+def get_colours(env_selected):
+    """
+    Method used to get the color pattern of an environment
+    :param env_selected: The current environment
+    """
+    colours = jsonpickle.encode(environment.ENVS[env_selected].colours)
+    return {"Response": 200, "Data": colours}
+
+
 @app.route("/env/<env_selected>/", methods=['GET'])
 def get(env_selected):
     """

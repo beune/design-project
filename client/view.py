@@ -1,12 +1,14 @@
 """
 Imports
 """
+from typing import Dict, List
+
 import eel
-import json
-from typing import Dict
 
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import TextLeaf, LabelLeaf
+
+FALLBACK_COLOUR = "#ADADAD"
 
 
 def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
@@ -28,7 +30,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
         :param root: The node currently being traversed, containing all necessary information including children
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
-        nonlocal nodes
+        nonlocal new_id
         new_id = create_identifier(root.category, parent_id) if parent_id else create_identifier(root.category)
 
         node = make_node(root, new_id, parent_id)
@@ -36,26 +38,15 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
             change_label(node, tree_changes[new_id])
 
         nodes.append(node)
-        parent_id = new_id
-
-        for expects_label in root.expects:  # add expects nodes
-            flag = True
-            for child in root.children:
-                if type(child) == ReportLeaf:
-                    if expects_label == child.field:
-                        flag = False
-                        break
-            if flag:
-                new_id = create_identifier(expects_label, parent_id)
-                nodes.append(json_node_template(new_id, parent_id, expects_label))
-
+        parent = new_id
+        new_id += 1
         for child in root:
             if isinstance(child, ReportLeaf):
-                process_leaf(child, parent_id)
+                process_leaf(child, parent)
             else:
-                traverse(child, parent_id)
+                traverse(child, parent)
 
-    def process_leaf(leaf: ReportLeaf, parent_id: str):
+    def process_leaf(leaf: TextLeaf, parent_id: int):
         """
         Calls the add_nodes function on the leaves and their text, adding 2 nodes
         :param leaf: The leaf currently being traversed, containing all necessary information including its text
@@ -111,7 +102,7 @@ def make_node(node: ReportNode, identifier: str, parent_id: str):
     return node
 
 
-def make_leaf(leaf: ReportLeaf, identifier_field: str, identifier_value: str, parent_id: str):
+def make_leaf(leaf: Textleaf, identifier_field: str, identifier_value: str, parent_id: str):
     """
     Create a leaf, which consists of two json objects: the leaf key and the leaf value
     :param leaf: object that represents the leave
@@ -120,52 +111,128 @@ def make_leaf(leaf: ReportLeaf, identifier_field: str, identifier_value: str, pa
     :param parent_id: The id of the parent of the leaf currently being added
     :return: a list containing the key and value json objects
     """
-    leaf_key = json_node_template(identifier_field, parent_id, leaf.field, hint=leaf.hint)
-    field_cert = round(leaf.fieldconf * 100)  # certainty percentage
-    template = "<div class=\"domStyle\"><span>" + leaf.text + "</span></div><span class=\"confidence\">" \
-               + str(field_cert) + "%</span>"  # generate confidence template
 
-    leaf_value = json_node_template(identifier_value, identifier_field, leaf.text, template)
-    leaf_value["alternatives"] = {leaf.text: field_cert, **{x: round(leaf.labels[x] * 100) for x in leaf.labels}}
-    leaf_value["text"] = leaf.text
-    leaf_value["valueNode"] = True
-    leaf_value["lowConfidence"] = field_cert <= 75  # TODO implement low confindence
+    # Field
+    leaf_field = json_node_template(
+        identifier=field_id,
+        parent_id=parent_id,
+        text=leaf.field,
+        confidence=leaf.field_conf,
+        hint=leaf.hint,
+        speculative=leaf.speculative
+    )
+
+    # Value
+    value_id = field_id + 1
+    if isinstance(leaf, LabelLeaf):
+        leaf_value = json_node_template(
+            identifier=value_id,
+            parent_id=field_id,
+            text=leaf.label,
+            confidence=leaf.label_conf,
+            hint=leaf.text,
+            alternatives={leaf.text: confidence, **{x: 0 for x in leaf.labels}},
+            value_node=True
+        )
+    else:
+        leaf_value = json_node_template(value_id, field_id, leaf.text, value_node=True)
 
     return leaf_key, leaf_value
 
 
-def json_node_template(identifier: str, parent_id: str, label: str, template: str = None, hint: str = None):
+def json_node_template(identifier: str, parent_id: str, text: str, confidence: float = None, hint: str = None,
+                       alternatives: List = None, value_node: bool = False, speculative: bool = False, label: str):
     """
     Helper function that generates a basic structure for the json objects used in functions above
     :param hint: The hint, if it is a key node
     :param identifier: the id for the json object
     :param parent_id: the id of the parent of the json object
-    :param label: the label that is used in the default HTML template of the json object
-    :param template: optional argument if a modified template is to be used
+    :param text: the text that is used in the default HTML template of the json object
+    :param confidence: the confidence for the node
+    :param alternatives: the alternative texts
+    :param value_node: whether the node is a value.
+    :param speculative: whether the node is auto-generated
     :return: a python dict representing the json object
     """
-    if template is None:  # default template
-        template = "<div class=\"domStyle\"><span>" + label + "</span></div>"
+    template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
+    low_confidence = False
+    if confidence:
+        percentage = round(confidence * 100)
+        low_confidence = percentage < 75
+        template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
 
     if parent_id is not None:
         par = parent_id
     else:
         par = None
 
-    node = {"nodeId": identifier,
-            "parentNodeId": par,
-            "valueNode": False,
-            "lowConfidence": False,
-            "width": 347,
-            "height": 147,
-            "template": template,  # add
-            "alternatives": None,
-            "originalTemplate": template,
-            "hint": hint,
-            "label": label,
-            "text": None}
+    return {
+        "nodeId": identifier,
+        "parentNodeId": par,
+        "valueNode": value_node,
+        "lowConfidence": low_confidence,
+        "width": 347,
+        "height": 147,
+        "template": template,
+        "alternatives": alternatives,
+        "originalTemplate": template,
+        "hint": hint,
+        "text": text,
+        "speculative": speculative,
+        "label": label
+    }
 
-    return node
+
+def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str]):
+    """
+    Method used to create the text object with colour for nodes
+    :param node: The ReportNode which needs to be formed into the right format for the frontend
+    :param parent_label: The label of the parent of the node
+    :param colours: The colourdictionary for the current environment
+    :return: Returns the object generated out the node for the frontend
+    """
+    children = []
+    label = parent_label + node.category
+    for child in node:
+        if isinstance(child, TextLeaf):
+            res = set_leaf_colours(child, label + "/", colours)
+        else:
+            res = set_node_colours(child, label + "/", colours)
+        if res:
+            children.append(res)
+    if children:
+        return {
+            "children": children,
+            "type": "node",
+            "label": label,
+        }
+    else:
+        return None
+
+
+def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str]):
+    """
+    Method used to create the text object with colour for the leaves
+    :param leaf: The TextLeaf which needs to get a colour
+    :param parent_label: The label of the parent
+    :param colours: The colour dictionary for the current environment
+    :return: Returns the object needed for the frontend
+    """
+    if leaf.speculative:
+        return None
+    label = "{}{}".format(parent_label, leaf.field)
+    if leaf.field == "O":
+        result_type = "other"
+        colour = None
+    else:
+        result_type = "label"
+        colour = colours.get(leaf.field, FALLBACK_COLOUR)
+    return {
+        "text": leaf.text,
+        "colour": colour,
+        "type": result_type,
+        "label": label,
+    }
 
 
 def change_label(node: dict, new_label: str):
@@ -192,6 +259,15 @@ def update(model):
     """
     Reflect the changes to the model in the front-end
     """
-    linear_tree = generate_tree(model.tree, model.tree_changes)
-    print(json.dumps(linear_tree, indent=4))
-    eel.update_frontend(linear_tree, model.environment, model.text)
+    linear_tree = generate_tree(model.tree)
+    visual_text = set_node_colours(model.tree, "", model.colours)
+    eel.update_frontend(linear_tree, model.environment, visual_text)
+
+
+def server_error(mess: str):
+    """
+    Method used to display an error in the connection to the server
+    :param mess: The message of the server error
+    # :param mess: The accompanying error message
+    """
+    eel.show_server_error(mess)

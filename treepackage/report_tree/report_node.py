@@ -7,10 +7,9 @@ class ReportNode:
     """
     Class used to represent Nodes
     """
-    def __init__(self, category: str, children: list = None, expects: list = None):
+    def __init__(self, category: str, children: list = None):
         self.category = category
         self.children = [] if children is None else children
-        self.expects = [] if expects is None else expects
 
     def __repr__(self):
         return 'Node({})'.format(self.category)

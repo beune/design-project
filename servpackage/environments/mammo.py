@@ -9,11 +9,22 @@ import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
 from report_tree.report_node import ReportNode
-from report_tree.report_leaf import ReportLeaf
+from report_tree.report_leaf import TextLeaf, LabelLeaf
 
 """
 Class used to connect Shreyasi's python2 algorithm to python 3
 """
+
+COLOURS = {"breast_composition": "#E71212",
+           "shape": "#E77C12",
+           "margin": "#EDED12",
+           "size": "#13EB13",
+           "location": "#13EBEB",
+           "morphology": "#1313EB",
+           "associated_features": "#D981D9",
+           "distribution": "#81ADD9",
+           }
+
 COMM = "python2 \"./nlp/AutomaticStructuring/CRF Model A/predict_labels.py\""
 PATH = "./nlp"
 
@@ -50,22 +61,30 @@ hints = {
             "- Density: high, equal, low or fat-containing.\n"
 }
 
-expected = {
+expected_leaves = {
     "mass": ["shape", "margin", "density"],
     "calcifications": ["morphology", "distribution"]
 }
 
 options = {
-    "shape": ["oval", "round", "irregular"],
-    "margin": ["circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"],
-    "density": ["fat", "low", "equal", "high"],
-    "asymmetry": ["asymmetry", "global", "focal", "developing"],
-    "morphology": ["typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
-                                                                                                 "linear branching"],
-    "distribution": ["diffuse", "regional", "grouped", "linear", "segmental"],
+    "shape": {"oval", "round", "irregular"},
+    "margin": {"circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"},
+    "density": {"fat", "low", "equal", "high"},
+    "asymmetry": {"asymmetry", "global", "focal", "developing"},
+    "morphology": {"typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
+                                                                                                 "linear branching"},
+    "distribution": {"diffuse", "regional", "grouped", "linear", "segmental"},
 }
 
 alternatives = {key: {label: 0 for label in option_list} for key, option_list in options.items()}
+
+
+def get_colours() -> dict:
+    """
+    Method used to retrieve the colour palette of the mammo environment
+    :return: Dictionary with labels mapped to colours
+    """
+    return COLOURS
 
 
 def parse(text):
@@ -133,8 +152,8 @@ def after(label_after: str, label_before: str) -> bool:
     :param label_before: the label that comes first
     :return: true if the label can come afterwards
     """
-    return label_after.startswith('I-') and len(label_before) > 2 and label_after[2:] == label_before[2:] \
-        or label_before == label_after == 'O'
+    return (label_after.startswith('I-') and len(label_before) > 2
+            and label_after[2:] == label_before[2:] or label_before == label_after == 'O')
 
 
 def clean(unfiltered: str) -> str:
@@ -186,7 +205,10 @@ def make_tree(base: List[str], items: list):
     # if text has been found create a Leaf, otherwise a node
     if agg_text:
         conf = sum_conf / len(agg_text)
-        return ReportLeaf(' '.join(agg_text), category, conf)
+        text = ' '.join(agg_text)
+        if category in options:
+            return LabelLeaf(category, options[category], conf, text)
+        return TextLeaf(category, conf, ' '.join(agg_text))
     return ReportNode(category, children)
 
 
@@ -198,8 +220,9 @@ def add_labels(node: ReportNode):
     for child in node:
         if isinstance(child, ReportNode):
             add_labels(child)
-        elif isinstance(child, ReportLeaf) and child.field in alternatives:
-            child.labels = alternatives[child.field]
+        elif isinstance(child, LabelLeaf) and child.field in options:
+            child.label = child.text
+            child.label_conf = .7
 
 
 if __name__ == '__main__':
@@ -209,5 +232,6 @@ if __name__ == '__main__':
     tree = make_tree([], data)
     add_labels(tree)
     import pickle
+
     with open("TESTPICKLE.pkl", "wb") as tree_file:
         pickle.dump(tree, tree_file)
