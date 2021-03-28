@@ -93,7 +93,6 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
             traversed_identifiers[identifier_string] += 1
             identifier_string = identifier_string + str(traversed_identifiers[identifier_string])
 
-
         return identifier_string
 
     traverse(tree)
@@ -177,7 +176,8 @@ def change_label(node: dict, new_label: str):
     :param new_label: The new label that should be displayed in the front-end.
     """
     node['label'] = new_label
-    node['template'] = "<div class=\"domStyle\"><span>" + new_label + "</div></span><span class=\"material-icons\">mode</span>"
+    node[
+        'template'] = "<div class=\"domStyle\"><span>" + new_label + "</div></span><span class=\"material-icons\">mode</span>"
 
 
 def initialize(model):
