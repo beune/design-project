@@ -11,7 +11,7 @@ from report_tree.report_leaf import TextLeaf, LabelLeaf
 FALLBACK_COLOUR = "#ADADAD"
 
 
-def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
+def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
@@ -64,7 +64,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
 
             nodes.extend([field, value])
 
-    def create_identifier(*args: list):
+    def create_identifier(*args: str):
         """
         Creates a string from the input strings, used as id of a node/leaf,
         Used to link user changes to a changing tree
