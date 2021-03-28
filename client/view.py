@@ -76,6 +76,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
         for arg in args[:-1]:
             identifier_string += str(arg) + "_"
         identifier_string += str(args[-1])
+        # TODO: Equivalent of identifier_string = "_".join(args)
 
         if identifier_string not in traversed_identifiers:
             traversed_identifiers[identifier_string] = 1
@@ -129,6 +130,8 @@ def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, pare
             text=leaf.label,
             confidence=leaf.label_conf,
             hint=leaf.text,
+            # TODO: Dit is niet de bedoeling. leaf.text kan null zijn, hoort niet thuis tussen de labels (zoals
+            #  afgesproken) en nullen toevoegen heeft totaal geen waarde
             alternatives={leaf.text: round(leaf.label_conf * 100), **{x: 0 for x in leaf.labels}},
             value_node=True,
             speculative=leaf.speculative
@@ -162,6 +165,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         low_confidence = percentage < 75
         template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
 
+    # TODO: dit moet ook echt gefixed worden
     if parent_id is not None:
         par = parent_id
     else:
