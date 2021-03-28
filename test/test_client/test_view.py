@@ -168,7 +168,6 @@ class ViewTest(unittest.TestCase):
         leaf_a_label = 'stervormige'
         leaf_a_field = 'margin'
 
-
         report_leaf_a = ReportLeaf(leaf_a_label, leaf_a_field, 0.55,
                                    {'stervormige': 55, 'circumscribed': 0, 'obscured': 0})
         report_node_1 = ReportNode('mass', [report_leaf_a], ['shape', 'margin', 'density'])
