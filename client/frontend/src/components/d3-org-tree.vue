@@ -228,7 +228,6 @@
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
               let label = this.alternativeToLabel[this.chosenNodeLabelAlternative]
-              console.log(this.alternativeToLabel)
               this.changeLabel(this.currentNodeId, label)
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;

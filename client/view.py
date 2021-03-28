@@ -30,7 +30,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
         :param root: The node currently being traversed, containing all necessary information including children
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
-        nonlocal new_id
+        nonlocal nodes
         new_id = create_identifier(root.category, parent_id) if parent_id else create_identifier(root.category)
 
         node = make_node(root, new_id, parent_id)
@@ -39,14 +39,13 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
 
         nodes.append(node)
         parent = new_id
-        new_id += 1
         for child in root:
-            if isinstance(child, ReportLeaf):
+            if isinstance(child, TextLeaf):
                 process_leaf(child, parent)
             else:
                 traverse(child, parent)
 
-    def process_leaf(leaf: TextLeaf, parent_id: int):
+    def process_leaf(leaf: TextLeaf, parent_id: str):
         """
         Calls the add_nodes function on the leaves and their text, adding 2 nodes
         :param leaf: The leaf currently being traversed, containing all necessary information including its text
@@ -102,7 +101,7 @@ def make_node(node: ReportNode, identifier: str, parent_id: str):
     return node
 
 
-def make_leaf(leaf: Textleaf, identifier_field: str, identifier_value: str, parent_id: str):
+def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, parent_id: str):
     """
     Create a leaf, which consists of two json objects: the leaf key and the leaf value
     :param leaf: object that represents the leave
@@ -114,7 +113,7 @@ def make_leaf(leaf: Textleaf, identifier_field: str, identifier_value: str, pare
 
     # Field
     leaf_field = json_node_template(
-        identifier=field_id,
+        identifier=identifier_field,
         parent_id=parent_id,
         text=leaf.field,
         confidence=leaf.field_conf,
@@ -123,25 +122,26 @@ def make_leaf(leaf: Textleaf, identifier_field: str, identifier_value: str, pare
     )
 
     # Value
-    value_id = field_id + 1
     if isinstance(leaf, LabelLeaf):
         leaf_value = json_node_template(
-            identifier=value_id,
-            parent_id=field_id,
+            identifier=identifier_value,
+            parent_id=identifier_field,
             text=leaf.label,
             confidence=leaf.label_conf,
             hint=leaf.text,
-            alternatives={leaf.text: confidence, **{x: 0 for x in leaf.labels}},
-            value_node=True
+            alternatives={leaf.text: round(leaf.label_conf * 100), **{x: 0 for x in leaf.labels}},
+            value_node=True,
+            speculative=leaf.speculative
         )
     else:
-        leaf_value = json_node_template(value_id, field_id, leaf.text, value_node=True)
+        leaf_value = json_node_template(identifier_value, identifier_field, leaf.text, value_node=True)
 
-    return leaf_key, leaf_value
+    return leaf_field, leaf_value
 
 
-def json_node_template(identifier: str, parent_id: str, text: str, confidence: float = None, hint: str = None,
-                       alternatives: List = None, value_node: bool = False, speculative: bool = False, label: str):
+def json_node_template(identifier: str, parent_id: str, text: str, confidence: float = None,
+                       hint: str = None, alternatives: Dict[str, float] = None, value_node: bool = False,
+                       speculative: bool = False):
     """
     Helper function that generates a basic structure for the json objects used in functions above
     :param hint: The hint, if it is a key node
@@ -154,7 +154,8 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
     :param speculative: whether the node is auto-generated
     :return: a python dict representing the json object
     """
-    template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
+    template_text = "?" if speculative and value_node else text
+    template = "<div class=\"domStyle\"><span>{}</span></div>".format(template_text)
     low_confidence = False
     if confidence:
         percentage = round(confidence * 100)
@@ -179,7 +180,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "hint": hint,
         "text": text,
         "speculative": speculative,
-        "label": label
+        "label": template_text
     }
 
 
@@ -259,7 +260,7 @@ def update(model):
     """
     Reflect the changes to the model in the front-end
     """
-    linear_tree = generate_tree(model.tree)
+    linear_tree = generate_tree(model.tree, model.tree_changes)
     visual_text = set_node_colours(model.tree, "", model.colours)
     eel.update_frontend(linear_tree, model.environment, visual_text)
 
