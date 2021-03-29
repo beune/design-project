@@ -9,7 +9,13 @@
     >
       <template slot="activator">
         <span>
-          <marker-test v-for="child in node.children" :key="child" :node="child" :parent-open-callback="display" :parent-close-callback="hide"/>
+          <marker-test
+            v-for="child in node.children"
+            :key="child"
+            :node="child"
+            :parent-open-callback="display"
+            :parent-close-callback="hide"
+          />
         </span>
       </template>
       <span>{{ node.label }}</span>
