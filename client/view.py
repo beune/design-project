@@ -11,7 +11,7 @@ from report_tree.report_leaf import TextLeaf, LabelLeaf
 FALLBACK_COLOUR = "#ADADAD"
 
 
-def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
+def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
@@ -64,7 +64,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
 
             nodes.extend([field, value])
 
-    def create_identifier(*args: list):
+    def create_identifier(*args: str):
         """
         Creates a string from the input strings, used as id of a node/leaf,
         Used to link user changes to a changing tree
@@ -76,6 +76,7 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str] = {}):
         for arg in args[:-1]:
             identifier_string += str(arg) + "_"
         identifier_string += str(args[-1])
+        # TODO: Equivalent of identifier_string = "_".join(args)
 
         if identifier_string not in traversed_identifiers:
             traversed_identifiers[identifier_string] = 1
@@ -129,6 +130,8 @@ def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, pare
             text=leaf.label,
             confidence=leaf.label_conf,
             hint=leaf.text,
+            # TODO: Dit is niet de bedoeling. leaf.text kan null zijn, hoort niet thuis tussen de labels (zoals
+            #  afgesproken) en nullen toevoegen heeft totaal geen waarde
             alternatives={leaf.text: round(leaf.label_conf * 100), **{x: 0 for x in leaf.labels}},
             value_node=True,
             speculative=leaf.speculative
@@ -162,6 +165,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         low_confidence = percentage < 75
         template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
 
+    # TODO: dit moet ook echt gefixed worden
     if parent_id is not None:
         par = parent_id
     else:

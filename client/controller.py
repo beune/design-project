@@ -24,7 +24,7 @@ def update_tree(new_tree):
     Recieve tree update from front-end and update model
     :param new_tree: the updated tree in json format
     """
-    old_tree = view.generate_tree(model.tree)
+    old_tree = view.generate_tree(model.tree, model.tree_changes)
     tree_changes = tree_user_changes_map(new_tree, old_tree)
     model.set_changes_map(tree_changes)
 
