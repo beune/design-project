@@ -132,7 +132,7 @@
           <v-tab-item>
             <v-container fluid>
               <div style="padding-top: 90px;">
-                <marker-test :node="text"/>
+                <marker-test :node="text" />
               </div>
             </v-container>
           </v-tab-item>
