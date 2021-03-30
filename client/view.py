@@ -222,6 +222,14 @@ def update(model):
     eel.update_frontend(linear_tree, model.environment, visual_text)
 
 
+def show_loader(show: bool):
+    """
+    Method used to give visual feedback on when the NLP of the environment is loading
+    :param show: Whether to show the loader or not
+    """
+    eel.show_loader(show)
+
+
 def server_error(mess: str):
     """
     Method used to display an error in the connection to the server
