@@ -14,6 +14,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              style="margin-top: 10px;"
               class="text-none"
               tile
               text
@@ -69,6 +70,7 @@
           </v-list>
         </v-menu>
         <v-btn
+          style="margin-top: 10px;"
           class="text-none"
           tile
           text
@@ -78,6 +80,7 @@
           Beeld
         </v-btn>
         <v-btn
+          style="margin-top: 10px;"
           class="text-none"
           tile
           text
@@ -89,12 +92,12 @@
         <v-spacer />
         <v-progress-circular
           v-if="loading"
-          style="margin-right: 20px"
+          style="margin-top: 10px"
           indeterminate
           color="white"
         />
         <v-btn
-          style="padding-top: 10px;"
+          style="margin-top: 10px;"
           icon
           color="white"
           @click="$vuetify.theme.dark = !$vuetify.theme.dark"
