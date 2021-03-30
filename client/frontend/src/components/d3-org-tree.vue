@@ -111,9 +111,10 @@
     .show-white-space {
         white-space: pre-wrap;
     }
-    .svgContainer {
-    /* Because d3-org-tree fits to as much width as possible when a width is not specified, the width is not specified here. */
-      height: 86.0vh;
+    .container.svgContainer {
+        width: 100vw;
+        max-width: 100vw;
+        height: calc(100vh - 90px);
     }
     .domStyle {
         display: flex;
