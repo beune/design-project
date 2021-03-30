@@ -88,11 +88,11 @@
         </v-btn>
         <v-spacer />
         <v-progress-circular
-          style="margin-right: 20px"
           v-if="loading"
+          style="margin-right: 20px"
           indeterminate
           color="white"
-        ></v-progress-circular>
+        />
         <div style="width: 250px; padding-top: 10px;">
           <v-select
             v-model="environment"
