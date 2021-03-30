@@ -144,6 +144,7 @@
               <d3orgtree
                 v-if="tree.length > 1"
                 :tree-data="tree"
+                @tree-changed="treeChanged()"
               />
             </div>
           </v-tab-item>
@@ -251,6 +252,10 @@ export default {
     showServerError(mess) {
       this.errorText = mess
       this.errorMessage = true
+    },
+    //notifies backend of tree change
+    treeChanged() {
+      window.eel.update_tree(this.tree);
     }
   },
 }

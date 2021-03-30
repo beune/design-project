@@ -31,6 +31,7 @@ class Model:
         self.text = ""
         self.colours = {}
         self.tree = ReportNode("Root")
+        self.tree_changes = {}
 
     def retrieve_initial_data(self):
         """
@@ -83,6 +84,13 @@ class Model:
         self.retrieve_colours()
         self.retrieve_tree()
         self.show_loader(False)
+
+    def set_changes_map(self, tree_changes):
+        """
+        Set the tree changes map with changes from front end
+        :param tree_changes: the map containing all changes from front end
+        """
+        self.tree_changes = tree_changes
 
     def get_request(self, path: str, data=None):
         """
