@@ -149,7 +149,6 @@
             showNoNodeLabelAlternativesAvailableSnackbar: false,
             nodeLabelAlternatives: undefined,
             chosenNodeLabelAlternative: undefined,
-            alternativeToLabel: {},
             currentNodeId: undefined,
             vicinityMargin: 1,
             hintMenuContent: undefined,
@@ -215,20 +214,11 @@
             fetchNodeAlternatives(){
               let self = this
               let alternatives = [];
-              let alternativeToLabel = {}
               this.treeData.forEach(function(object){
-                if (object.nodeId === self.currentNodeId) {
-                  alternativeToLabel = {}
-                  if (object.alternatives != null) {
-                    for (let [key, value] of Object.entries(object.alternatives)) {
-                      let alternative = `${key} (${value}%)`
-                      alternatives.push(alternative)
-                      alternativeToLabel[alternative] = key
-                    }
-                  }
+                if (object.nodeId === self.currentNodeId && object.alternatives != null) {
+                  alternatives = object.alternatives
                 }
               });
-              this.alternativeToLabel = alternativeToLabel
               return alternatives
             },
             toggleEditNodeLabelDialog(){
@@ -250,7 +240,7 @@
             },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
-              let label = this.alternativeToLabel[this.chosenNodeLabelAlternative]
+              let label = this.chosenNodeLabelAlternative
               this.changeLabel(this.currentNodeId, label)
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
