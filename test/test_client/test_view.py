@@ -178,16 +178,19 @@ class ViewTest(unittest.TestCase):
                       'valueNode': False, 'lowConfidence': True, 'width': 347, 'height': 147,
                       'template': '<div class="domStyle"><span>margin</span></div><span class="confidence">55%</span>',
                       'alternatives': None,
-                      'originalTemplate': '<div class="domStyle"><span>margin</span></div><span class="confidence">55%</span>',
+                      'originalTemplate': '<div class="domStyle"><span>margin</span></div><span class="confidence">' +
+                                          '55%</span>',
                       'hint': leaf_hint,
                       'text': 'margin', 'speculative': False, 'label': leaf_field, 'isLabel': False,
                       'confidence': leaf_field_conf, 'directSubordinates': 1, 'totalSubordinates': 1},
                      {'nodeId': 'stervormige_margin_mass_positive_finding_root',
                       'parentNodeId': 'margin_mass_positive_finding_root', 'valueNode': True, 'lowConfidence': True,
                       'width': 347, 'height': 147,
-                      'template': '<div class="domStyle"><span>obscured</div></span><span class="material-icons">mode</span>',
+                      'template': '<div class="domStyle"><span>obscured</div></span><span class="material-icons">' +
+                                  'mode</span>',
                       'alternatives': leaf_alternatives,
-                      'originalTemplate': '<div class="domStyle"><span>stervormige</span></div><span class="confidence">70%</span>',
+                      'originalTemplate': '<div class="domStyle"><span>stervormige</span></div><span class=' +
+                                          '"confidence">70%</span>',
                       'hint': 'stervormige', 'text': leaf_text, 'speculative': False, 'label': leaf_value,
                       'isLabel': True,
                       'confidence': leaf_label_conf, 'directSubordinates': 0, 'totalSubordinates': 0}]
