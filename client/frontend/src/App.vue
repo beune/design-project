@@ -87,6 +87,12 @@
           Help
         </v-btn>
         <v-spacer />
+        <v-progress-circular
+          style="margin-right: 20px"
+          v-if="loading"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
         <div style="width: 250px; padding-top: 10px;">
           <v-select
             v-model="environment"
@@ -186,6 +192,7 @@ export default {
     environments: [],
     environment: "",
     errorMessage: false,
+    loading: false,
     errorText: "",
     text: {}
   }),
@@ -198,6 +205,7 @@ export default {
     eel.expose(this.initializeFrontend, "initialize_frontend");
     eel.expose(this.updateFrontend, "update_frontend");
     eel.expose(this.showServerError, "show_server_error")
+    eel.expose(this.showLoader, "show_loader")
   },
   methods: {
     closePreferencesDialog() {
@@ -217,6 +225,9 @@ export default {
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
+    },
+    showLoader(show) {
+      this.loading = show;
     },
     showServerError(mess) {
       this.errorText = mess
