@@ -138,7 +138,7 @@
       <v-main>
         <!-- Provides the application the proper gutter -->
 
-        <v-tabs-items v-model="tab">
+        <v-tabs-items v-model="tab" v-if="envchosen">
           <v-tab-item>
             <div style="padding-top: 90px;">
               <d3orgtree
@@ -147,7 +147,6 @@
               />
             </div>
           </v-tab-item>
-
           <v-tab-item>
             <v-container fluid>
               <div style="padding-top: 90px;">
@@ -156,6 +155,9 @@
             </v-container>
           </v-tab-item>
         </v-tabs-items>
+        <div style="padding-top: 90px;" v-else>
+           <empty-state></empty-state>
+        </div>
       </v-main>
       <v-snackbar
         v-model="errorMessage"
@@ -191,12 +193,14 @@
 import d3orgtree from "./components/d3-org-tree.vue"
 import PreferencesDialog from "./components/PreferencesDialog.vue"
 import MarkerTest from "./components/Marker.vue"
+import EmptyState from "./components/EmptyState"
 
 export default {
   components: {
     d3orgtree,
     PreferencesDialog,
     MarkerTest,
+    EmptyState
   },
   data: () => ({
     tab: null,
@@ -204,6 +208,7 @@ export default {
     tree: [],
     environments: [],
     environment: "",
+    envchosen: false,
     errorMessage: false,
     loading: false,
     errorText: "",
@@ -238,6 +243,7 @@ export default {
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
+      this.envchosen = true;
     },
     showLoader(show) {
       this.loading = show;
