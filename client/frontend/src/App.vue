@@ -93,6 +93,15 @@
           indeterminate
           color="white"
         />
+        <v-btn
+          style="padding-top: 10px;"
+          icon
+          color="white"
+          @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+        >
+          <v-icon>mdi-brightness-6</v-icon>
+        </v-btn>
+
         <div style="width: 250px; padding-top: 10px;">
           <v-select
             v-model="environment"
@@ -114,6 +123,7 @@
             <v-tab
               v-for="tab in tabs"
               :key="tab"
+              class="white--text"
             >
               {{ tab }}
             </v-tab>
