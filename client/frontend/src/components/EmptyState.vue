@@ -7,7 +7,7 @@
       Pick an environment by using the selector in the top right corner
     </v-card-subtitle>
     <v-icon x-large style="position:absolute; right: 0; top: 5px" class="ma-5">
-      mdi-clipboard-check-multiple
+      mdi-alert-octagon-outline
     </v-icon>
   </v-card>
 </template>
