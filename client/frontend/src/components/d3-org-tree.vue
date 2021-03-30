@@ -48,7 +48,7 @@
             <v-list-item-title>Undo</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="uncertain">
+        <v-list-item v-if="uncertain" @click="ignoreWarning">
           <v-list-item-icon>
             <v-icon>report_off</v-icon>
           </v-list-item-icon>
@@ -261,6 +261,14 @@
               this.changeLabel(this.currentNodeId, "?")
               this.renderChart(this.treeData)
               this.$emit("tree-changed")
+            },
+            ignoreWarning(){
+              this.treeData.forEach((object) => {
+                if (object.nodeId === this.currentNodeId) {
+                  object.lowConfidence = false;
+                }
+              });
+              this.renderChart(this.treeData)
             },
             renderChart(data) {
               if (!this.chartReference) {
