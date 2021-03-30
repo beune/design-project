@@ -155,7 +155,30 @@
             hintMenuContent: undefined,
             mouseHoversOnNode: true
         }),
+        computed: {
+          chartArrowColor: function () {
+            return this.$vuetify.theme.dark ? {
+                "red": 255,
+                "green": 255,
+                "blue": 255,
+                "alpha": 1
+            } : {
+                "red": 45,
+                "green": 48,
+                "blue": 119,
+                "alpha": 1
+            }
+          },
+          // Because you cannot directly watch 'this.$vuetify.theme.dark', I created this field. Hacky, but it workds.
+          dark: function(){
+            return this.$vuetify.theme.dark
+          }
+        },
         watch: {
+            // Because you cannot directly watch 'this.$vuetify.theme.dark', I created a computed field 'dark'. Hacky, but it workds.
+            dark: function () {
+              this.renderChart(this.treeData)
+            },
             treeData: function(value) {
                 this.renderChart(value);
             }
@@ -255,6 +278,9 @@
               this.chartReference
                   .container('.svgContainer')
                   .data(data)
+                  // Setting backgroundcolor to nothing will make the chart inherit the background color from the app.
+                  .backgroundColor()
+                  .linkColor(this.chartArrowColor)
                   .onNodeHoverOut(() => {
                       this.mouseHoversOnNode = false
                   })

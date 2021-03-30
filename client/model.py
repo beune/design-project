@@ -17,7 +17,7 @@ class Model:
     """
 
     def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None],
-                 server_error: Callable[[str], None]):
+                 server_error: Callable[[str], None], show_loader: Callable[[bool], None]):
         """
         :param initialize_view: a callback function to initialize the view with initial data
         :param update_view: a callback function to update the view when the model changed
@@ -25,6 +25,7 @@ class Model:
         self.initialize_view = initialize_view
         self.update_view = update_view
         self.server_error = server_error
+        self.show_loader = show_loader
         self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
@@ -68,17 +69,21 @@ class Model:
         Store the new_text, update the tree and notify the view.
         :param new_text: the new text.
         """
+        self.show_loader(True)
         self.text = new_text
         self.retrieve_tree()
+        self.show_loader(False)
 
     def set_environment(self, new_environment: str):
         """
         Set the environment to new_environment, update the tree and notify the view.
         :param new_environment: the new environment.
         """
+        self.show_loader(True)
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
+        self.show_loader(False)
 
     def set_changes_map(self, tree_changes):
         """

@@ -130,20 +130,24 @@ def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, pare
             text=leaf.label,
             confidence=leaf.label_conf,
             hint=leaf.text,
-            # TODO: Dit is niet de bedoeling. leaf.text kan null zijn, hoort niet thuis tussen de labels (zoals
-            #  afgesproken) en nullen toevoegen heeft totaal geen waarde
-            alternatives={leaf.text: round(leaf.label_conf * 100), **{x: 0 for x in leaf.labels}},
+            alternatives=list(leaf.labels),
             value_node=True,
             speculative=leaf.speculative
         )
     else:
-        leaf_value = json_node_template(identifier_value, identifier_field, leaf.text, value_node=True)
+        leaf_value = json_node_template(
+            identifier=identifier_value,
+            parent_id=identifier_field,
+            text=leaf.text,
+            value_node=True,
+            speculative=leaf.speculative
+        )
 
     return leaf_field, leaf_value
 
 
 def json_node_template(identifier: str, parent_id: str, text: str, confidence: float = None,
-                       hint: str = None, alternatives: Dict[str, float] = None, value_node: bool = False,
+                       hint: str = None, alternatives: List[str] = None, value_node: bool = False,
                        speculative: bool = False):
     """
     Helper function that generates a basic structure for the json objects used in functions above
@@ -157,23 +161,19 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
     :param speculative: whether the node is auto-generated
     :return: a python dict representing the json object
     """
-    template_text = "?" if speculative and value_node else text
-    template = "<div class=\"domStyle\"><span>{}</span></div>".format(template_text)
+    if text is None:
+        text = "?"
+    template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
+
     low_confidence = False
     if confidence:
         percentage = round(confidence * 100)
         low_confidence = percentage < 75
         template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
 
-    # TODO: dit moet ook echt gefixed worden
-    if parent_id is not None:
-        par = parent_id
-    else:
-        par = None
-
     return {
         "nodeId": identifier,
-        "parentNodeId": par,
+        "parentNodeId": parent_id,
         "valueNode": value_node,
         "lowConfidence": low_confidence,
         "width": 347,
@@ -184,7 +184,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "hint": hint,
         "text": text,
         "speculative": speculative,
-        "label": template_text
+        "label": text
     }
 
 
@@ -267,6 +267,14 @@ def update(model):
     linear_tree = generate_tree(model.tree, model.tree_changes)
     visual_text = set_node_colours(model.tree, "", model.colours)
     eel.update_frontend(linear_tree, model.environment, visual_text)
+
+
+def show_loader(show: bool):
+    """
+    Method used to give visual feedback on when the NLP of the environment is loading
+    :param show: Whether to show the loader or not
+    """
+    eel.show_loader(show)
 
 
 def server_error(mess: str):

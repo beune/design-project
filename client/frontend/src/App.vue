@@ -14,6 +14,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              style="margin-top: 10px;"
               class="text-none"
               tile
               text
@@ -69,6 +70,7 @@
           </v-list>
         </v-menu>
         <v-btn
+          style="margin-top: 10px;"
           class="text-none"
           tile
           text
@@ -78,6 +80,7 @@
           Beeld
         </v-btn>
         <v-btn
+          style="margin-top: 10px;"
           class="text-none"
           tile
           text
@@ -87,6 +90,21 @@
           Help
         </v-btn>
         <v-spacer />
+        <v-progress-circular
+          v-if="loading"
+          style="margin-top: 10px"
+          indeterminate
+          color="white"
+        />
+        <v-btn
+          style="margin-top: 10px;"
+          icon
+          color="white"
+          @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+        >
+          <v-icon>mdi-brightness-6</v-icon>
+        </v-btn>
+
         <div style="width: 250px; padding-top: 10px;">
           <v-select
             v-model="environment"
@@ -108,6 +126,7 @@
             <v-tab
               v-for="tab in tabs"
               :key="tab"
+              class="white--text"
             >
               {{ tab }}
             </v-tab>
@@ -133,7 +152,7 @@
           <v-tab-item>
             <v-container fluid>
               <div style="padding-top: 90px;">
-                <marker-test :node="text"/>
+                <marker-test :node="text" />
               </div>
             </v-container>
           </v-tab-item>
@@ -187,6 +206,7 @@ export default {
     environments: [],
     environment: "",
     errorMessage: false,
+    loading: false,
     errorText: "",
     text: {}
   }),
@@ -199,6 +219,7 @@ export default {
     eel.expose(this.initializeFrontend, "initialize_frontend");
     eel.expose(this.updateFrontend, "update_frontend");
     eel.expose(this.showServerError, "show_server_error")
+    eel.expose(this.showLoader, "show_loader")
   },
   methods: {
     closePreferencesDialog() {
@@ -218,6 +239,9 @@ export default {
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment)
+    },
+    showLoader(show) {
+      this.loading = show;
     },
     showServerError(mess) {
       this.errorText = mess
