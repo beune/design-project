@@ -48,7 +48,7 @@
             <v-list-item-title>Undo</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <v-list-item v-if="uncertain">
           <v-list-item-icon>
             <v-icon>report_off</v-icon>
           </v-list-item-icon>
@@ -144,7 +144,7 @@
 
             mouseX: 0,
             mouseY: 0,
-
+            uncertain: false,
             chartReference: null,
             showEditNodeLabelDialog: false,
             showNoNodeLabelAlternativesAvailableSnackbar: false,
@@ -282,6 +282,13 @@
                   })
                   .onNodeClick(d => {
                     this.contextMenuVisible = true;
+                    let uncert = false
+                    this.treeData.forEach(function(object){
+                      if (object.nodeId === d.nodeId) {
+                        uncert = object.lowConfidence
+                      }
+                    });
+                    this.uncertain = uncert;
                     // Do not show hint menu so that both menus won't overlap.
                     this.hintMenuVisible = false;
                     this.currentNodeId = d.nodeId
