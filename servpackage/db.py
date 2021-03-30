@@ -14,11 +14,14 @@ class DBConnector:
 
     def __init__(self):
         self.conn = None
+        with open('../password.txt') as f:
+            passwd = f.read()
         try:
-            self.conn = mysql.connector.connect(host='localhost',
-                                                database='newdb',
+            self.conn = mysql.connector.connect(host='mydb',
+                                                database='db',
                                                 user='root',
-                                                password='dockertest123+')
+                                                password=passwd,
+                                                port=3306)
             if self.conn.is_connected():
                 print('Connected to MySQL database')
         except Error as e:
@@ -57,3 +60,8 @@ class DBConnector:
         cursor = self.conn.cursor()
         cursor.execute(query)
         self.conn.commit()
+
+
+if __name__ == "__main__":
+    db = DBConnector()
+    db.update("INSERT INTO reports (report_text) VALUES ('TESTSTRING')")

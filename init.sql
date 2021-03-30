@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS db;
+USE db;
+CREATE TABLE IF NOT EXISTS reports (
+    id INT UNSIGNED AUTO_INCREMENT primary key,
+    report_text VARCHAR(1000),
+    date_time DATETIME
+);
+CREATE USER 'user'@'%' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON db.* TO 'user'@'%';

@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  mydb:
+    image: mysql:8.0.23
+    restart: always
+    secrets:
+      - db-password
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_ROOT_PASSWORD: /run/secrets/db-password
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+
+  server:
+    build: .
+    restart: always
+    ports:
+    - "5000:5000"
+
+secrets:
+  db-password:
+    file: password.txt
