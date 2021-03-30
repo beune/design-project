@@ -33,7 +33,7 @@ SCRIPT = "./AutomaticStructuring/CRF MODEL A/predict_labels.py"
 INPUT_FILE = "/AutomaticStructuring/data/testSample_input.xml"
 OUTPUT_FILE = "/AutomaticStructuring/data/out.json"
 
-hints = {
+HINTS = {
     "breast composition": "In the BI-RADS edition 2013 the assignment of the breast composition is changed into a, b, c"
                           "and d-categories followed by a description: \n"
                           "- A The breast are almost entirely fatty. Mammography is highly sensitive in this setting.\n"
@@ -61,12 +61,12 @@ hints = {
             "- Density: high, equal, low or fat-containing.\n"
 }
 
-expected_leaves = {
+EXPECTED_LEAVES = {
     "mass": ["shape", "margin", "density"],
     "calcifications": ["morphology", "distribution"]
 }
 
-options = {
+OPTIONS = {
     "shape": {"oval", "round", "irregular"},
     "margin": {"circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"},
     "density": {"fat", "low", "equal", "high"},
@@ -76,7 +76,7 @@ options = {
     "distribution": {"diffuse", "regional", "grouped", "linear", "segmental"},
 }
 
-alternatives = {key: {label: 0 for label in option_list} for key, option_list in options.items()}
+ALTERNATIVES = {key: {label: 0 for label in option_list} for key, option_list in OPTIONS.items()}
 
 
 def get_colours() -> dict:
@@ -206,8 +206,8 @@ def make_tree(base: List[str], items: list):
     if agg_text:
         conf = sum_conf / len(agg_text)
         text = ' '.join(agg_text)
-        if category in options:
-            return LabelLeaf(category, options[category], conf, text)
+        if category in OPTIONS:
+            return LabelLeaf(category, OPTIONS[category], conf, text)
         return TextLeaf(category, conf, ' '.join(agg_text))
     return ReportNode(category, children)
 
@@ -220,7 +220,7 @@ def add_labels(node: ReportNode):
     for child in node:
         if isinstance(child, ReportNode):
             add_labels(child)
-        elif isinstance(child, LabelLeaf) and child.field in options:
+        elif isinstance(child, LabelLeaf) and child.field in OPTIONS:
             child.label = child.text
             child.label_conf = .7
 
