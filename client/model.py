@@ -78,9 +78,11 @@ class Model:
         Set the environment to new_environment, update the tree and notify the view.
         :param new_environment: the new environment.
         """
+        self.show_loader(True)
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
+        self.show_loader(False)
 
     def get_request(self, path: str, data=None):
         """
