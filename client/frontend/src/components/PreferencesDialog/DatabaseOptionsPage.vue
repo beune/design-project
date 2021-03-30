@@ -14,7 +14,7 @@
           :rules="[rules.required]"
           :type="'text'"
           name="input-10-1"
-          label="Gebruikersnaam"
+          label="Username"
         />
         <v-text-field
           v-model="databasePassword"
@@ -22,7 +22,7 @@
           :rules="[rules.required]"
           :type="showPassword ? 'text' : 'password'"
           name="input-10-1"
-          label="Wachtwoord"
+          label="Password"
           counter
           @click:append="showPassword = !showPassword"
         />
@@ -38,7 +38,7 @@
         databaseUsername: '',
         databasePassword: '',
         rules: {
-          required: value => !!value || 'Verplicht.',
+          required: value => !!value || 'Required.',
         },
   }),
 }

@@ -23,7 +23,7 @@
     >
       <!-- TODO: only allow value nodes to be removed. -->
       <v-list dense>
-        <v-subheader>OPTIES</v-subheader>
+        <v-subheader>OPTIONS</v-subheader>
         <v-list-item @click="deleteNodeLabel">
           <v-list-item-icon>
             <v-icon>delete</v-icon>
@@ -65,7 +65,7 @@
     >
       <v-card>
         <v-card-title class="headline">
-          Label wijzigen
+          Edit label
         </v-card-title>
         <v-card-text>
           <v-select
@@ -82,14 +82,14 @@
             text
             @click="showEditNodeLabelDialog = false"
           >
-            Annuleer
+            Cancel
           </v-btn>
           <v-btn
             color="primary"
             text
             @click="editNodeLabel"
           >
-            Wijzigen
+            Edit
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -98,7 +98,7 @@
     <v-snackbar
       v-model="showNoNodeLabelAlternativesAvailableSnackbar"
     >
-      Er zijn geen alternatieven beschikbaar.
+      There are no alternatives available.
     </v-snackbar>
 
     <v-container

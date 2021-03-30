@@ -23,27 +23,16 @@
               v-bind="attrs"
               v-on="on"
             >
-              Bestand
+              File
             </v-btn>
           </template>
 
           <v-list>
             <v-list-item link>
-              <v-list-item-title>Nieuw</v-list-item-title>
+              <v-list-item-title>New</v-list-item-title>
             </v-list-item>
             <v-list-item link>
-              <v-list-item-title>Openen...</v-list-item-title>
-            </v-list-item>
-          </v-list>
-
-          <v-divider />
-
-          <v-list>
-            <v-list-item link>
-              <v-list-item-title>Opslaan</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-title>Opslaan als...</v-list-item-title>
+              <v-list-item-title>Open...</v-list-item-title>
             </v-list-item>
           </v-list>
 
@@ -51,10 +40,21 @@
 
           <v-list>
             <v-list-item link>
-              <v-list-item-title>Exporteren naar schijf...</v-list-item-title>
+              <v-list-item-title>Save</v-list-item-title>
             </v-list-item>
             <v-list-item link>
-              <v-list-item-title>Exporteren naar database...</v-list-item-title>
+              <v-list-item-title>Save as...</v-list-item-title>
+            </v-list-item>
+          </v-list>
+
+          <v-divider />
+
+          <v-list>
+            <v-list-item link>
+              <v-list-item-title>Export to disk...</v-list-item-title>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-title>Export to database...</v-list-item-title>
             </v-list-item>
           </v-list>
 
@@ -65,7 +65,7 @@
               to="/preferences"
               link
             >
-              <v-list-item-title>Voorkeuren...</v-list-item-title>
+              <v-list-item-title>Preferences...</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -77,7 +77,7 @@
           elevation="0"
           color="white"
         >
-          Beeld
+          View
         </v-btn>
         <v-btn
           style="margin-top: 10px;"

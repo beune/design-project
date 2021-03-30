@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title class="headline">
-        Voorkeuren
+        Preferences
       </v-card-title>
       <v-row no-gutters>
         <v-col cols="4">
@@ -54,7 +54,7 @@
           text
           @click="closePreferencesDialog"
         >
-          Annuleer
+          CANCEL
         </v-btn>
         <v-btn
           color="primary"
@@ -84,7 +84,7 @@ import DatabaseOptionsPage from './PreferencesDialog/DatabaseOptionsPage.vue'
        items: [
         { text: 'Database', icon: 'storage', routerPath: 'database' },
         { text: 'G2Speech', icon: 'record_voice_over', routerPath: 'g2speech' },
-        { text: 'Substituties', icon: 'swap_horiz', routerPath: 'substituties' },
+        { text: 'Substitutions', icon: 'swap_horiz', routerPath: 'substitutions' },
       ],
   }),
   methods: {

@@ -4,7 +4,7 @@ import App from '../App.vue'
 import PreferencesDialog from '../components/PreferencesDialog.vue'
 import DatabaseOptionsPage from '../components/PreferencesDialog/DatabaseOptionsPage.vue'
 import G2SpeechOptionsPage from '../components/PreferencesDialog/G2SpeechOptionsPage.vue'
-import SubstitutiesOptionsPage from '../components/PreferencesDialog/SubstitutiesOptionsPage.vue'
+import SubstitutionsOptionsPage from '../components/PreferencesDialog/SubstitutionsOptionsPage.vue'
 
 Vue.use(VueRouter)
 
@@ -27,8 +27,8 @@ const routes = [
         component: G2SpeechOptionsPage
       },
       {
-        path: '/preferences/substituties',
-        component: SubstitutiesOptionsPage
+        path: '/preferences/substitutions',
+        component: SubstitutionsOptionsPage
       },
       {
         path: '',
