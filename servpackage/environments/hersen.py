@@ -4,9 +4,9 @@ Imports
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf, LabelLeaf
 
-expected = {}
-options = {}
-hints = {}
+EXPECTED = {}
+OPTIONS = {}
+HINTS = {}
 
 COLOURS = {"size": "#E71212",
            "Neurofibromatosis II": "#E77C12",

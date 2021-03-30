@@ -42,12 +42,12 @@ ENVS = {
         name="Mammo",
         parse=mammo.parse,
         colours=mammo.COLOURS,
-        hinter=Hinter(mammo.expected_leaves, mammo.options, mammo.hints)
+        hinter=Hinter(mammo.EXPECTED_LEAVES, mammo.OPTIONS, mammo.HINTS)
     ),
     "hersen": Environment(
         name="Hersen",
         parse=hersen.parse,
         colours=hersen.COLOURS,
-        hinter=Hinter(hersen.expected, hersen.options, hersen.hints)
+        hinter=Hinter(hersen.EXPECTED, hersen.OPTIONS, hersen.HINTS)
     ),
 }
