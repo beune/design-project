@@ -138,7 +138,10 @@
       <v-main>
         <!-- Provides the application the proper gutter -->
 
-        <v-tabs-items v-model="tab" v-if="envchosen">
+        <v-tabs-items
+          v-if="envchosen"
+          v-model="tab"
+        >
           <v-tab-item>
             <div style="padding-top: 90px;">
               <d3orgtree
@@ -155,8 +158,11 @@
             </v-container>
           </v-tab-item>
         </v-tabs-items>
-        <div style="padding-top: 90px;" v-else>
-           <empty-state></empty-state>
+        <div
+          v-else
+          style="padding-top: 90px;"
+        >
+          <empty-state />
         </div>
       </v-main>
       <v-snackbar
