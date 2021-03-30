@@ -177,6 +177,9 @@
 </template>
 
 <style lang="scss">
+
+html { overflow-y: auto }
+
 .v-tabs-slider-wrapper {
   border: 4px solid #EF7104;
 }
