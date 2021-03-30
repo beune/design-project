@@ -9,12 +9,7 @@ services:
     volumes:
       - ./init.sql:/data/application/init.sql
     environment:
-      MYSQL_HOST: localhost
       MYSQL_ROOT_PASSWORD: /run/secrets/db-password
-    ports:
-      - '3306:3306'
-    expose:
-      - '3306'
 
   server:
     build: .

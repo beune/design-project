@@ -17,7 +17,7 @@ class DBConnector:
         with open('../password.txt') as f:
             passwd = f.read()
         try:
-            self.conn = mysql.connector.connect(host='mydb',
+            self.conn = mysql.connector.connect(host='localhost',
                                                 database='db',
                                                 user='root',
                                                 password=passwd,

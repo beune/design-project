@@ -5,5 +5,3 @@ CREATE TABLE IF NOT EXISTS reports (
     report_text VARCHAR(1000),
     date_time DATETIME
 );
-CREATE USER 'user'@'%' IDENTIFIED BY '';
-GRANT ALL PRIVILEGES ON db.* TO 'user'@'%';
