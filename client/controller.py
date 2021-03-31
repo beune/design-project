@@ -30,7 +30,7 @@ def update_tree(new_tree):
 
 
 @eel.expose
-def add_in_db():
+def add_to_db():
     """
     Method used to store the current tree in the database
     """
