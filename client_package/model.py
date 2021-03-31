@@ -99,8 +99,8 @@ class Model:
     def get_request(self, path: str, data=None):
         """
         Method used to create get requests
-        :param path:
-        :param data:
+        :param path: The path of the get request
+        :param data: The data of the get request
         """
         try:
             response = requests.get(path, json=data)

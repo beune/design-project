@@ -37,6 +37,13 @@ def update_tree(identifier, changed_type, value):
     # tree_changes = tree_user_changes_map(new_tree, original_tree)
     # model.set_changes_map(tree_changes)
 
+@eel.expose
+def add_to_db():
+    """
+    Method used to store the current tree in the database
+    """
+    model.add_to_db()
+
 
 def tree_user_changes_map(new_tree, original_tree):
     """

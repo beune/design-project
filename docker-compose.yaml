@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql
+    secrets:
+      - db-password
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
+    volumes:
+      - ./init.sql:/data/application/init.sql
+      - my-datavolume:/var/lib/mysql
+    command: "--init-file /data/application/init.sql"
+  server:
+    secrets:
+      - db-password
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+
+secrets:
+  db-password:
+    file: password
+
+volumes:
+  my-datavolume:
