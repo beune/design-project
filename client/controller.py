@@ -40,7 +40,7 @@ def tree_user_changes_map(new_tree, original_tree):
     """
     Generate map of changes between two trees
     :param new_tree: the new tree in json format
-    :param old_tree: the old tree in json format
+    :param original_tree: the old tree in json format
     :return: a dictionary mapping hashes from the old nodes to labels of new nodes
     """
     tree_changes = {}

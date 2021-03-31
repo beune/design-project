@@ -220,17 +220,12 @@ def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str])
     }
 
 
-def change_label(node: dict, new_label: str):
-    """
-    Helper function that is called when the node is being traversed has a stored edit.
-    Changes the label and the template before it is added to the list of json nodes.
-    :param node: The node currently being traversed, to which an edit should be applied.
-    :param new_label: The new label that should be displayed in the front-end.
-    """
-    node['label'] = new_label
-    node[
-        'template'] = "<div class=\"domStyle\"><span>" + new_label + \
-                      "</div></span><span class=\"material-icons\">mode</span>"
+def apply_change(node, change: Change):
+    if node['label'] != change.label:
+        node['template'] = "<div class=\"domStyle\"><span>" + change.label + \
+                           "</div></span><span class=\"material-icons\">mode</span>"
+    node['label'] = change.label
+    node['lowConfidence'] = change.warning
 
 
 def initialize(model):
