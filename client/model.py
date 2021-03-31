@@ -99,7 +99,7 @@ class Model:
         """
         data = {"jsonrep": "Teststring"}
         try:
-            response = requests.post(ENDPOINT, json=data)
+            response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as c:
             self.server_error(c.args[0].args[0])
