@@ -205,7 +205,7 @@ def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str])
     """
     if leaf.speculative:
         return None
-    label = "{}{}".format(parent_label, leaf.field)
+    label = parent_label + leaf.field
     if leaf.field == "O":
         result_type = "other"
         colour = None

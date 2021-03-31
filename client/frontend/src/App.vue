@@ -263,9 +263,9 @@ export default {
       this.errorMessage = true
     },
     //notifies backend of tree change
-    treeChanged() {
-      window.eel.update_tree(this.tree);
-    }
+    // treeChanged() {
+    //   window.eel.update_tree(this.tree);
+    // }
   },
 }
 </script>

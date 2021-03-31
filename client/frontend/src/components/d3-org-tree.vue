@@ -245,7 +245,8 @@
               this.changeLabel(this.currentNodeId, label)
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
-              this.$emit("tree-changed")
+              window.eel.treeChanged(this.currentNodeId, "label", label);
+              // this.$emit("tree-changed")
             },
             undoNodeLabelEdit(){
               let self = this
@@ -255,7 +256,8 @@
                 }
               });
               this.renderChart(this.treeData)
-              this.$emit("tree-changed")
+              window.eel.treeChanged(this.currentNodeId, "label", null);
+              // this.$emit("tree-changed")
             },
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?")
@@ -270,6 +272,7 @@
                 }
               });
               this.renderChart(this.treeData)
+              window.eel.treeChanged(this.currentNodeId, "warning", false)
             },
             renderChart(data) {
               if (!this.chartReference) {
