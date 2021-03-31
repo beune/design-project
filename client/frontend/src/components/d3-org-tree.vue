@@ -121,6 +121,7 @@
         justify-content: center;
         align-items: center;
         height: 100%;
+        text-align: center;
 
         * {
             display: inline-block;
