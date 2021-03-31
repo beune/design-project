@@ -245,7 +245,6 @@ export default {
     },
     //update frontend (called from backend)
     updateFrontend(tree, environment, text) {
-      console.log(tree)
       this.tree = tree;
       this.environment = environment;
       this.text = text;
