@@ -13,7 +13,6 @@ class DBConnector:
     """
 
     def __init__(self):
-        self.conn = None
         with open('/run/secrets/db-password') as f:
             passwd = f.read()
         try:
@@ -27,19 +26,26 @@ class DBConnector:
         except Error as e:
             print(e)
 
-    def create(self, env: str, jsonrep: str ) -> None:
+    def create(self, env: str, jsonrep: str) -> None:
         """
         Method which executes a given CREATE query on the current MySQL Database
         :param env: The current environment
-        :
-        """
-
-    def read(self, query: str) -> object:
-        """
-        Method which executes a given READ query on the current MySQL Database
-        :param query: The read query that needs to be executed on the database
+        :param jsonrep: The json representation of the tree
         """
         cursor = self.conn.cursor()
-        cursor.execute(query)
-        return cursor.fetchall()
+        args = (env, jsonrep)
+        query = "INSERT INTO db.reports (environment, tree_json) VALUES (%s, %s);"
+        cursor.execute(query, args)
+        self.conn.commit()
+        cursor.close()
 
+    def read(self) -> object:
+        """
+        Method which executes a given READ query on the current MySQL Database
+        """
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM db.reports;")
+        self.conn.commit()
+        res = cursor.fetchall()
+        cursor.close()
+        return res
