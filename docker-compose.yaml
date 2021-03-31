@@ -6,11 +6,18 @@ services:
     secrets:
       - db-password
     environment:
-      MYSQL_DATABASE: testapp
+      MYSQL_DATABASE: db
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
-
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    command: "--init-file /data/application/init.sql"
+  server:
+    secrets:
+      - db-password
+    build: .
+    restart: always
     ports:
-      - "3308:3306"
+      - "5000:5000"
 
 secrets:
   db-password:
