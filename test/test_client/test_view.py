@@ -3,7 +3,7 @@ Imports
 """
 
 import unittest
-from client import view
+from client_package import view
 
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf

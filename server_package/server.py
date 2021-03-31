@@ -5,8 +5,8 @@ import jsonpickle
 from flask import Flask, request
 from flask_restful import Api, abort
 
-from servpackage import environment
-from servpackage.db import DBConnector
+from server_package import environment
+from server_package.db import DBConnector
 
 app = Flask(__name__)
 api = Api(app)
