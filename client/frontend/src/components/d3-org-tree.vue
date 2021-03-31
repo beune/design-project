@@ -268,7 +268,8 @@
                   object.lowConfidence = false;
                 }
               });
-              this.renderChart(this.treeData)
+              this.renderChart(this.treeData);
+              this.$emit("tree-changed")
             },
             renderChart(data) {
               if (!this.chartReference) {
