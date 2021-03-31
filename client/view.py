@@ -11,6 +11,38 @@ from report_tree.report_leaf import TextLeaf, LabelLeaf
 FALLBACK_COLOUR = "#ADADAD"
 
 
+def tree_from_json(json_nodes, root_json):
+    node_children = {node['nodeId']: [] for node in json_nodes}  # initialize with empty list
+    for json_node in json_nodes:
+        parent = json_node['parentNodeId']
+        if parent and parent in node_children:
+            node_children[parent].append(json_node)  # add id to parent children list
+
+    nodes = []
+
+    def traverse(root):
+        nonlocal nodes, json_nodes, node_children
+
+        json_children = node_children[root['nodeId']]
+
+        if len(json_children) == 1 and len(node_children[json_children[0]['nodeId']]) == 0:  # leaf case
+            value_node = json_children[0]
+            if not value_node['isLabel']:
+                node = TextLeaf(root['label'], root['confidence'], value_node['text'], root['hint'])
+            else:
+                node = LabelLeaf(root['label'], value_node['alternatives'], root['confidence'], value_node['text'],
+                                 (value_node['label'], value_node['confidence']), root['hint'])
+        else:  # node case
+            children = [traverse(child) for child in json_children]
+            node = ReportNode(root['label'], children)
+
+        nodes.append(node)
+        return node
+
+    traverse(root_json)
+    return nodes
+
+
 def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
@@ -132,7 +164,8 @@ def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, pare
             hint=leaf.text,
             alternatives=list(leaf.labels),
             value_node=True,
-            speculative=leaf.speculative
+            speculative=leaf.speculative,
+            is_label=True
         )
     else:
         leaf_value = json_node_template(
@@ -148,7 +181,7 @@ def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, pare
 
 def json_node_template(identifier: str, parent_id: str, text: str, confidence: float = None,
                        hint: str = None, alternatives: List[str] = None, value_node: bool = False,
-                       speculative: bool = False):
+                       speculative: bool = False, is_label: bool = False):
     """
     Helper function that generates a basic structure for the json objects used in functions above
     :param hint: The hint, if it is a key node
@@ -159,6 +192,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
     :param alternatives: the alternative texts
     :param value_node: whether the node is a value.
     :param speculative: whether the node is auto-generated
+    :param is_label: whether this node is LabelLeaf (or TextLeaf if false)
     :return: a python dict representing the json object
     """
     if text is None:
@@ -184,7 +218,9 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "hint": hint,
         "text": text,
         "speculative": speculative,
-        "label": text
+        "label": text,
+        "isLabel": is_label,
+        "confidence": confidence
     }
 
 

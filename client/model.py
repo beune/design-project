@@ -31,6 +31,7 @@ class Model:
         self.text = ""
         self.colours = {}
         self.tree = ReportNode("Root")
+        self.tree_edited = None  # Tree structure with edits from frontend, converted back to the python structure
         self.tree_changes = {}
 
     def retrieve_initial_data(self):
@@ -105,6 +106,13 @@ class Model:
             self.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
             self.server_error(e.args[0])
+
+    def set_tree_edited(self, tree_edited):
+        """
+        Set the new edited tree
+        :param tree_edited: The new report tree containing user changes from front end
+        """
+        self.tree_edited = tree_edited
 
     def get_request(self, path: str, data=None):
         """

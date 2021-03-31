@@ -48,7 +48,7 @@
             <v-list-item-title>Undo</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item>
+        <v-list-item v-if="uncertain" @click="ignoreWarning">
           <v-list-item-icon>
             <v-icon>report_off</v-icon>
           </v-list-item-icon>
@@ -111,15 +111,17 @@
     .show-white-space {
         white-space: pre-wrap;
     }
-    .svgContainer {
-    /* Because d3-org-tree fits to as much width as possible when a width is not specified, the width is not specified here. */
-      height: 86.0vh;
+    .container.svgContainer {
+        width: 100vw;
+        max-width: 100vw;
+        height: calc(100vh - 90px);
     }
     .domStyle {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100%;
+        text-align: center;
 
         * {
             display: inline-block;
@@ -143,7 +145,7 @@
 
             mouseX: 0,
             mouseY: 0,
-
+            uncertain: false,
             chartReference: null,
             showEditNodeLabelDialog: false,
             showNoNodeLabelAlternativesAvailableSnackbar: false,
@@ -261,6 +263,14 @@
               this.renderChart(this.treeData)
               this.$emit("tree-changed")
             },
+            ignoreWarning(){
+              this.treeData.forEach((object) => {
+                if (object.nodeId === this.currentNodeId) {
+                  object.lowConfidence = false;
+                }
+              });
+              this.renderChart(this.treeData)
+            },
             renderChart(data) {
               if (!this.chartReference) {
                   this.chartReference = new OrgTree();
@@ -281,6 +291,13 @@
                   })
                   .onNodeClick(d => {
                     this.contextMenuVisible = true;
+                    let uncert = false
+                    this.treeData.forEach(function(object){
+                      if (object.nodeId === d.nodeId) {
+                        uncert = object.lowConfidence
+                      }
+                    });
+                    this.uncertain = uncert;
                     // Do not show hint menu so that both menus won't overlap.
                     this.hintMenuVisible = false;
                     this.currentNodeId = d.nodeId

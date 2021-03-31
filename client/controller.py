@@ -27,6 +27,7 @@ def update_tree(new_tree):
     old_tree = view.generate_tree(model.tree, model.tree_changes)
     tree_changes = tree_user_changes_map(new_tree, old_tree)
     model.set_changes_map(tree_changes)
+    model.set_tree_edited(view.tree_from_json(new_tree, new_tree[0]))
 
 
 @eel.expose
