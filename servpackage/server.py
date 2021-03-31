@@ -6,9 +6,11 @@ from flask import Flask, request
 from flask_restful import Api, abort
 
 from servpackage import environment
+from servpackage.db import DBConnector
 
 app = Flask(__name__)
 api = Api(app)
+db = DBConnector()
 
 
 def run():
@@ -26,6 +28,18 @@ def home():
     """
     envs = {environment.ENVS[endpoint].name: endpoint for endpoint in environment.ENVS}
     return {"Response": 200, "Data": envs}
+
+
+@app.route("/env/<env_selected>", methods=['POST'])
+def add_to_db(env_selected):
+    """
+    Method used to create new records in the MySQL database, sets the environment
+     and Json representation of the generated tree
+    :param env_selected: The current environment
+    """
+    data = request.get_json()
+    jsonrep = data['jsonrep']
+    db.create(env_selected, jsonrep)
 
 
 @app.route("/env/<env_selected>/colours", methods=['GET'])
