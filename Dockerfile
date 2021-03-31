@@ -18,7 +18,7 @@ RUN git clone https://git.snt.utwente.nl/s2174294/nlpbreastcancer.git /workdir/n
 RUN python2 -m pip install -r nlp/nlpreqs.txt
 RUN python2 -c "import nltk; nltk.download('stopwords')"
 RUN python2 -c "import nltk; nltk.download('averaged_perceptron_tagger')"
-COPY server_package /workdir/servpackage
+COPY server_package /workdir/server_package
 
-CMD ["python3", "./servpackage/server.py"]
+CMD ["python3", "./server_package/server.py"]
 
