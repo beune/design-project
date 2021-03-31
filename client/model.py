@@ -92,6 +92,20 @@ class Model:
         """
         self.tree_changes = tree_changes
 
+    #     TODO: CREATE JSONREPRESENTATION OF THE TREE WITH CHANGES
+    def add_to_db(self):
+        """
+        Method used to store the current tree into the database
+        """
+        data = {"jsonrep": "Teststring"}
+        try:
+            response = requests.post(ENDPOINT, json=data)
+            response.raise_for_status()
+        except requests.exceptions.ConnectionError as c:
+            self.server_error(c.args[0].args[0])
+        except requests.exceptions.RequestException as e:
+            self.server_error(e.args[0])
+
     def get_request(self, path: str, data=None):
         """
         Method used to create get requests
