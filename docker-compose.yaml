@@ -10,6 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
     volumes:
       - ./init.sql:/data/application/init.sql
+      - my-datavolume:/var/lib/mysql
     command: "--init-file /data/application/init.sql"
   server:
     secrets:
@@ -22,3 +23,6 @@ services:
 secrets:
   db-password:
     file: password
+
+volumes:
+  my-datavolume:
