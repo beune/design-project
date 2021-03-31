@@ -9,15 +9,15 @@ class DBConnector:
     """
     Class which establishes the connection between the Controller and the MySQL Database
     The database will be running on a Docker image
-    Queries are used using the CRUD convention (CREATE, READ, UPDATE, DELETE)
+    For now there is only a Create and a Read method
     """
 
     def __init__(self):
         self.conn = None
-        with open('../password.txt') as f:
+        with open('/run/secrets/db-password') as f:
             passwd = f.read()
         try:
-            self.conn = mysql.connector.connect(host='localhost',
+            self.conn = mysql.connector.connect(host='mysql',
                                                 database='db',
                                                 user='root',
                                                 password=passwd,
@@ -27,10 +27,11 @@ class DBConnector:
         except Error as e:
             print(e)
 
-    def create(self, query: str) -> None:
+    def create(self, env: str, jsonrep: str ) -> None:
         """
         Method which executes a given CREATE query on the current MySQL Database
-        :param query: The create query that needs to be executed on the database
+        :param env: The current environment
+        :
         """
 
     def read(self, query: str) -> object:
@@ -40,28 +41,5 @@ class DBConnector:
         """
         cursor = self.conn.cursor()
         cursor.execute(query)
-        self.conn.commit()
         return cursor.fetchall()
 
-    def update(self, query: str) -> None:
-        """
-        Method which executes a given UPDATE query on the current MySQL Database
-        :param query: The update query that needs to be executed on the database
-        """
-        cursor = self.conn.cursor()
-        cursor.execute(query)
-        self.conn.commit()
-
-    def delete(self, query: str) -> None:
-        """
-        Method which executes a given DELETE query on the current MySQL Database
-        :param query: The delete query that needs to be executed on the database
-        """
-        cursor = self.conn.cursor()
-        cursor.execute(query)
-        self.conn.commit()
-
-
-if __name__ == "__main__":
-    db = DBConnector()
-    db.update("INSERT INTO reports (report_text) VALUES ('TESTSTRING')")
