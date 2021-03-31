@@ -15,3 +15,19 @@ Docker should be installed on your machine in order to run these commands:
 docker-compose build 
 docker-compose up -d
 
+# Compiling the client side 
+
+The client side of our application can be compiled using the following commands form the source:
+
+  - .\venv\Scripts\activate 
+  - cd client\frontend
+  - npm install 
+  - npm run build
+  - cd ..
+  - python -m eel controller.py web --onefile
+
+This will create one executable: \client\dist\controller.exe 
+Executing this file will open the frontend of our application
+
+
+
