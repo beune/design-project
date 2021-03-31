@@ -9,7 +9,7 @@ import jsonpickle
 import requests
 
 from report_tree.report_node import ReportNode
-from servpackage import server
+from server_package import server
 
 
 class HTTPTest(unittest.TestCase):
