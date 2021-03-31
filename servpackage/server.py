@@ -10,7 +10,7 @@ from servpackage.db import DBConnector
 
 app = Flask(__name__)
 api = Api(app)
-db = DBConnector()
+db = None
 
 
 def run():
@@ -30,16 +30,20 @@ def home():
     return {"Response": 200, "Data": envs}
 
 
-@app.route("/env/<env_selected>", methods=['POST'])
+@app.route("/env/<env_selected>/db", methods=['GET', 'POST'])
 def add_to_db(env_selected):
     """
     Method used to create new records in the MySQL database, sets the environment
      and Json representation of the generated tree
     :param env_selected: The current environment
     """
+    global db
+    if not db:
+        db = DBConnector()
     data = request.get_json()
     jsonrep = data['jsonrep']
     db.create(env_selected, jsonrep)
+    return {"Response": 200}
 
 
 @app.route("/env/<env_selected>/colours", methods=['GET'])
