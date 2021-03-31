@@ -92,7 +92,6 @@ import DatabaseOptionsPage from './PreferencesDialog/DatabaseOptionsPage.vue'
       this.$router.push({ path: '/preferences/' + path })
     },
     saveNewPreferences () {
-      console.log("💩TODO💩")
       this.closePreferencesDialog()
     },
     closePreferencesDialog(){
