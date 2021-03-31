@@ -31,7 +31,7 @@ class UIAutomation:
                 while flag:
                     new_text = self.textfield.window_text()
                     if (len(new_text) > 0 and (new_text[-1] == ' ' or time.time() - start_time > 2)
-                            or len(self.text) > 0 and len(new_text) == 0):
+                            or len(new_text) == 0):
                         self.text = new_text
                         self.callback(self.text)
                         flag = False

@@ -9,51 +9,43 @@ class DBConnector:
     """
     Class which establishes the connection between the Controller and the MySQL Database
     The database will be running on a Docker image
-    Queries are used using the CRUD convention (CREATE, READ, UPDATE, DELETE)
+    For now there is only a Create and a Read method
     """
 
     def __init__(self):
-        self.conn = None
+        with open('/run/secrets/db-password') as f:
+            passwd = f.read()
         try:
-            self.conn = mysql.connector.connect(host='localhost',
-                                                database='newdb',
+            self.conn = mysql.connector.connect(host='mysql',
+                                                database='db',
                                                 user='root',
-                                                password='dockertest123+')
+                                                password=passwd,
+                                                port=3306)
             if self.conn.is_connected():
                 print('Connected to MySQL database')
         except Error as e:
             print(e)
 
-    def create(self, query: str) -> None:
+    def create(self, env: str, jsonrep: str) -> None:
         """
         Method which executes a given CREATE query on the current MySQL Database
-        :param query: The create query that needs to be executed on the database
+        :param env: The current environment
+        :param jsonrep: The json representation of the tree
         """
+        cursor = self.conn.cursor()
+        args = (env, jsonrep)
+        query = "INSERT INTO db.reports (environment, tree_json) VALUES (%s, %s);"
+        cursor.execute(query, args)
+        self.conn.commit()
+        cursor.close()
 
-    def read(self, query: str) -> object:
+    def read(self) -> object:
         """
         Method which executes a given READ query on the current MySQL Database
-        :param query: The read query that needs to be executed on the database
         """
         cursor = self.conn.cursor()
-        cursor.execute(query)
+        cursor.execute("SELECT * FROM db.reports;")
         self.conn.commit()
-        return cursor.fetchall()
-
-    def update(self, query: str) -> None:
-        """
-        Method which executes a given UPDATE query on the current MySQL Database
-        :param query: The update query that needs to be executed on the database
-        """
-        cursor = self.conn.cursor()
-        cursor.execute(query)
-        self.conn.commit()
-
-    def delete(self, query: str) -> None:
-        """
-        Method which executes a given DELETE query on the current MySQL Database
-        :param query: The delete query that needs to be executed on the database
-        """
-        cursor = self.conn.cursor()
-        cursor.execute(query)
-        self.conn.commit()
+        res = cursor.fetchall()
+        cursor.close()
+        return res
