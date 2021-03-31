@@ -260,7 +260,8 @@
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?")
               this.renderChart(this.treeData)
-              this.$emit("tree-changed")
+              window.eel.treeChanged(this.currentNodeId, "deleted", true);
+              // this.$emit("tree-changed")
             },
             ignoreWarning(){
               this.treeData.forEach((object) => {

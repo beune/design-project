@@ -6,6 +6,7 @@ from typing import Callable
 import jsonpickle
 import requests
 from report_tree.report_node import ReportNode
+from report_tree.report_leaf import TextLeaf
 
 # ENDPOINT = "https://docker.beune.dev/"
 ENDPOINT = "http://127.0.0.1:5000/"
@@ -31,7 +32,7 @@ class Model:
         self.text = ""
         self.colours = {}
         self.tree = ReportNode("Root")
-        self.tree_edited = None  # Tree structure with edits from frontend, converted back to the python structure
+        self.tree_identifiers = {}
         self.tree_changes = {}
 
     def retrieve_initial_data(self):
@@ -53,6 +54,8 @@ class Model:
             response = self.get_request(path, data)
             if response:
                 self.tree = jsonpickle.decode(response.json()["Data"])
+                self.tree_identifiers = {}
+                self.create_identifiers(self.tree)
                 self.update_view(self)
 
     def retrieve_colours(self):
@@ -93,13 +96,6 @@ class Model:
         """
         self.tree_changes = tree_changes
 
-    def set_tree_edited(self, tree_edited):
-        """
-        Set the new edited tree
-        :param tree_edited: The new report tree containing user changes from front end
-        """
-        self.tree_edited = tree_edited
-
     def get_request(self, path: str, data=None):
         """
         Method used to create get requests
@@ -114,3 +110,27 @@ class Model:
             self.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
             self.server_error(e.args[0])
+
+    def create_identifiers(self, node):
+        """
+        Recursively iterates through the given tree, creating
+        """
+        identifier = node.field if isinstance(node, TextLeaf) else node.category
+        if identifier not in self.tree_identifiers.values():
+            self.tree_identifiers[id(node)] = identifier
+        else:
+            distinguisher = 1
+            while identifier + str(distinguisher) in self.tree_identifiers.values():
+                distinguisher += 1
+            self.tree_identifiers[id(node)] = identifier + str(distinguisher)
+
+        if isinstance(node, ReportNode):
+            for child in node.children:
+                self.create_identifiers(child)
+
+    def get_or_create_change(self, identifier):
+        if identifier not in self.tree_changes:
+            self.tree_changes[identifier] = Change()
+        return self.tree_changes[identifier]
+        # equivalent
+        return self.tree_changes.setdefault(identifier, Change())
