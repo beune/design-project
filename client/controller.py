@@ -39,8 +39,8 @@ def tree_user_changes_map(new_tree, old_tree):
     """
     tree_changes = {}
     for new_node, old_node in zip(new_tree, old_tree):
-        if new_node['label'] != old_node['label']:
-            tree_changes[old_node['nodeId']] = new_node['label']
+        if new_node['label'] != old_node['label'] or new_node['lowConfidence'] != old_node['lowConfidence']:
+            tree_changes[old_node['nodeId']] = new_node
     return tree_changes
 
 

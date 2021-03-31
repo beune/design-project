@@ -43,7 +43,7 @@ def tree_from_json(json_nodes, root_json):
     return nodes
 
 
-def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
+def generate_tree(tree: ReportNode, tree_changes: Dict[str, dict]):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
@@ -67,8 +67,8 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
 
         node = make_node(root, new_id, parent_id)
         if new_id in tree_changes:  # check for user change
-            change_label(node, tree_changes[new_id])
-
+            node = tree_changes[new_id]
+            change_label(node, node['label'])
         nodes.append(node)
         parent = new_id
         for child in root:
@@ -90,10 +90,11 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, str]):
             field, value = make_leaf(leaf, field_id, value_id, parent_id)
 
             if field_id in tree_changes:  # check for user change
-                change_label(field, tree_changes[field_id])
+                field = tree_changes[field_id]
+                change_label(field, field['label'])
             if value_id in tree_changes:  # check for user change
-                change_label(value, tree_changes[value_id])
-
+                value = tree_changes[value_id]
+                change_label(value, value['label'])
             nodes.extend([field, value])
 
     def create_identifier(*args: str):
