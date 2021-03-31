@@ -29,6 +29,14 @@ def update_tree(new_tree):
     model.set_changes_map(tree_changes)
 
 
+@eel.expose
+def add_in_db():
+    """
+    Method used to store the current tree in the database
+    """
+    model.add_to_db()
+
+
 def tree_user_changes_map(new_tree, old_tree):
     """
     Generate map of changes between two trees
