@@ -55,12 +55,13 @@ def generate_tree(tree: ReportNode, tree_identifiers: Dict[object, str], tree_ch
         nonlocal nodes
         if leaf.field != 'O':  # 'Other' leaves are currently excluded
             identifier = tree_identifiers[id(leaf)]
-            field, value = make_leaf(leaf, identifier, identifier + "_value", parent_id)
+            field, label = make_leaf(leaf, identifier, identifier + "_value", parent_id)
 
             if identifier in tree_changes:  # check for user change
-                apply_change_leaf(field, value, tree_changes[identifier])
+                apply_change(field, tree_changes[identifier])  #TODO apply for label as well
+                apply_change(label, tree_changes[identifier + "_value"])  #TODO apply for label as well
 
-            nodes.extend([field, value])
+            nodes.extend([field, label])
 
     traverse(tree)
     return nodes
