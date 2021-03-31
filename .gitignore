@@ -435,3 +435,4 @@ docs/_book
 # https://plugins.jetbrains.com/plugin/12206-codestream
 
 # End of https://www.toptal.com/developers/gitignore/api/python,java,vue,vim,intellij,pycharm,webstorm
+/password

@@ -8,6 +8,8 @@ Eel==0.14.0
 flake8==3.9.0
 Flask==1.1.2
 Flask-RESTful==0.3.8
+fuzzywuzzy~=0.18.0
+python-Levenshtein~=0.12.2
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.3
