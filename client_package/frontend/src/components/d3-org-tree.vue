@@ -175,63 +175,60 @@
           },
           // Because you cannot directly watch 'this.$vuetify.theme.dark', I created this field. Hacky, but it workds.
           dark: function(){
-            return this.$vuetify.theme.dark
+            return this.$vuetify.theme.dark;
           }
         },
         watch: {
             // Because you cannot directly watch 'this.$vuetify.theme.dark', I created a computed field 'dark'. Hacky, but it workds.
             dark: function () {
-              this.renderChart(this.treeData)
+              this.renderChart(this.treeData);
             },
             treeData: function(value) {
                 this.renderChart(value);
             }
         },
         mounted() {
-            this.renderChart(this.treeData)
+            this.renderChart(this.treeData);
         },
         methods: {
             handleHintMenu(node) {
               let currentNodeId = this.currentNodeId
               setTimeout(() => {
                 if (node.hint != null && !this.contextMenuVisible && this.mouseHoversOnNode && currentNodeId === this.currentNodeId) {
-                  this.hintMenuVisible = true
-                  this.mouseHoversOnNode = false
+                  this.hintMenuVisible = true;
+                  this.mouseHoversOnNode = false;
                 }
               }, 800)
-              this.hintMenuContent = node.hint
+              this.hintMenuContent = node.hint;
             },
             handleMouseMove(e){
-              let mouseX = e.clientX
-              let mouseY = e.clientY
+              let mouseX = e.clientX;
+              let mouseY = e.clientY;
               // If the mouse is not in the vicinity of the the context or hint menu, it will not be visible anymore.
               if (!this.between(this.mouseX, mouseX) && !this.between(this.mouseY, mouseY)){
-                this.contextMenuVisible = false
-                this.hintMenuVisible = false
+                this.contextMenuVisible = false;
+                this.hintMenuVisible = false;
               }
-              this.mouseX = mouseX
-              this.mouseY = mouseY
+              this.mouseX = mouseX;
+              this.mouseY = mouseY;
             },
             between (previous, current) {
               // Tests whether a number is between the specified margin
-              return current > previous - this.vicinityMargin && current < previous + this.vicinityMargin
+              return current > previous - this.vicinityMargin && current < previous + this.vicinityMargin;
             },
             fetchNodeAlternatives(){
-              let self = this
+              let self = this;
               let alternatives = [];
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId && object.alternatives != null) {
-                  console.log(object)
                   object.alternatives.forEach(function(alt) {
-                    console.log(alt)
                     if (alt !== object.label) {
-                      alternatives.push(alt)
+                      alternatives.push(alt);
                     }
                   })
                 }
               });
-              console.log(alternatives)
-              return alternatives
+              return alternatives;
             },
             toggleEditNodeLabelDialog(){
               //Only show dialog if there are alternatives available. If no alternatives available, show a snackbar that notifies the user.
@@ -245,37 +242,37 @@
             changeLabel(nodeId, label){
               this.treeData.forEach(function(object){
                 if (object.nodeId === nodeId) {
-                  object.label = label
-                  object.template = "<div class=\"domStyle\"><span>" + label + "</div></span><span class=\"material-icons\">mode</span>"
+                  object.label = label;
+                  object.template = "<div class=\"domStyle\"><span>" + label + "</div></span><span class=\"material-icons\">mode</span>";
                 }
               });
             },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
-              let label = this.chosenNodeLabelAlternative
-              this.changeLabel(this.currentNodeId, label)
-              this.renderChart(this.treeData)
+              let label = this.chosenNodeLabelAlternative;
+              this.changeLabel(this.currentNodeId, label);
+              this.renderChart(this.treeData);
               this.chosenNodeLabelAlternative = undefined;
               window.eel.update_tree(this.currentNodeId, "label", label);
-              this.ignoreWarning() //remove warning because of edit
+              this.ignoreWarning(); //remove warning because of edit
             },
             undoNodeLabelEdit(){
-              let self = this
-              let label = null
+              let self = this;
+              let label = null;
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
-                  object.template = object.originalTemplate
-                  object.lowConfidence = object.originalLowConfidence
-                  object.label = object.originalLabel
-                  label = object.originalLabel
+                  object.template = object.originalTemplate;
+                  object.lowConfidence = object.originalLowConfidence;
+                  object.label = object.originalLabel;
+                  label = object.originalLabel;
                 }
               });
               this.renderChart(this.treeData)
               window.eel.update_tree(this.currentNodeId, "label", label);
             },
             deleteNodeLabel(){
-              this.changeLabel(this.currentNodeId, "?")
-              this.renderChart(this.treeData)
+              this.changeLabel(this.currentNodeId, "?");
+              this.renderChart(this.treeData);
               window.eel.update_tree(this.currentNodeId, "label", "?");
               window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
             },
@@ -286,7 +283,7 @@
                 }
               });
               this.renderChart(this.treeData)
-              window.eel.update_tree(this.currentNodeId, "warning", false)
+              window.eel.update_tree(this.currentNodeId, "warning", false);
             },
             renderChart(data) {
               if (!this.chartReference) {
@@ -317,7 +314,7 @@
                     this.uncertain = uncert;
                     // Do not show hint menu so that both menus won't overlap.
                     this.hintMenuVisible = false;
-                    this.currentNodeId = d.nodeId
+                    this.currentNodeId = d.nodeId;
                   })
                   .render();
             }
