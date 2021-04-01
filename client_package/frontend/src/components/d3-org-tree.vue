@@ -257,6 +257,7 @@
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   object.template = object.originalTemplate
+                  object.lowConfidence = object.originalLowConfidence
                 }
               });
               this.renderChart(this.treeData)
