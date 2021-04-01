@@ -44,9 +44,18 @@
 export default {
   name: "MarkerTest",
   props: {
-    node: Object,
-    parentOpenCallback: Function,
-    parentCloseCallback: Function,
+    node: {
+      type: Object,
+      required: true,
+    },
+    parentOpenCallback: {
+      type: Function,
+      default: () => {},
+    },
+    parentCloseCallback: {
+      type: Function,
+      default: () => {},
+    },
   },
   data: () => ({
     show: false,
@@ -54,9 +63,9 @@ export default {
   computed: {
     testColor: function () {
       if (this.node.colour) {
-        return '--test-color: ' + this.node.colour + '4C;';
+        return '--marker-colour: ' + this.node.colour + '4C;';
       }
-      return '--test-color: transparent';
+      return '--marker-colour: transparent';
     },
     style_class: function() {
       return this.node.type + (this.show ? " activated" : "");
@@ -87,7 +96,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .node {
   display: inline;
@@ -95,7 +104,7 @@ export default {
 }
 
 .label {
-  background-color: var(--test-color);
+  background-color: var(--marker-colour);
   display: inline;
   white-space:pre-wrap;
 }

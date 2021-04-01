@@ -8,12 +8,16 @@ Eel==0.14.0
 flake8==3.9.0
 Flask==1.1.2
 Flask-RESTful==0.3.8
+fuzzywuzzy~=0.18.0
+python-Levenshtein~=0.12.2
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.3
 jsonpickle==2.0.0
 MarkupSafe==1.1.1
 mccabe==0.6.1
+mysql~=0.0.2
+mysql-connector-python~=8.0.23
 pycodestyle==2.7.0
 pyflakes==2.3.0
 pytz==2021.1

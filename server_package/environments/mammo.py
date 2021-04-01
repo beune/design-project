@@ -1,5 +1,5 @@
 """
-Imports
+File used to connect Shreyasi's python2 algorithm to python 3
 """
 from typing import List, Tuple
 import json
@@ -11,19 +11,16 @@ from xml.dom import minidom
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf, LabelLeaf
 
-"""
-Class used to connect Shreyasi's python2 algorithm to python 3
-"""
-
-COLOURS = {"breast_composition": "#E71212",
-           "shape": "#E77C12",
-           "margin": "#EDED12",
-           "size": "#13EB13",
-           "location": "#13EBEB",
-           "morphology": "#1313EB",
-           "associated_features": "#D981D9",
-           "distribution": "#81ADD9",
-           }
+COLOURS = {
+    "breast_composition": "#E71212",
+    "shape": "#E77C12",
+    "margin": "#EDED12",
+    "size": "#13EB13",
+    "location": "#13EBEB",
+    "morphology": "#1313EB",
+    "associated_features": "#D981D9",
+    "distribution": "#81ADD9",
+}
 
 COMM = "python2 \"./nlp/AutomaticStructuring/CRF Model A/predict_labels.py\""
 PATH = "./nlp"
@@ -63,7 +60,7 @@ HINTS = {
 
 EXPECTED_LEAVES = {
     "mass": ["shape", "margin", "density"],
-    "calcifications": ["morphology", "distribution"]
+    "calcifications": ["morphology", "distribution"],
 }
 
 OPTIONS = {
@@ -75,16 +72,6 @@ OPTIONS = {
                                                                                                  "linear branching"},
     "distribution": {"diffuse", "regional", "grouped", "linear", "segmental"},
 }
-
-ALTERNATIVES = {key: {label: 0 for label in option_list} for key, option_list in OPTIONS.items()}
-
-
-def get_colours() -> dict:
-    """
-    Method used to retrieve the colour palette of the mammo environment
-    :return: Dictionary with labels mapped to colours
-    """
-    return COLOURS
 
 
 def parse(text):
@@ -107,9 +94,9 @@ def make_input(text: str) -> None:
     top = ElementTree.Element('radiology_reports')
     child = ElementTree.SubElement(top, 'report')
     child.text = text
-    xmlstr = minidom.parseString(ElementTree.tostring(top)).toprettyxml()
+    xml_string = minidom.parseString(ElementTree.tostring(top)).toprettyxml()
     with open(os.path.normpath(PATH + INPUT_FILE), "w") as f:
-        f.write(xmlstr)
+        f.write(xml_string)
 
 
 def run() -> None:
@@ -125,8 +112,7 @@ def get_list() -> List[Tuple[str, str, float]]:
     :return A list of lists in the format: [[word, label, probability]]
     """
     with open(os.path.normpath(PATH + OUTPUT_FILE), "r") as file:
-        data = json.load(file)
-    return data
+        return json.load(file)
 
 
 def has_base(labels, base) -> bool:
@@ -223,15 +209,3 @@ def add_labels(node: ReportNode):
         elif isinstance(child, LabelLeaf) and child.field in OPTIONS:
             child.label = child.text
             child.label_conf = .7
-
-
-if __name__ == '__main__':
-    # Generate a pickle file containing a test tree using json as input
-    with open("out.json", "r") as json_file:
-        data = json.load(json_file)
-    tree = make_tree([], data)
-    add_labels(tree)
-    import pickle
-
-    with open("TESTPICKLE.pkl", "wb") as tree_file:
-        pickle.dump(tree, tree_file)

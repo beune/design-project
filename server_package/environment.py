@@ -2,8 +2,8 @@
 Imports
 """
 from report_tree.report_node import ReportNode
-from servpackage.environments import hersen, mammo
-from servpackage.hinter import Hinter
+from server_package.environments import hersen, mammo, mammo_fw
+from server_package.hinter import Hinter
 from typing import Callable
 
 
@@ -43,6 +43,12 @@ ENVS = {
         parse=mammo.parse,
         colours=mammo.COLOURS,
         hinter=Hinter(mammo.EXPECTED_LEAVES, mammo.OPTIONS, mammo.HINTS)
+    ),
+    "mammo_fw": Environment(
+        name="Mammo Fuzzy Wuzzy",
+        parse=mammo_fw.parse,
+        colours=mammo_fw.COLOURS,
+        hinter=Hinter(mammo_fw.EXPECTED_LEAVES, mammo_fw.OPTIONS, mammo_fw.HINTS)
     ),
     "hersen": Environment(
         name="Hersen",

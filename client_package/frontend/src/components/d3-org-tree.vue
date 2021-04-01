@@ -48,7 +48,10 @@
             <v-list-item-title>Undo</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="uncertain" @click="ignoreWarning">
+        <v-list-item
+          v-if="uncertain"
+          @click="ignoreWarning"
+        >
           <v-list-item-icon>
             <v-icon>report_off</v-icon>
           </v-list-item-icon>
@@ -121,6 +124,7 @@
         justify-content: center;
         align-items: center;
         height: 100%;
+        text-align: center;
 
         * {
             display: inline-block;
@@ -245,7 +249,9 @@
               this.changeLabel(this.currentNodeId, label)
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
-              this.$emit("tree-changed")
+              window.eel.update_tree(this.currentNodeId, "label", label);
+              window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
+              // this.$emit("tree-changed")
             },
             undoNodeLabelEdit(){
               let self = this
@@ -255,12 +261,15 @@
                 }
               });
               this.renderChart(this.treeData)
-              this.$emit("tree-changed")
+              window.eel.update_tree(this.currentNodeId, "label", null);
+              // this.$emit("tree-changed")
             },
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?")
               this.renderChart(this.treeData)
-              this.$emit("tree-changed")
+              window.eel.update_tree(this.currentNodeId, "label", "?");
+              window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
+              // this.$emit("tree-changed")
             },
             ignoreWarning(){
               this.treeData.forEach((object) => {
@@ -268,8 +277,8 @@
                   object.lowConfidence = false;
                 }
               });
-              this.renderChart(this.treeData);
-              this.$emit("tree-changed")
+              this.renderChart(this.treeData)
+              window.eel.update_tree(this.currentNodeId, "warning", false)
             },
             renderChart(data) {
               if (!this.chartReference) {

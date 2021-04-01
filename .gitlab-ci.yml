@@ -34,7 +34,7 @@ lint_backend:
       - .cache/pip
       - venv/
   script:
-    - flake8 client servpackage test treepackage
+    - flake8 client_package server_package test treepackage
 
 build_frontend:
   stage: build
@@ -42,10 +42,10 @@ build_frontend:
   cache:
     key:
       files:
-        - client/frontend/package-lock.json
+        - client_package/frontend/package-lock.json
     paths:
-      - client/frontend/node_modules
+      - client_package/frontend/node_modules
   script:
-    - cd client/frontend
+    - cd client_package/frontend
     - npm install
     - npm run build

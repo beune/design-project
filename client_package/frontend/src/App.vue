@@ -53,7 +53,7 @@
             <v-list-item link>
               <v-list-item-title>Export to disk...</v-list-item-title>
             </v-list-item>
-            <v-list-item link>
+            <v-list-item link @click="addToDB">
               <v-list-item-title>Export to database...</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -261,10 +261,9 @@ export default {
       this.errorText = mess
       this.errorMessage = true
     },
-    //notifies backend of tree change
-    treeChanged() {
-      window.eel.update_tree(this.tree);
-    }
+    addToDB() {
+      window.eel.add_to_db();
+    },
   },
 }
 </script>

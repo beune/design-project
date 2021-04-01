@@ -8,52 +8,22 @@ import eel
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf, LabelLeaf
 
+from client_package.tree_changes import Change
+
 FALLBACK_COLOUR = "#ADADAD"
 
 
-def tree_from_json(json_nodes, root_json):
-    node_children = {node['nodeId']: [] for node in json_nodes}  # initialize with empty list
-    for json_node in json_nodes:
-        parent = json_node['parentNodeId']
-        if parent and parent in node_children:
-            node_children[parent].append(json_node)  # add id to parent children list
-
-    nodes = []
-
-    def traverse(root):
-        nonlocal nodes, json_nodes, node_children
-
-        json_children = node_children[root['nodeId']]
-
-        if len(json_children) == 1 and len(node_children[json_children[0]['nodeId']]) == 0:  # leaf case
-            value_node = json_children[0]
-            if not value_node['isLabel']:
-                node = TextLeaf(root['label'], root['confidence'], value_node['text'], root['hint'])
-            else:
-                node = LabelLeaf(root['label'], value_node['alternatives'], root['confidence'], value_node['text'],
-                                 (value_node['label'], value_node['confidence']), root['hint'])
-        else:  # node case
-            children = [traverse(child) for child in json_children]
-            node = ReportNode(root['label'], children)
-
-        nodes.append(node)
-        return node
-
-    traverse(root_json)
-    return nodes
-
-
-def generate_tree(tree: ReportNode, tree_changes: Dict[str, dict]):
+def generate_tree(tree: ReportNode, tree_identifiers: Dict[object, str], tree_changes: Dict[str, Change]):
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
+    :param tree_identifiers:
     :param tree: The report node created by the NLP, containing the entire structure
     :param tree_changes: Dictionary stored in model containing all changes made on the front end,
             key: identifier, value: new label
     :return: Structured data for the front end in Json
     """
     nodes = []
-    traversed_identifiers = {}
 
     def traverse(root: ReportNode, parent_id: str = None):
         """
@@ -63,19 +33,18 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, dict]):
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
         nonlocal nodes
-        new_id = create_identifier(root.category, parent_id) if parent_id else create_identifier(root.category)
 
-        node = make_node(root, new_id, parent_id)
-        if new_id in tree_changes:  # check for user change
-            node = tree_changes[new_id]
-            change_label(node, node['label'])
+        identifier = tree_identifiers[id(root)]
+        node = make_node(root, identifier, parent_id)
+        if identifier in tree_changes:  # check for user change
+            apply_change(node, tree_changes[identifier])
+
         nodes.append(node)
-        parent = new_id
         for child in root:
             if isinstance(child, TextLeaf):
-                process_leaf(child, parent)
+                process_leaf(child, identifier)
             else:
-                traverse(child, parent)
+                traverse(child, identifier)
 
     def process_leaf(leaf: TextLeaf, parent_id: str):
         """
@@ -85,39 +54,15 @@ def generate_tree(tree: ReportNode, tree_changes: Dict[str, dict]):
         """
         nonlocal nodes
         if leaf.field != 'O':  # 'Other' leaves are currently excluded
-            field_id = create_identifier(leaf.field, parent_id)
-            value_id = create_identifier(leaf.text, field_id)
-            field, value = make_leaf(leaf, field_id, value_id, parent_id)
+            identifier = tree_identifiers[id(leaf)]
+            field, label = make_leaf(leaf, identifier, identifier + "_value", parent_id)
 
-            if field_id in tree_changes:  # check for user change
-                field = tree_changes[field_id]
-                change_label(field, field['label'])
-            if value_id in tree_changes:  # check for user change
-                value = tree_changes[value_id]
-                change_label(value, value['label'])
-            nodes.extend([field, value])
+            if identifier in tree_changes:  # check for user change
+                apply_change(field, tree_changes[identifier])  # TODO apply for label as well
+            if identifier + "_value" in tree_changes:
+                apply_change(label, tree_changes[identifier + "_value"])  # TODO apply for label as well
 
-    def create_identifier(*args: str):
-        """
-        Creates a string from the input strings, used as id of a node/leaf,
-        Used to link user changes to a changing tree
-        :param args: Either text + label + parent_id  or  category + parent_id
-        :return: A string concatenation of the input strings
-        """
-        nonlocal nodes, traversed_identifiers
-        identifier_string = ""
-        for arg in args[:-1]:
-            identifier_string += str(arg) + "_"
-        identifier_string += str(args[-1])
-        # TODO: Equivalent of identifier_string = "_".join(args)
-
-        if identifier_string not in traversed_identifiers:
-            traversed_identifiers[identifier_string] = 1
-        else:
-            traversed_identifiers[identifier_string] += 1
-            identifier_string = identifier_string + str(traversed_identifiers[identifier_string])
-
-        return identifier_string
+            nodes.extend([field, label])
 
     traverse(tree)
     return nodes
@@ -262,7 +207,7 @@ def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str])
     """
     if leaf.speculative:
         return None
-    label = "{}{}".format(parent_label, leaf.field)
+    label = parent_label + leaf.field
     if leaf.field == "O":
         result_type = "other"
         colour = None
@@ -277,17 +222,18 @@ def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str])
     }
 
 
-def change_label(node: dict, new_label: str):
+def apply_change(node, change: Change):
     """
-    Helper function that is called when the node is being traversed has a stored edit.
-    Changes the label and the template before it is added to the list of json nodes.
-    :param node: The node currently being traversed, to which an edit should be applied.
-    :param new_label: The new label that should be displayed in the front-end.
+    Given a json node (to be sent to front end), apply changes to it
+    :param node: the json node (actually python dict) to which change should be applied
+    :param change: the Change object, containing fields that should be altered in json node
     """
-    node['label'] = new_label
-    node[
-        'template'] = "<div class=\"domStyle\"><span>" + new_label + \
-                      "</div></span><span class=\"material-icons\">mode</span>"
+    if change.label is not None:
+        node['template'] = "<div class=\"domStyle\"><span>" + change.label + \
+                           "</div></span><span class=\"material-icons\">mode</span>"
+        node['label'] = change.label
+    if change.warning is not None:
+        node['lowConfidence'] = change.warning
 
 
 def initialize(model):
@@ -301,7 +247,7 @@ def update(model):
     """
     Reflect the changes to the model in the front-end
     """
-    linear_tree = generate_tree(model.tree, model.tree_changes)
+    linear_tree = generate_tree(model.tree, model.tree_identifiers, model.tree_changes)
     visual_text = set_node_colours(model.tree, "", model.colours)
     eel.update_frontend(linear_tree, model.environment, visual_text)
 
