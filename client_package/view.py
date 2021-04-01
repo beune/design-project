@@ -151,10 +151,31 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         low_confidence = percentage < 75
         template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
 
+    # Set the colours of the node
+    if value_node:
+        if speculative:
+            background_color = "#E6BEBC"
+            outline_color = "#E6BEBC"
+            text_color = "#FFFFFF"
+        else:
+            background_color = "#EF7104"
+            outline_color = "#EF7104"
+            text_color = "#FFFFFF"
+
+    else:
+        if speculative:
+            background_color = "#ADCBF8"
+            outline_color = "#ADCBF8"
+            text_color = "#FFFFFF"
+
+        else:
+            background_color = "#5A9AFA"
+            outline_color = "#5A9AFA"
+            text_color = "#FFFFFF"
+
     return {
         "nodeId": identifier,
         "parentNodeId": parent_id,
-        "valueNode": value_node,
         "lowConfidence": low_confidence,
         "width": 347,
         "height": 147,
@@ -168,7 +189,10 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "speculative": speculative,
         "label": text,
         "isLabel": is_label,
-        "confidence": confidence
+        "confidence": confidence,
+        "backgroundColor": background_color,
+        "textColor": text_color,
+        "outlineColor": outline_color,
     }
 
 
