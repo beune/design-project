@@ -38,4 +38,4 @@ def add_labels(node: ReportNode):
             add_labels(child)
         elif isinstance(child, LabelLeaf) and child.field in OPTIONS:
             child.label, percentage = process.extractOne(child.text, OPTIONS[child.field])
-            child.conf = percentage/100
+            child.label_conf = percentage/100
