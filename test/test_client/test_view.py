@@ -40,7 +40,6 @@ class ViewTest(unittest.TestCase):
         json_tree = view.generate_tree(root, model.tree_identifiers, {})
 
         # test root
-        self.assertEqual(json_tree[0]["nodeId"], root_label)
         self.assertEqual(json_tree[0]["parentNodeId"], None)
         self.assertEqual(json_tree[0]["valueNode"], False)
         self.assertEqual(json_tree[0]["template"], "<div class=\"domStyle\"><span>root</span></div>")
@@ -51,8 +50,7 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[1]["label"], node_2_label)
 
         # test category (mass)
-        self.assertEqual(json_tree[2]["nodeId"], "_".join([node_1_label, node_2_label, root_label]))
-        self.assertEqual(json_tree[2]["parentNodeId"], "_".join([node_2_label, root_label]))
+        self.assertEqual(json_tree[2]["parentNodeId"], node_2_label)
         self.assertEqual(json_tree[2]["valueNode"], False)
         self.assertEqual(json_tree[2]["label"], node_1_label)
 

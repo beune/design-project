@@ -13,6 +13,7 @@ from report_tree.report_leaf import LabelLeaf
 class ModelTest(unittest.TestCase):
 
     def test_identifier_function(self):
+        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
         node_1_label = 'mass'
         node_2_label = 'positive_finding'
         node_3_label = 'negative_finding'
