@@ -162,6 +162,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "alternatives": alternatives,
         "originalTemplate": template,
         "originalLowConfidence": low_confidence,
+        "originalLabel": text,
         "hint": hint,
         "text": text,
         "speculative": speculative,
