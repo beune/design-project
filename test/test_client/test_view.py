@@ -41,7 +41,6 @@ class ViewTest(unittest.TestCase):
 
         # test root
         self.assertEqual(json_tree[0]["parentNodeId"], None)
-        self.assertEqual(json_tree[0]["valueNode"], False)
         self.assertEqual(json_tree[0]["template"], "<div class=\"domStyle\"><span>root</span></div>")
         self.assertEqual(json_tree[0]["label"], root_label)
 
@@ -51,17 +50,14 @@ class ViewTest(unittest.TestCase):
 
         # test category (mass)
         self.assertEqual(json_tree[2]["parentNodeId"], node_2_label)
-        self.assertEqual(json_tree[2]["valueNode"], False)
         self.assertEqual(json_tree[2]["label"], node_1_label)
 
         # test labelLeaf field
         self.assertEqual(json_tree[3]["parentNodeId"], node_1_label)
-        self.assertEqual(json_tree[3]["valueNode"], False)
         self.assertEqual(json_tree[3]["label"], leaf_a_field)
 
         # test labelLeaf label with low confidence
         self.assertEqual(json_tree[4]["parentNodeId"], leaf_a_field)
-        self.assertEqual(json_tree[4]["valueNode"], True)
         self.assertEqual(json_tree[4]["lowConfidence"], True)
         self.assertEqual(json_tree[4]["label"], leaf_a_label)
 
@@ -71,7 +67,6 @@ class ViewTest(unittest.TestCase):
 
         # test textLeaf text
         self.assertEqual(json_tree[6]["parentNodeId"], leaf_b_field)
-        self.assertEqual(json_tree[6]["valueNode"], True)
         self.assertEqual(json_tree[6]["label"], leaf_b_text)
 
         # test spec_leaf
