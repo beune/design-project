@@ -154,8 +154,8 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
     # Set the colours of the node
     if value_node:
         if speculative:
-            background_color = "#ADCBF8"
-            outline_color = "#ADCBF8"
+            background_color = "#E6BEBC"
+            outline_color = "#E6BEBC"
             text_color = "#FFFFFF"
         else:
             background_color = "#EF7104"
@@ -164,14 +164,14 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
 
     else:
         if speculative:
-            background_color = "#FFFFFF"
-            outline_color = "#E6BEBC"
-            text_color = "#E6BEBC"
+            background_color = "#ADCBF8"
+            outline_color = "#ADCBF8"
+            text_color = "#FFFFFF"
 
         else:
             background_color = "#FFFFFF"
-            outline_color = "#EF7104"
-            text_color = "#FFFFFF"
+            outline_color = "#2D3077"
+            text_color = "#2D3077"
 
 
     return {
