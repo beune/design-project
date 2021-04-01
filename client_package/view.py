@@ -169,10 +169,9 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
             text_color = "#FFFFFF"
 
         else:
-            background_color = "#FFFFFF"
-            outline_color = "#2D3077"
-            text_color = "#2D3077"
-
+            background_color = "#5A9AFA"
+            outline_color = "#5A9AFA"
+            text_color = "#FFFFFF"
 
     return {
         "nodeId": identifier,
