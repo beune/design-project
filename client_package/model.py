@@ -9,6 +9,8 @@ from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf
 
 # ENDPOINT = "https://docker.beune.dev/"
+from client_package.tree_changes import Change
+
 ENDPOINT = "http://127.0.0.1:5000/"
 
 
@@ -128,9 +130,14 @@ class Model:
             for child in node.children:
                 self.create_identifiers(child)
 
-    def get_or_create_change(self, identifier):
-        if identifier not in self.tree_changes:
-            self.tree_changes[identifier] = Change()
-        return self.tree_changes[identifier]
-        # equivalent
-        return self.tree_changes.setdefault(identifier, Change())
+    def set_change(self, identifier, changed_type, value):
+        node = self.tree_changes.setdefault(identifier, {})
+        if value is None:
+            node.pop(changed_type)
+        else:
+            # if else
+            node[changed_type] = value
+        self.update_view(self)
+
+    def set_warning_change(self, identifier, value):
+        self.treechanges[identifier].warning = value

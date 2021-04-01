@@ -20,15 +20,13 @@ def update_environment(new_environment):
     model.set_environment(new_environment)
 
 
-
-
 @eel.expose
 def update_tree(identifier, changed_type, value):
     # if changed_type == "label":
     #     model.tree_changes =
-    change = model.get_or_create_change(identifier)
-    change[changed_type] = value
-
+    # change = model.get_or_create_change(identifier)
+    # change[changed_type] = value
+    model.set_change(identifier, changed_type, value)
     # """
     # Recieve tree update from front-end and update model
     # :param new_tree: the updated tree in json format

@@ -8,7 +8,7 @@ import eel
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf, LabelLeaf
 
-from tree_changes import NodeChange, LeafChange, Change
+from tree_changes import Change
 
 FALLBACK_COLOUR = "#ADADAD"
 
@@ -59,6 +59,7 @@ def generate_tree(tree: ReportNode, tree_identifiers: Dict[object, str], tree_ch
 
             if identifier in tree_changes:  # check for user change
                 apply_change(field, tree_changes[identifier])  #TODO apply for label as well
+            if identifier + "_value" in tree_changes:
                 apply_change(label, tree_changes[identifier + "_value"])  #TODO apply for label as well
 
             nodes.extend([field, label])
@@ -222,11 +223,12 @@ def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str])
 
 
 def apply_change(node, change: Change):
-    if node['label'] != change.label:
+    if change.label:
         node['template'] = "<div class=\"domStyle\"><span>" + change.label + \
                            "</div></span><span class=\"material-icons\">mode</span>"
-    node['label'] = change.label
-    node['lowConfidence'] = change.warning
+        node['label'] = change.label
+    if change.warning:
+        node['lowConfidence'] = change.warning
 
 
 def initialize(model):
