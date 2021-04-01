@@ -5,14 +5,19 @@ Imports
 import unittest
 from client_package import view
 
+from client_package.model import Model
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf
 from report_tree.report_leaf import LabelLeaf
 
+from client_package.tree_changes import Change
+
+model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+
 
 class ViewTest(unittest.TestCase):
 
-    def test_build_json_tree(self):
+    def test_build_json_tree(self):  #TODO rewrite tests
         leaf_a_label = 'stervormige'
         leaf_a_label_confidence = 0.70
         leaf_a_field = 'margin'
@@ -32,7 +37,8 @@ class ViewTest(unittest.TestCase):
         report_node_1 = ReportNode(node_1_label, [report_leaf_a, report_leaf_b, spec_leaf_c])
         report_node_2 = ReportNode(node_2_label, [report_node_1])
         root = ReportNode(root_label, [report_node_2])
-        json_tree = view.generate_tree(root, {})
+        model.create_identifiers(root)
+        json_tree = view.generate_tree(root, model.tree_identifiers, {})
 
         # test root
         self.assertEqual(json_tree[0]["nodeId"], root_label)
@@ -84,78 +90,27 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[7]["speculative"], True)
         self.assertEqual(json_tree[7]["label"], spec_c_field)
 
-
     def test_apply_changes(self):
         leaf_a_label = 'stervormige'
         leaf_a_field = 'margin'
 
         report_leaf_a = LabelLeaf(leaf_a_field, set(), 0.55, leaf_a_label,
-                                  (leaf_a_label, 80))
+                                  (leaf_a_label, 0.55))
         report_node_1 = ReportNode('mass', [report_leaf_a])
         report_node_2 = ReportNode('positive_finding', [report_node_1])
         root = ReportNode('root', [report_node_2])
-        json_tree = view.generate_tree(root, {})
+        model.create_identifiers(root)
+        json_tree = view.generate_tree(root, model.tree_identifiers, {})
 
-        # test pre change
-        self.assertEqual(json_tree[4]["nodeId"], "_".join([leaf_a_label, leaf_a_field, "mass_positive_finding_root"]))
-        self.assertEqual(json_tree[4]["parentNodeId"], "_".join([leaf_a_field, "mass_positive_finding_root"]))
-        self.assertEqual(json_tree[4]["label"], leaf_a_label)
-
+        # Test label change
+        self.assertEqual(json_tree[4]["label"], leaf_a_label)  # pre change
         leaf_a_id = json_tree[4]["nodeId"]
         leaf_a_new_label = "circumscribed"
-        json_tree = view.generate_tree(root, {leaf_a_id: leaf_a_new_label})
+        json_tree = view.generate_tree(root, model.tree_identifiers, {leaf_a_id: Change(label=leaf_a_new_label)})
+        self.assertEqual(json_tree[4]["label"], leaf_a_new_label)  # post change
 
-        # test after change
-        self.assertEqual(json_tree[4]["nodeId"], "_".join([leaf_a_label, leaf_a_field, "mass_positive_finding_root"]))
-        self.assertEqual(json_tree[4]["parentNodeId"], "_".join([leaf_a_field, "mass_positive_finding_root"]))
-        self.assertEqual(json_tree[4]["label"], leaf_a_new_label)
-
-    def test_build_tree_from_json(self):
-        root_category = 'kaas'
-        leaf_field = 'kaaas'
-        leaf_value = 'kas'
-        leaf_text = 'käs'
-        leaf_hint = 'kissoe'
-        leaf_field_conf = 0.23
-        leaf_label_conf = 0.2190
-        leaf_alternatives = ['niffo', 'bro', 'niffobro']
-        json_tree = [{'nodeId': 'mass_positive_finding_root', 'parentNodeId': None, 'valueNode': False,
-                      'lowConfidence': False, 'width': 347, 'height': 147,
-                      'template': '<div class="domStyle"><span>mass</span></div>', 'alternatives': None,
-                      'originalTemplate': '<div class="domStyle"><span>mass</span></div>', 'hint': None, 'text': 'mass',
-                      'speculative': False, 'label': root_category, 'isLabel': False, 'confidence': None,
-                      'directSubordinates': 5,
-                      'totalSubordinates': 10},
-                     {'nodeId': 'margin_mass_positive_finding_root', 'parentNodeId': 'mass_positive_finding_root',
-                      'valueNode': False, 'lowConfidence': True, 'width': 347, 'height': 147,
-                      'template': '<div class="domStyle"><span>margin</span></div><span class="confidence">55%</span>',
-                      'alternatives': None,
-                      'originalTemplate': '<div class="domStyle"><span>margin</span></div><span class="confidence">' +
-                                          '55%</span>',
-                      'hint': leaf_hint,
-                      'text': 'margin', 'speculative': False, 'label': leaf_field, 'isLabel': False,
-                      'confidence': leaf_field_conf, 'directSubordinates': 1, 'totalSubordinates': 1},
-                     {'nodeId': 'stervormige_margin_mass_positive_finding_root',
-                      'parentNodeId': 'margin_mass_positive_finding_root', 'valueNode': True, 'lowConfidence': True,
-                      'width': 347, 'height': 147,
-                      'template': '<div class="domStyle"><span>obscured</div></span><span class="material-icons">' +
-                                  'mode</span>',
-                      'alternatives': leaf_alternatives,
-                      'originalTemplate': '<div class="domStyle"><span>stervormige</span></div><span class=' +
-                                          '"confidence">70%</span>',
-                      'hint': 'stervormige', 'text': leaf_text, 'speculative': False, 'label': leaf_value,
-                      'isLabel': True,
-                      'confidence': leaf_label_conf, 'directSubordinates': 0, 'totalSubordinates': 0}]
-
-        tree_root = view.tree_from_json(json_tree, json_tree[0])[1]
-        tree_leaf = tree_root.children[0]
-
-        # test structure
-        self.assertEqual(tree_root.category, root_category)
-        self.assertEqual(tree_leaf.field, leaf_field)
-        self.assertEqual(tree_leaf.label, leaf_value)
-        self.assertEqual(tree_leaf.text, leaf_text)
-        self.assertEqual(tree_leaf.hint, leaf_hint)
-        self.assertEqual(tree_leaf.field_conf, leaf_field_conf)
-        self.assertEqual(tree_leaf.label_conf, leaf_label_conf)
-        self.assertEqual(tree_leaf.labels, leaf_alternatives)
+        # Test ignore warning
+        self.assertEqual(json_tree[4]["lowConfidence"], True)  # pre change
+        leaf_a_id = json_tree[4]["nodeId"]
+        json_tree = view.generate_tree(root, model.tree_identifiers, {leaf_a_id: Change(warning=False)})
+        self.assertEqual(json_tree[4]["lowConfidence"], False)  # post change
