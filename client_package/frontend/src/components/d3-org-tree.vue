@@ -261,14 +261,17 @@
             },
             undoNodeLabelEdit(){
               let self = this
+              let label = null
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   object.template = object.originalTemplate
                   object.lowConfidence = object.originalLowConfidence
+                  object.label = object.originalLabel
+                  label = object.originalLabel
                 }
               });
               this.renderChart(this.treeData)
-              window.eel.update_tree(this.currentNodeId, "label", null);
+              window.eel.update_tree(this.currentNodeId, "label", label);
             },
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?")
