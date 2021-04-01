@@ -12,12 +12,11 @@ from report_tree.report_leaf import LabelLeaf
 
 from client_package.tree_changes import Change
 
-model = Model(view.initialize, view.update, view.server_error, view.show_loader)
-
 
 class ViewTest(unittest.TestCase):
 
-    def test_build_json_tree(self):  #TODO rewrite tests
+    def test_build_json_tree(self):
+        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
         leaf_a_label = 'stervormige'
         leaf_a_label_confidence = 0.70
         leaf_a_field = 'margin'
@@ -48,7 +47,6 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[0]["label"], root_label)
 
         # test finding
-        self.assertEqual(json_tree[1]["nodeId"], "_".join([node_2_label, root_label]))
         self.assertEqual(json_tree[1]["parentNodeId"], root_label)
         self.assertEqual(json_tree[1]["label"], node_2_label)
 
@@ -59,38 +57,32 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[2]["label"], node_1_label)
 
         # test labelLeaf field
-        self.assertEqual(json_tree[3]["nodeId"], "_".join([leaf_a_field, node_1_label, node_2_label, root_label]))
-        self.assertEqual(json_tree[3]["parentNodeId"], "_".join([node_1_label, node_2_label, root_label]))
+        self.assertEqual(json_tree[3]["parentNodeId"], node_1_label)
         self.assertEqual(json_tree[3]["valueNode"], False)
         self.assertEqual(json_tree[3]["label"], leaf_a_field)
 
         # test labelLeaf label with low confidence
-        self.assertEqual(json_tree[4]["nodeId"], "_".join([leaf_a_label, leaf_a_field, node_1_label, node_2_label,
-                                                           root_label]))
-        self.assertEqual(json_tree[4]["parentNodeId"], "_".join([leaf_a_field, node_1_label, node_2_label, root_label]))
+        self.assertEqual(json_tree[4]["parentNodeId"], leaf_a_field)
         self.assertEqual(json_tree[4]["valueNode"], True)
         self.assertEqual(json_tree[4]["lowConfidence"], True)
         self.assertEqual(json_tree[4]["label"], leaf_a_label)
 
         # test textLeaf field
-        self.assertEqual(json_tree[5]["nodeId"], "_".join([leaf_b_field, node_1_label, node_2_label, root_label]))
-        self.assertEqual(json_tree[5]["parentNodeId"], "_".join([node_1_label, node_2_label, root_label]))
+        self.assertEqual(json_tree[5]["parentNodeId"], node_1_label)
         self.assertEqual(json_tree[5]["label"], leaf_b_field)
 
         # test textLeaf text
-        self.assertEqual(json_tree[6]["nodeId"], "_".join([leaf_b_text, leaf_b_field, node_1_label, node_2_label,
-                                                           root_label]))
-        self.assertEqual(json_tree[6]["parentNodeId"], "_".join([leaf_b_field, node_1_label, node_2_label, root_label]))
+        self.assertEqual(json_tree[6]["parentNodeId"], leaf_b_field)
         self.assertEqual(json_tree[6]["valueNode"], True)
         self.assertEqual(json_tree[6]["label"], leaf_b_text)
 
         # test spec_leaf
-        self.assertEqual(json_tree[7]["nodeId"], "_".join([spec_c_field, node_1_label, node_2_label, root_label]))
-        self.assertEqual(json_tree[7]["parentNodeId"], "_".join([node_1_label, node_2_label, root_label]))
+        self.assertEqual(json_tree[7]["parentNodeId"], node_1_label)
         self.assertEqual(json_tree[7]["speculative"], True)
         self.assertEqual(json_tree[7]["label"], spec_c_field)
 
     def test_apply_changes(self):
+        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
         leaf_a_label = 'stervormige'
         leaf_a_field = 'margin'
 

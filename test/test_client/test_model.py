@@ -9,8 +9,6 @@ from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf
 from report_tree.report_leaf import LabelLeaf
 
-model = Model(view.initialize, view.update, view.server_error, view.show_loader)
-
 
 class ModelTest(unittest.TestCase):
 
@@ -50,9 +48,8 @@ class ModelTest(unittest.TestCase):
         node_2_label = 'positive_finding'
         root_label = 'root'
 
-        change1 = 'kaas'
-        change2 = 'worst'
-        change3 = 'bacon'
+        change1 = 'changed_label1'
+        change2 = 'changed_label2'
 
         report_leaf_a = LabelLeaf(leaf_a_field, set(), leaf_a_field_confidence, leaf_a_label,
                                   (leaf_a_label, leaf_a_label_confidence))
@@ -64,16 +61,17 @@ class ModelTest(unittest.TestCase):
         model.create_identifiers(root)
         json_tree = view.generate_tree(root, model.tree_identifiers, {})
         model.tree = root
-        
 
         # Test leaf label change
         model.set_change(json_tree[4]['nodeId'], 'label', change1)
-        self.assertEqual(change1, model.tree_changes[json_tree[4]['nodeId']])
+        self.assertEqual(change1, model.tree_changes[json_tree[4]['nodeId']].label)
 
         # Test leaf warning change
-        model.set_change(json_tree[4]['nodeId'], 'warning', change2)
-        self.assertEqual(change2, model.tree_changes[json_tree[4]['nodeId']])
+        model.set_change(json_tree[4]['nodeId'], 'warning', True)
+        self.assertEqual(True, model.tree_changes[json_tree[4]['nodeId']].warning)
+        model.set_change(json_tree[4]['nodeId'], 'warning', False)
+        self.assertEqual(False, model.tree_changes[json_tree[4]['nodeId']].warning)
 
         # Test node category change
-        model.set_change(json_tree[0]['nodeId'], 'label', change3)
-        self.assertEqual(change3, model.tree_changes[json_tree[0]['nodeId']])
+        model.set_change(json_tree[0]['nodeId'], 'label', change2)
+        self.assertEqual(change2, model.tree_changes[json_tree[0]['nodeId']].label)
