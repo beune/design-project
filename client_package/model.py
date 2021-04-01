@@ -6,8 +6,11 @@ from typing import Callable
 import jsonpickle
 import requests
 from report_tree.report_node import ReportNode
+from report_tree.report_leaf import TextLeaf
 
 # ENDPOINT = "https://docker.beune.dev/"
+from client_package.tree_changes import Change
+
 ENDPOINT = "http://127.0.0.1:5000/"
 
 
@@ -31,7 +34,7 @@ class Model:
         self.text = ""
         self.colours = {}
         self.tree = ReportNode("Root")
-        self.tree_edited = None  # Tree structure with edits from frontend, converted back to the python structure
+        self.tree_identifiers = {}
         self.tree_changes = {}
 
     def retrieve_initial_data(self):
@@ -53,6 +56,8 @@ class Model:
             response = self.get_request(path, data)
             if response:
                 self.tree = jsonpickle.decode(response.json()["Data"])
+                self.tree_identifiers = {}
+                self.create_identifiers(self.tree)
                 self.update_view(self)
 
     def retrieve_colours(self):
@@ -93,27 +98,6 @@ class Model:
         """
         self.tree_changes = tree_changes
 
-    #     TODO: CREATE JSONREPRESENTATION OF THE TREE WITH CHANGES
-    def add_to_db(self):
-        """
-        Method used to store the current tree into the database
-        """
-        data = {"jsonrep": "Teststring"}
-        try:
-            response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
-            response.raise_for_status()
-        except requests.exceptions.ConnectionError as c:
-            self.server_error(c.args[0].args[0])
-        except requests.exceptions.RequestException as e:
-            self.server_error(e.args[0])
-
-    def set_tree_edited(self, tree_edited):
-        """
-        Set the new edited tree
-        :param tree_edited: The new report tree containing user changes from front end
-        """
-        self.tree_edited = tree_edited
-
     def get_request(self, path: str, data=None):
         """
         Method used to create get requests
@@ -128,3 +112,31 @@ class Model:
             self.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
             self.server_error(e.args[0])
+
+    def create_identifiers(self, node):
+        """
+        Recursively iterates through the given tree, creating
+        """
+        identifier = node.field if isinstance(node, TextLeaf) else node.category
+        if identifier not in self.tree_identifiers.values():
+            self.tree_identifiers[id(node)] = identifier
+        else:
+            distinguisher = 1
+            while identifier + str(distinguisher) in self.tree_identifiers.values():
+                distinguisher += 1
+            self.tree_identifiers[id(node)] = identifier + str(distinguisher)
+
+        if isinstance(node, ReportNode):
+            for child in node.children:
+                self.create_identifiers(child)
+
+    def set_change(self, identifier, changed_type, value):
+        """
+        Update tree changes map with change
+        :param identifier: identifier of node that change belongs to
+        :param changed_type: what kind of change, corresponds with attribute name in Change class
+        :param value: the value of the change
+        """
+        change = self.tree_changes.setdefault(identifier, Change())
+        if hasattr(change, changed_type):
+            setattr(change, changed_type, value)

@@ -2,6 +2,7 @@
 Presenter class
 """
 import eel
+
 from model import Model
 import view
 from ui_automation import UIAutomation
@@ -19,15 +20,14 @@ def update_environment(new_environment):
 
 
 @eel.expose
-def update_tree(new_tree):
+def update_tree(identifier, changed_type, value):
     """
-    Recieve tree update from front-end and update model
-    :param new_tree: the updated tree in json format
+    On tree update from front end, pass changes to model
+    :param identifier: the node the change was applied to
+    :param changed_type: the type of change, i.e. what field needs to be updated
+    :param value: the value of the change field
     """
-    old_tree = view.generate_tree(model.tree, model.tree_changes)
-    tree_changes = tree_user_changes_map(new_tree, old_tree)
-    model.set_changes_map(tree_changes)
-    model.set_tree_edited(view.tree_from_json(new_tree, new_tree[0]))
+    model.set_change(identifier, changed_type, value)
 
 
 @eel.expose
@@ -36,20 +36,6 @@ def add_to_db():
     Method used to store the current tree in the database
     """
     model.add_to_db()
-
-
-def tree_user_changes_map(new_tree, old_tree):
-    """
-    Generate map of changes between two trees
-    :param new_tree: the new tree in json format
-    :param old_tree: the old tree in json format
-    :return: a dictionary mapping hashes from the old nodes to labels of new nodes
-    """
-    tree_changes = {}
-    for new_node, old_node in zip(new_tree, old_tree):
-        if new_node['label'] != old_node['label']:
-            tree_changes[old_node['nodeId']] = new_node['label']
-    return tree_changes
 
 
 def update_text(new_text):
