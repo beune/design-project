@@ -140,5 +140,3 @@ class Model:
         change = self.tree_changes.setdefault(identifier, Change())
         if hasattr(change, changed_type):
             setattr(change, changed_type, value)
-
-        self.update_view(self)
