@@ -221,9 +221,16 @@
               let alternatives = [];
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId && object.alternatives != null) {
-                  alternatives = object.alternatives
+                  console.log(object)
+                  object.alternatives.forEach(function(alt) {
+                    console.log(alt)
+                    if (alt !== object.label) {
+                      alternatives.push(alt)
+                    }
+                  })
                 }
               });
+              console.log(alternatives)
               return alternatives
             },
             toggleEditNodeLabelDialog(){
