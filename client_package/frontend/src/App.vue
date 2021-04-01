@@ -226,22 +226,22 @@ export default {
   }),
   computed: {
     showPreferencesDialog() {
-      return this.$route.path.includes("preferences")
+      return this.$route.path.includes("preferences");
     }
   },
   mounted: function() {
     eel.expose(this.initializeFrontend, "initialize_frontend");
     eel.expose(this.updateFrontend, "update_frontend");
     eel.expose(this.showServerError, "show_server_error")
-    eel.expose(this.showLoader, "show_loader")
+    eel.expose(this.showLoader, "show_loader");
   },
   methods: {
     closePreferencesDialog() {
-      this.$router.push({ path: '/' })
+      this.$router.push({ path: '/' });
     },
     //initialize frontend (called from backend)
     initializeFrontend(environments) {
-      this.environments = environments
+      this.environments = environments;
     },
     //update frontend (called from backend)
     updateFrontend(tree, environment, text) {
@@ -251,15 +251,15 @@ export default {
     },
     //notifies backend of environment change
     environmentChanged(newEnvironment) {
-      window.eel.update_environment(newEnvironment)
+      window.eel.update_environment(newEnvironment);
       this.envchosen = true;
     },
     showLoader(show) {
       this.loading = show;
     },
     showServerError(mess) {
-      this.errorText = mess
-      this.errorMessage = true
+      this.errorText = mess;
+      this.errorMessage = true;
     },
     addToDB() {
       window.eel.add_to_db();
