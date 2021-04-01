@@ -250,26 +250,24 @@
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
               window.eel.update_tree(this.currentNodeId, "label", label);
-              window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
-              // this.$emit("tree-changed")
+              this.ignoreWarning() //remove warning because of edit
             },
             undoNodeLabelEdit(){
               let self = this
               this.treeData.forEach(function(object){
                 if (object.nodeId === self.currentNodeId) {
                   object.template = object.originalTemplate
+                  object.lowConfidence = object.originalLowConfidence
                 }
               });
               this.renderChart(this.treeData)
               window.eel.update_tree(this.currentNodeId, "label", null);
-              // this.$emit("tree-changed")
             },
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?")
               this.renderChart(this.treeData)
               window.eel.update_tree(this.currentNodeId, "label", "?");
               window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
-              // this.$emit("tree-changed")
             },
             ignoreWarning(){
               this.treeData.forEach((object) => {

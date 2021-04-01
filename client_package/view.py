@@ -161,6 +161,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "template": template,
         "alternatives": alternatives,
         "originalTemplate": template,
+        "originalLowConfidence": low_confidence,
         "hint": hint,
         "text": text,
         "speculative": speculative,
