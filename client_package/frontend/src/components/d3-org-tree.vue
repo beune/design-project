@@ -250,6 +250,7 @@
               this.renderChart(this.treeData)
               this.chosenNodeLabelAlternative = undefined;
               window.eel.update_tree(this.currentNodeId, "label", label);
+              window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
               // this.$emit("tree-changed")
             },
             undoNodeLabelEdit(){
@@ -266,7 +267,8 @@
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?")
               this.renderChart(this.treeData)
-              window.eel.update_tree(this.currentNodeId, "deleted", true);
+              window.eel.update_tree(this.currentNodeId, "label", "?");
+              window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
               // this.$emit("tree-changed")
             },
             ignoreWarning(){

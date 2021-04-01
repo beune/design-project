@@ -8,7 +8,7 @@ import eel
 from report_tree.report_node import ReportNode
 from report_tree.report_leaf import TextLeaf, LabelLeaf
 
-from tree_changes import Change
+from client_package.tree_changes import Change
 
 FALLBACK_COLOUR = "#ADADAD"
 
@@ -58,9 +58,9 @@ def generate_tree(tree: ReportNode, tree_identifiers: Dict[object, str], tree_ch
             field, label = make_leaf(leaf, identifier, identifier + "_value", parent_id)
 
             if identifier in tree_changes:  # check for user change
-                apply_change(field, tree_changes[identifier])  #TODO apply for label as well
+                apply_change(field, tree_changes[identifier])  # TODO apply for label as well
             if identifier + "_value" in tree_changes:
-                apply_change(label, tree_changes[identifier + "_value"])  #TODO apply for label as well
+                apply_change(label, tree_changes[identifier + "_value"])  # TODO apply for label as well
 
             nodes.extend([field, label])
 
@@ -223,11 +223,16 @@ def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str])
 
 
 def apply_change(node, change: Change):
-    if change.label:
+    """
+    Given a json node (to be sent to front end), apply changes to it
+    :param node: the json node (actually python dict) to which change should be applied
+    :param change: the Change object, containing fields that should be altered in json node
+    """
+    if change.label is not None:
         node['template'] = "<div class=\"domStyle\"><span>" + change.label + \
                            "</div></span><span class=\"material-icons\">mode</span>"
         node['label'] = change.label
-    if change.warning:
+    if change.warning is not None:
         node['lowConfidence'] = change.warning
 
 

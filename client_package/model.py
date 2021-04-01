@@ -131,13 +131,14 @@ class Model:
                 self.create_identifiers(child)
 
     def set_change(self, identifier, changed_type, value):
-        node = self.tree_changes.setdefault(identifier, {})
-        if value is None:
-            node.pop(changed_type)
-        else:
-            # if else
-            node[changed_type] = value
-        self.update_view(self)
+        """
+        Update tree changes map with change
+        :param identifier: identifier of node that change belongs to
+        :param changed_type: what kind of change, corresponds with attribute name in Change class
+        :param value: the value of the change
+        """
+        change = self.tree_changes.setdefault(identifier, Change())
+        if hasattr(change, changed_type):
+            setattr(change, changed_type, value)
 
-    def set_warning_change(self, identifier, value):
-        self.treechanges[identifier].warning = value
+        self.update_view(self)
