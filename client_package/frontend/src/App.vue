@@ -264,10 +264,6 @@ export default {
     addToDB() {
       window.eel.add_to_db();
     },
-    //notifies backend of tree change
-    treeChanged() {
-      window.eel.update_tree(this.tree);
-    }
   },
 }
 </script>
