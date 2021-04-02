@@ -4,156 +4,87 @@ Imports
 from typing import Dict, List
 
 import eel
-
-from reporttree.report_node import ReportNode
-from reporttree.report_leaf import TextLeaf, LabelLeaf
-
-from client_package.tree_changes import Change
+from client_package.model import Model
+from reporttree.node import Node
+from reporttree.label_node import LabelNode
+from client_package.tree_changes import FrontChange
 
 FALLBACK_COLOUR = "#ADADAD"
 
 
-def generate_tree(tree: ReportNode, tree_identifiers: Dict[object, str], tree_changes: Dict[str, Change]):
+def generate_tree(model: Model) -> list:
     """"
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
-    :param tree_identifiers:
-    :param tree: The report node created by the NLP, containing the entire structure
-    :param tree_changes: Dictionary stored in model containing all changes made on the front end,
-            key: identifier, value: new label
+    :param model The model of our application
     :return: Structured data for the front end in Json
     """
     nodes = []
 
-    def traverse(root: ReportNode, parent_id: str = None):
+    def traverse(node: Node, parent_id: str = None):
         """
         Function which traverses through tree by calling recursively calling its children,
         while calling the add_nodes function on each node.
-        :param root: The node currently being traversed, containing all necessary information including children
+        :param node: The node currently being traversed, containing all necessary information including children
         :param parent_id: The id of the parent of the currently traversed node, needed in the add_node function
         """
         nonlocal nodes
 
-        identifier = tree_identifiers[id(root)]
-        node = make_node(root, identifier, parent_id)
-        if identifier in tree_changes:  # check for user change
-            apply_change(node, tree_changes[identifier])
+        identifier = model.tree_identifiers[id(node)]
+        change = model.front_changes.get(identifier)
+        nodes += make_node(node, identifier,  parent_id, change)
 
-        nodes.append(node)
-        for child in root:
-            if isinstance(child, TextLeaf):
-                process_leaf(child, identifier)
-            else:
-                traverse(child, identifier)
-
-    def process_leaf(leaf: TextLeaf, parent_id: str):
-        """
-        Calls the add_nodes function on the leaves and their text, adding 2 nodes
-        :param leaf: The leaf currently being traversed, containing all necessary information including its text
-        :param parent_id: The id of the parent of the currently traversed node, needed in the add_nodes function
-        """
-        nonlocal nodes
-        if leaf.field != 'O':  # 'Other' leaves are currently excluded
-            identifier = tree_identifiers[id(leaf)]
-            field, label = make_leaf(leaf, identifier, identifier + "_value", parent_id)
-
-            if identifier in tree_changes:  # check for user change
-                apply_change(field, tree_changes[identifier])  # TODO apply for label as well
-            if identifier + "_value" in tree_changes:
-                apply_change(label, tree_changes[identifier + "_value"])  # TODO apply for label as well
-
-            nodes.extend([field, label])
-
-    traverse(tree)
+    traverse(model.tree)
     return nodes
 
 
-def make_node(node: ReportNode, identifier: str, parent_id: str):
+def make_node(node: Node, identifier: str, parent_id: str, change: FrontChange) -> list:
     """
-    Create a regular (category) node, in json/dictionary format
-    :param node: object that represents the node
-    :param identifier: The id given to the node currently being added, giving this node the currently highest index
-    :param parent_id: The id of the parent of the node/leaf currently being added
+    Method used to create a jsontemplate from a node
+    :param node: The node that needs to be converted into a json representation
+    :param identifier: The identifier of the node
+    :param parent_id: The id of the parent of the node
+    :param change: possible change accompanied with the node
+    :return: list of json representations of the node
     """
-    node = json_node_template(identifier, parent_id, node.category)
+    tmp = json_node_template(node, identifier, parent_id, change, False)
+    if node.is_leaf():
+        field = json_node_template(node, identifier + "_value", identifier, change, True)
+        return [tmp, field]
+    return [tmp]
 
-    return node
 
-
-def make_leaf(leaf: TextLeaf, identifier_field: str, identifier_value: str, parent_id: str):
+def json_node_template(node: Node, identifier: str, parent_id: str, change: FrontChange, leaf: bool):
     """
-    Create a leaf, which consists of two json objects: the leaf key and the leaf value
-    :param leaf: object that represents the leave
-    :param identifier_value: The id given to the label of the leaf
-    :param identifier_field: The id given to the key of the leaf
-    :param parent_id: The id of the parent of the leaf currently being added
-    :return: a list containing the key and value json objects
+    Method used to create a json template of any node in the tree
+    :param node: The node for which
+    :param identifier:
+    :param parent_id:
+    :param change:
+    :param leaf:
+    :return:
     """
-
-    # Field
-    leaf_field = json_node_template(
-        identifier=identifier_field,
-        parent_id=parent_id,
-        text=leaf.field,
-        confidence=leaf.field_conf,
-        hint=leaf.hint,
-        speculative=leaf.speculative
-    )
-
-    # Value
-    if isinstance(leaf, LabelLeaf):
-        leaf_value = json_node_template(
-            identifier=identifier_value,
-            parent_id=identifier_field,
-            text=leaf.label,
-            confidence=leaf.label_conf,
-            hint=leaf.text,
-            alternatives=list(leaf.labels),
-            value_node=True,
-            speculative=leaf.speculative,
-            is_label=True
-        )
-    else:
-        leaf_value = json_node_template(
-            identifier=identifier_value,
-            parent_id=identifier_field,
-            text=leaf.text,
-            value_node=True,
-            speculative=leaf.speculative
-        )
-
-    return leaf_field, leaf_value
-
-
-def json_node_template(identifier: str, parent_id: str, text: str, confidence: float = None,
-                       hint: str = None, alternatives: List[str] = None, value_node: bool = False,
-                       speculative: bool = False, is_label: bool = False):
-    """
-    Helper function that generates a basic structure for the json objects used in functions above
-    :param hint: The hint, if it is a key node
-    :param identifier: the id for the json object
-    :param parent_id: the id of the parent of the json object
-    :param text: the text that is used in the default HTML template of the json object
-    :param confidence: the confidence for the node
-    :param alternatives: the alternative texts
-    :param value_node: whether the node is a value.
-    :param speculative: whether the node is auto-generated
-    :param is_label: whether this node is LabelLeaf (or TextLeaf if false)
-    :return: a python dict representing the json object
-    """
-    if text is None:
+    text = node.text
+    if not text:
         text = "?"
     template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
 
+    alternatives = None
     low_confidence = False
-    if confidence:
-        percentage = round(confidence * 100)
+    percentage = None
+    if leaf:
+        if isinstance(node, LabelNode):
+            alternatives = node.options
+            percentage = node.pred_label_conf
+    else:
+        percentage = node.pred_text_conf
+
+    if percentage:
         low_confidence = percentage < 75
         template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
 
-    # Set the colours of the node
-    if value_node:
-        if speculative:
+    if leaf:
+        if node.is_speculative():
             background_color = "#E6BEBC"
             outline_color = "#E6BEBC"
             text_color = "#FFFFFF"
@@ -163,7 +94,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
             text_color = "#FFFFFF"
 
     else:
-        if speculative:
+        if node.is_speculative():
             background_color = "#ADCBF8"
             outline_color = "#ADCBF8"
             text_color = "#FFFFFF"
@@ -173,7 +104,7 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
             outline_color = "#5A9AFA"
             text_color = "#FFFFFF"
 
-    return {
+    jsonnode = {
         "nodeId": identifier,
         "parentNodeId": parent_id,
         "lowConfidence": low_confidence,
@@ -181,22 +112,20 @@ def json_node_template(identifier: str, parent_id: str, text: str, confidence: f
         "height": 147,
         "template": template,
         "alternatives": alternatives,
-        "originalTemplate": template,
-        "originalLowConfidence": low_confidence,
-        "originalLabel": text,
-        "hint": hint,
-        "text": text,
-        "speculative": speculative,
-        "label": text,
-        "isLabel": is_label,
-        "confidence": confidence,
+        "hint": node.hint,
+        "text": node.text,
+        "speculative": node.is_speculative(),
         "backgroundColor": background_color,
         "textColor": text_color,
         "outlineColor": outline_color,
     }
 
+    if change:
+        apply_change(jsonnode, change, leaf)
+    return jsonnode
 
-def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str]):
+
+def set_node_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     """
     Method used to create the text object with colour for nodes
     :param node: The ReportNode which needs to be formed into the right format for the frontend
@@ -207,7 +136,7 @@ def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str
     children = []
     label = parent_label + node.category
     for child in node:
-        if isinstance(child, TextLeaf):
+        if child.is_leaf():
             res = set_leaf_colours(child, label + "/", colours)
         else:
             res = set_node_colours(child, label + "/", colours)
@@ -223,43 +152,50 @@ def set_node_colours(node: ReportNode, parent_label: str, colours: Dict[str, str
         return None
 
 
-def set_leaf_colours(leaf: TextLeaf, parent_label: str, colours: Dict[str, str]):
+def set_leaf_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     """
     Method used to create the text object with colour for the leaves
-    :param leaf: The TextLeaf which needs to get a colour
+    :param node: The TextLeaf which needs to get a colour
     :param parent_label: The label of the parent
     :param colours: The colour dictionary for the current environment
     :return: Returns the object needed for the frontend
     """
-    if leaf.speculative:
+
+    if node.is_speculative():
         return None
-    label = parent_label + leaf.field
-    if leaf.field == "O":
-        result_type = "other"
-        colour = None
+    label = parent_label + node.category
+    if isinstance(node, LabelNode):
+        if node.category == "O":
+            result_type = "other"
+            colour = None
+        else:
+            label = label + "/" + node.pred_label
+            result_type = "label"
+            colour = colours.get(node.pred_label, FALLBACK_COLOUR)
     else:
         result_type = "label"
-        colour = colours.get(leaf.field, FALLBACK_COLOUR)
+        colour = colours.get(node.category, FALLBACK_COLOUR)
     return {
-        "text": leaf.text,
+        "text": node.text,
         "colour": colour,
         "type": result_type,
         "label": label,
     }
 
 
-def apply_change(node, change: Change):
+def apply_change(node, change: FrontChange, leaf: bool):
     """
-    Given a json node (to be sent to front end), apply changes to it
+    Given json node (to be sent to front end), apply changes to it
     :param node: the json node (actually python dict) to which change should be applied
     :param change: the Change object, containing fields that should be altered in json node
+    :param leaf: Boolean whether the node is a leaf or not
     """
-    if change.label is not None:
-        node['template'] = "<div class=\"domStyle\"><span>" + change.label + \
-                           "</div></span><span class=\"material-icons\">mode</span>"
-        node['label'] = change.label
-    if change.warning is not None:
-        node['lowConfidence'] = change.warning
+    if leaf:
+        if change.pred_label_warning:
+            node['lowConfidence'] = change.pred_label_warning
+    else:
+        if change.pred_text_warning:
+            node['lowConfidence'] = change.pred_text_warning
 
 
 def initialize(model):
@@ -273,7 +209,7 @@ def update(model):
     """
     Reflect the changes to the model in the front-end
     """
-    linear_tree = generate_tree(model.tree, model.tree_identifiers, model.tree_changes)
+    linear_tree = generate_tree(model)
     visual_text = set_node_colours(model.tree, "", model.colours)
     eel.update_frontend(linear_tree, model.environment, visual_text)
 
@@ -304,21 +240,17 @@ def get_tree_text(model):
 
     def traverse(node, indentations: int = 0) -> str:
         """
-        Traverse the code recursively to build a textual representation.
-        :param node: current node. No clue what it is. Does it have a change or not, I don't know.
-        :param indentations: the number of tabs needed
-        :return: A textual representation of the tree
+        Method used to traverse the tree to create the tree text
+        :param node: Node that needs to be processed
+        :param indentations: Current level of indentation
+        :return: Textual representation of node
         """
-        change, leaf_change = model.get_change(node)
-        if isinstance(node, ReportNode):
-            label = change.label if change and change.label else node.category
-            return "\t" * indentations + label + ":\n" + "".join(traverse(child, indentations + 1) for child in node)
-        field = change.label if change and change.label else node.field
-        if field == "O":
-            return ""
-        if isinstance(node, LabelLeaf):
-            label = leaf_change.label if leaf_change and leaf_change.label else node.label
-            return "\t" * indentations + field + ": " + str(label) + "\n"
+        if node.is_leaf():
+            if isinstance(node, LabelNode):
+                return "\t" * indentations + node.category + ": " + node.label + "\n"
+            else:
+                return "\t" * indentations + node.category
         else:
-            return "\t" * indentations + field + ": " + str(node.text) + "\n"
+            return "\t" * indentations + node.category + ":\n" + "".join(traverse(child, indentations + 1) for child in node)
+
     return "Environment: {}\n\n{}".format(model.environment, "".join(traverse(node) for node in model.tree))

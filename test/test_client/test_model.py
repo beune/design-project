@@ -5,9 +5,8 @@ import unittest
 
 from client_package.model import Model
 from client_package import view
-from reporttree.report_node import ReportNode
-from reporttree.report_leaf import TextLeaf
-from reporttree.report_leaf import LabelLeaf
+from reporttree.node import Node
+from reporttree.label_node import LabelNode
 
 
 class ModelTest(unittest.TestCase):
@@ -19,15 +18,15 @@ class ModelTest(unittest.TestCase):
         node_3_label = 'negative_finding'
         root_label = 'root'
 
-        report_node_1 = ReportNode(node_1_label, [])
-        report_node_2 = ReportNode(node_2_label, [report_node_1])
-        report_node_3 = ReportNode(node_1_label, [])
-        report_node_4 = ReportNode(node_2_label, [report_node_3])
-        report_node_5 = ReportNode(node_1_label, [])
-        report_node_6 = ReportNode(node_3_label, [report_node_5])
-        report_node_7 = ReportNode(node_1_label, [])
-        report_node_8 = ReportNode(node_3_label, [report_node_7])
-        root = ReportNode(root_label, [report_node_2, report_node_4, report_node_6, report_node_8])
+        report_node_1 = Node(node_1_label, children=[])
+        report_node_2 = Node(node_2_label, children=[report_node_1])
+        report_node_3 = Node(node_1_label, children=[])
+        report_node_4 = Node(node_2_label, children=[report_node_3])
+        report_node_5 = Node(node_1_label, children=[])
+        report_node_6 = Node(node_3_label, children=[report_node_5])
+        report_node_7 = Node(node_1_label, children=[])
+        report_node_8 = Node(node_3_label, children=[report_node_7])
+        root = Node(root_label, children=[report_node_2, report_node_4, report_node_6, report_node_8])
         model.create_identifiers(root)
 
         # test if no duplicates
@@ -38,12 +37,12 @@ class ModelTest(unittest.TestCase):
         model = Model(view.initialize, view.update, view.server_error, view.show_loader)
 
         leaf_a_label = 'stervormige'
-        leaf_a_label_confidence = 0.70
+        leaf_a_label_confidence = 70
         leaf_a_field = 'margin'
-        leaf_a_field_confidence = 0.55
+        leaf_a_field_confidence = 55
         leaf_b_text = 'laterale bovenkwadrant linkermamma'
         leaf_b_field = 'location'
-        leaf_b_field_confidence = 0.92
+        leaf_b_field_confidence = 92
         spec_c_field = 'shape'
         node_1_label = 'mass'
         node_2_label = 'positive_finding'
@@ -52,27 +51,25 @@ class ModelTest(unittest.TestCase):
         change1 = 'changed_label1'
         change2 = 'changed_label2'
 
-        report_leaf_a = LabelLeaf(leaf_a_field, set(), leaf_a_field_confidence, leaf_a_label,
+        report_leaf_a = LabelNode(leaf_a_field, [], (leaf_a_label, leaf_a_field_confidence),
                                   (leaf_a_label, leaf_a_label_confidence))
-        report_leaf_b = TextLeaf(leaf_b_field, leaf_b_field_confidence, leaf_b_text)
-        spec_leaf_c = TextLeaf(spec_c_field)
-        report_node_1 = ReportNode(node_1_label, [report_leaf_a, report_leaf_b, spec_leaf_c])
-        report_node_2 = ReportNode(node_2_label, [report_node_1])
-        root = ReportNode(root_label, [report_node_2])
+        report_leaf_b = Node(leaf_b_field, (leaf_b_text, leaf_b_field_confidence))
+        spec_leaf_c = Node(spec_c_field)
+        report_node_1 = Node(node_1_label, children=[report_leaf_a, report_leaf_b, spec_leaf_c])
+        report_node_2 = Node(node_2_label, children=[report_node_1])
+        root = Node(root_label, children=[report_node_2])
         model.create_identifiers(root)
-        json_tree = view.generate_tree(root, model.tree_identifiers, {})
+        json_tree = view.generate_tree(model)
         model.tree = root
 
         # Test leaf label change
-        model.set_change(json_tree[4]['nodeId'], 'label', change1)
-        self.assertEqual(change1, model.tree_changes[json_tree[4]['nodeId']].label)
-
-        # Test leaf warning change
-        model.set_change(json_tree[4]['nodeId'], 'warning', True)
-        self.assertEqual(True, model.tree_changes[json_tree[4]['nodeId']].warning)
-        model.set_change(json_tree[4]['nodeId'], 'warning', False)
-        self.assertEqual(False, model.tree_changes[json_tree[4]['nodeId']].warning)
+        model.set_back_change(json_tree[4]['nodeId'], change1)
+        model.apply_back_changes()
+        json_tree = view.generate_tree(model)
+        self.assertEqual(change1, json_tree[4]['nodeId'].label)
 
         # Test node category change
-        model.set_change(json_tree[0]['nodeId'], 'label', change2)
-        self.assertEqual(change2, model.tree_changes[json_tree[0]['nodeId']].label)
+        model.set_back_change(json_tree[0]['nodeId'], change2)
+        model.apply_back_changes()
+        json_tree = view.generate_tree(model)
+        self.assertEqual(change2, json_tree[0]['nodeId'].label)

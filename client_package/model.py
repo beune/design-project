@@ -5,11 +5,11 @@ from typing import Callable
 
 import jsonpickle
 import requests
-from reporttree.report_node import ReportNode
-from reporttree.report_leaf import TextLeaf
+from reporttree.node import Node
+from reporttree.label_node import LabelNode
 
 # ENDPOINT = "https://docker.beune.dev/"
-from client_package.tree_changes import Change
+from client_package.tree_changes import BackChange, FrontChange
 
 ENDPOINT = "http://127.0.0.1:5000/"
 
@@ -33,9 +33,35 @@ class Model:
         self.environment = None
         self.text = ""
         self.colours = {}
-        self.tree = ReportNode("Root")
+        self.tree = Node("Root")
         self.tree_identifiers = {}
-        self.tree_changes = {}
+        self.back_changes = {}
+        self.front_changes = {}
+
+    def apply_back_changes(self):
+        """
+        Method used to apply changes relevant for the state of the reportstructure
+        """
+        def traverse(node: Node):
+            """
+
+            :param node:
+            :return:
+            """
+            for child in node:
+                traverse(child)
+            self.apply_change(node)
+        traverse(self.tree)
+
+    def apply_change(self, node: Node):
+        """
+        Method used to apply a BackChange
+        :param node: The node which needs to be changed
+        """
+        if isinstance(node, LabelNode):
+            change = self.back_changes.get(self.tree_identifiers[id(node)])
+            if change:
+                node.corr_label = change.label
 
     def retrieve_initial_data(self):
         """
@@ -129,9 +155,10 @@ class Model:
 
     def create_identifiers(self, node):
         """
-        Recursively iterates through the given tree, creating
+        Recursively iterates through the given tree, creating identifiers
+        :param node The root of the tree
         """
-        identifier = node.field if isinstance(node, TextLeaf) else node.category
+        identifier = node.category
         if identifier not in self.tree_identifiers.values():
             self.tree_identifiers[id(node)] = identifier
         else:
@@ -140,27 +167,23 @@ class Model:
                 distinguisher += 1
             self.tree_identifiers[id(node)] = identifier + str(distinguisher)
 
-        if isinstance(node, ReportNode):
+        if not node.is_leaf():
             for child in node.children:
                 self.create_identifiers(child)
 
-    def set_change(self, identifier, changed_type, value):
+    def set_back_change(self, identifier: str, new_label: str):
         """
-        Update tree changes map with change
-        :param identifier: identifier of node that change belongs to
-        :param changed_type: what kind of change, corresponds with attribute name in Change class
-        :param value: the value of the change
+        Method used to set changes relevant for the state of the tree
+        :param identifier: identifier of the changed node
+        :param new_label: The new label for the changed node
         """
-        change = self.tree_changes.setdefault(identifier, Change())
-        if hasattr(change, changed_type):
-            setattr(change, changed_type, value)
+        self.back_changes[identifier] = BackChange(new_label)
 
-    def get_change(self, node):
+    def set_front_change(self, identifier, text_warning: bool = None, label_warning: bool = None):
         """
-        Method used to get a change for a certain node
+        Method used to set changes irrelevant for the state of the tree
+        :param identifier: identifier of the changed node
+        :param text_warning: new value for the text_warning of the changed node
+        :param label_warning: new value for the label_warning of the changed node
         """
-        identifier = self.tree_identifiers[id(node)]
-        if isinstance(node, ReportNode):
-            return self.tree_changes.get(identifier), None
-        else:
-            return self.tree_changes.get(identifier), self.tree_changes.get(identifier + "_value")
+        self.front_changes[identifier] = FrontChange(text_warning, label_warning)

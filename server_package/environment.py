@@ -1,7 +1,8 @@
 """
 Imports
 """
-from reporttree.report_node import ReportNode
+from reporttree.node import Node
+
 from server_package.environments import hersen, mammo, mammo_fw
 from server_package.hinter import Hinter
 from typing import Callable
@@ -25,7 +26,7 @@ class Environment:
         self.hinter = hinter
         self.name = name
 
-    def process(self, text: str) -> ReportNode:
+    def process(self, text: str) -> Node:
         """
         Method used to process text
         :param text:
