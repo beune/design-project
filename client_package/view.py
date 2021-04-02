@@ -253,12 +253,15 @@ def get_tree_text(model):
         :param indentations: Current level of indentation
         :return: Textual representation of node
         """
+        indentation = "\t" * indentations
         if node.is_leaf():
+            if node.category == "O":
+                return ""
             if isinstance(node, LabelNode):
-                return "\t" * indentations + node.category + ": " + node.label + "\n"
+                return indentation + node.category + ": " + node.label + "\n"
             else:
-                return "\t" * indentations + node.category
+                return indentation + node.category
         else:
-            return "\t" * indentations + node.category + ":\n" + "".join(traverse(child, indentations + 1) for child in node)
+            return indentation + node.category + ":\n" + "".join(traverse(child, indentations + 1) for child in node)
 
     return "Environment: {}\n\n{}".format(model.environment, "".join(traverse(node) for node in model.tree))
