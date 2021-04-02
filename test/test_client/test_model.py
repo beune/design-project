@@ -58,15 +58,15 @@ class ModelTest(unittest.TestCase):
         report_node_1 = Node(node_1_label, children=[report_leaf_a, report_leaf_b, spec_leaf_c])
         report_node_2 = Node(node_2_label, children=[report_node_1])
         root = Node(root_label, children=[report_node_2])
+        model.tree = root
         model.create_identifiers(root)
         json_tree = view.generate_tree(model)
-        model.tree = root
 
         # Test leaf label change
         model.set_back_change(json_tree[4]['nodeId'], change1)
         model.apply_back_changes()
         json_tree = view.generate_tree(model)
-        self.assertEqual(change1, json_tree[4]['nodeId'].label)
+        self.assertEqual(change1, json_tree[4]['text'])
 
         # Test node category change
         model.set_back_change(json_tree[0]['nodeId'], change2)

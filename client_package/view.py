@@ -32,7 +32,9 @@ def generate_tree(model: Model) -> list:
 
         identifier = model.tree_identifiers[id(node)]
         change = model.front_changes.get(identifier)
-        nodes += make_node(node, identifier,  parent_id, change)
+        nodes += make_node(node, identifier, parent_id, change)
+        for child in node.children:
+            traverse(child, identifier)
 
     traverse(model.tree)
     return nodes
@@ -64,7 +66,13 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
     :param leaf:
     :return:
     """
-    text = node.text
+    if leaf:
+        if isinstance(node, LabelNode):
+            text = node.label
+        else:
+            text = node.text
+    else:
+        text = node.category
     if not text:
         text = "?"
     template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
@@ -113,7 +121,7 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
         "template": template,
         "alternatives": alternatives,
         "hint": node.hint,
-        "text": node.text,
+        "text": text,
         "speculative": node.is_speculative(),
         "backgroundColor": background_color,
         "textColor": text_color,
@@ -191,10 +199,10 @@ def apply_change(node, change: FrontChange, leaf: bool):
     :param leaf: Boolean whether the node is a leaf or not
     """
     if leaf:
-        if change.pred_label_warning:
+        if change.pred_label_warning is not None:
             node['lowConfidence'] = change.pred_label_warning
     else:
-        if change.pred_text_warning:
+        if change.pred_text_warning is not None:
             node['lowConfidence'] = change.pred_text_warning
 
 

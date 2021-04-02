@@ -35,43 +35,44 @@ class ViewTest(unittest.TestCase):
         report_node_1 = Node(node_1_label, children=[report_leaf_a, report_leaf_b, spec_leaf_c])
         report_node_2 = Node(node_2_label, children=[report_node_1])
         root = Node(root_label, children=[report_node_2])
+        model.tree = root
         model.create_identifiers(root)
         json_tree = view.generate_tree(model)
 
         # test root
         self.assertEqual(json_tree[0]["parentNodeId"], None)
         self.assertEqual(json_tree[0]["template"], "<div class=\"domStyle\"><span>root</span></div>")
-        self.assertEqual(json_tree[0]["label"], root_label)
+        self.assertEqual(json_tree[0]["text"], root_label)
 
         # test finding
         self.assertEqual(json_tree[1]["parentNodeId"], root_label)
-        self.assertEqual(json_tree[1]["label"], node_2_label)
+        self.assertEqual(json_tree[1]["text"], node_2_label)
 
         # test category (mass)
         self.assertEqual(json_tree[2]["parentNodeId"], node_2_label)
-        self.assertEqual(json_tree[2]["label"], node_1_label)
+        self.assertEqual(json_tree[2]["text"], node_1_label)
 
         # test labelLeaf field
         self.assertEqual(json_tree[3]["parentNodeId"], node_1_label)
-        self.assertEqual(json_tree[3]["label"], leaf_a_field)
+        self.assertEqual(json_tree[3]["text"], leaf_a_field)
 
         # test labelLeaf label with low confidence
         self.assertEqual(json_tree[4]["parentNodeId"], leaf_a_field)
         self.assertEqual(json_tree[4]["lowConfidence"], True)
-        self.assertEqual(json_tree[4]["label"], leaf_a_label)
+        self.assertEqual(json_tree[4]["text"], leaf_a_label)
 
         # test textLeaf field
         self.assertEqual(json_tree[5]["parentNodeId"], node_1_label)
-        self.assertEqual(json_tree[5]["label"], leaf_b_field)
+        self.assertEqual(json_tree[5]["text"], leaf_b_field)
 
         # test textLeaf text
         self.assertEqual(json_tree[6]["parentNodeId"], leaf_b_field)
-        self.assertEqual(json_tree[6]["label"], leaf_b_text)
+        self.assertEqual(json_tree[6]["text"], leaf_b_text)
 
         # test spec_leaf
         self.assertEqual(json_tree[7]["parentNodeId"], node_1_label)
         self.assertEqual(json_tree[7]["speculative"], True)
-        self.assertEqual(json_tree[7]["label"], spec_c_field)
+        self.assertEqual(json_tree[7]["text"], spec_c_field)
 
     def test_apply_changes(self):
         model = Model(view.initialize, view.update, view.server_error, view.show_loader)
@@ -82,26 +83,27 @@ class ViewTest(unittest.TestCase):
         report_node_1 = Node('mass', children=[report_leaf_a])
         report_node_2 = Node('positive_finding', children=[report_node_1])
         root = Node('root', children=[report_node_2])
+        model.tree = root
         model.create_identifiers(root)
         json_tree = view.generate_tree(model)
 
         # Test label change
-        self.assertEqual(json_tree[4]["label"], leaf_a_label)  # pre change
-        leaf_a_id = json_tree[4]["nodeId"]
+        self.assertEqual(json_tree[4]["text"], leaf_a_label)  # pre change
+        leaf_a_id = json_tree[3]["nodeId"]
         leaf_a_new_label = "circumscribed"
         model.set_back_change(leaf_a_id, leaf_a_new_label)
         model.apply_back_changes()
         json_tree = view.generate_tree(model)
-        self.assertEqual(json_tree[4]["label"], leaf_a_new_label)  # post change
+        self.assertEqual(json_tree[4]["text"], leaf_a_new_label)  # post change
 
         # Test ignore warning
         self.assertEqual(json_tree[3]["lowConfidence"], True)  # pre change
         self.assertEqual(json_tree[4]["lowConfidence"], True)
         label_a_id = json_tree[3]["nodeId"]
         leaf_a_id = json_tree[4]["nodeId"]
-        model.set_front_change(label_a_id, label_warning=False)
+        model.set_front_change(label_a_id, text_warning=False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[3]["lowConfidence"], False)
-        model.set_front_change(leaf_a_id, text_warning=False)
+        model.set_front_change(label_a_id, text_warning=False, label_warning=False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[4]["lowConfidence"], False)

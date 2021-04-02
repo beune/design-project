@@ -30,5 +30,5 @@ class LabelNode(Node):
     @property
     def label(self):
         if self.corr_label:
-            return corr_label
+            return self.corr_label
         return self.pred_label

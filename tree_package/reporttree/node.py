@@ -29,7 +29,7 @@ class Node:
         return not self.children
 
     def is_speculative(self):
-        return text == None
+        return self.text == None
 
     # def recursive(self, call):
     #     for child in self:
