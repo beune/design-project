@@ -12,7 +12,7 @@ stages:
     - virtualenv venv
     - source venv/bin/activate
     - pip install -r test-lint-requirements.txt
-    - pip install -e treepackage
+    - pip install -e tree_package
 
 test_backend:
   stage: test
@@ -34,7 +34,7 @@ lint_backend:
       - .cache/pip
       - venv/
   script:
-    - flake8 client_package server_package test treepackage
+    - flake8 client_package server_package test tree_package
 
 build_frontend:
   stage: build

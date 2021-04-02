@@ -11,7 +11,7 @@ RUN python2 get-pip.py
 COPY server_package/serverreqs.txt serverreqs.txt
 RUN python3 -m pip install -r serverreqs.txt
 ##RUN python3 -m pip install git+https://git.snt.utwente.nl/s2174294/reporttree
-COPY treepackage /treepackage
+COPY tree_package /treepackage
 RUN python3 -m pip install -e ../treepackage
 # Clonen met ssh?
 RUN git clone https://git.snt.utwente.nl/s2174294/nlpbreastcancer.git /workdir/nlp
