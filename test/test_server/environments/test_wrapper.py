@@ -3,8 +3,8 @@ imports
 """
 import unittest
 from server_package.environments.mammo import make_tree, after, has_base, clean
-from report_tree.report_leaf import TextLeaf
-from report_tree.report_node import ReportNode
+from reporttree.report_leaf import TextLeaf
+from reporttree.report_node import ReportNode
 
 
 class MyTestCase(unittest.TestCase):

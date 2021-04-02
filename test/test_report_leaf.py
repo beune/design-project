@@ -3,7 +3,7 @@ Imports
 """
 
 import unittest
-from report_tree.report_leaf import LabelLeaf, TextLeaf
+from reporttree.report_leaf import LabelLeaf, TextLeaf
 
 
 class ReportLeafTest(unittest.TestCase):

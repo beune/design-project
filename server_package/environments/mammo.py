@@ -8,8 +8,8 @@ import os
 import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
-from report_tree.report_node import ReportNode
-from report_tree.report_leaf import TextLeaf, LabelLeaf
+from reporttree.report_node import ReportNode
+from reporttree.report_leaf import TextLeaf, LabelLeaf
 
 COLOURS = {
     "breast_composition": "#E71212",

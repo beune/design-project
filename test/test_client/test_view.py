@@ -6,9 +6,9 @@ import unittest
 from client_package import view
 
 from client_package.model import Model
-from report_tree.report_node import ReportNode
-from report_tree.report_leaf import TextLeaf
-from report_tree.report_leaf import LabelLeaf
+from reporttree.report_node import ReportNode
+from reporttree.report_leaf import TextLeaf
+from reporttree.report_leaf import LabelLeaf
 
 from client_package.tree_changes import Change
 

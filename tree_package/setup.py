@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name='report_tree',
+    name='reporttree',
     version='0.1',
-    packages=['report_tree'],
+    packages=['reporttree'],
     url='https://git.snt.utwente.nl/s2174294/reporttree',
     license='MIT License',
     author='S. Ritsema, J.S. van Assen',
