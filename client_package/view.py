@@ -293,3 +293,32 @@ def server_error(mess: str):
     # :param mess: The accompanying error message
     """
     eel.show_server_error(mess)
+
+
+def get_tree_text(model):
+    """
+    Create a textual representation of the tree
+    :param model: The model containing the current tree and the changes
+    :return: A structured report
+    """
+
+    def traverse(node, indentations: int = 0) -> str:
+        """
+        Traverse the code recursively to build a textual representation.
+        :param node: current node. No clue what it is. Does it have a change or not, I don't know.
+        :param indentations: the number of tabs needed
+        :return: A textual representation of the tree
+        """
+        change, leaf_change = model.get_change(node)
+        if isinstance(node, ReportNode):
+            label = change.label if change and change.label else node.category
+            return "\t" * indentations + label + ":\n" + "".join(traverse(child, indentations + 1) for child in node)
+        field = change.label if change and change.label else node.field
+        if field == "O":
+            return ""
+        if isinstance(node, LabelLeaf):
+            label = leaf_change.label if leaf_change and leaf_change.label else node.label
+            return "\t" * indentations + field + ": " + str(label) + "\n"
+        else:
+            return "\t" * indentations + field + ": " + str(node.text) + "\n"
+    return "Environment: {}\n\n{}".format(model.environment, "".join(traverse(node) for node in model.tree))

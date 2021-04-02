@@ -50,8 +50,8 @@
           <v-divider />
 
           <v-list>
-            <v-list-item link>
-              <v-list-item-title>Export to disk...</v-list-item-title>
+            <v-list-item link @click="copyTextRep">
+              <v-list-item-title>Copy to G2Speech</v-list-item-title>
             </v-list-item>
             <v-list-item link @click="addToDB">
               <v-list-item-title>Export to database...</v-list-item-title>
@@ -253,6 +253,9 @@ export default {
     environmentChanged(newEnvironment) {
       window.eel.update_environment(newEnvironment);
       this.envchosen = true;
+    },
+    copyTextRep() {
+      window.eel.copy_tree();
     },
     showLoader(show) {
       this.loading = show;
