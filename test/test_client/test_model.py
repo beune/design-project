@@ -63,13 +63,13 @@ class ModelTest(unittest.TestCase):
         json_tree = view.generate_tree(model)
 
         # Test leaf label change
-        model.set_back_change(json_tree[4]['nodeId'], change1)
+        model.set_back_change(json_tree[3]['nodeId'], change1)
         model.apply_back_changes()
         json_tree = view.generate_tree(model)
         self.assertEqual(change1, json_tree[4]['text'])
-
-        # Test node category change
-        model.set_back_change(json_tree[0]['nodeId'], change2)
+        model.set_back_change(json_tree[3]['nodeId'], change2)
         model.apply_back_changes()
         json_tree = view.generate_tree(model)
-        self.assertEqual(change2, json_tree[0]['nodeId'].label)
+        self.assertEqual(change2, json_tree[4]['text'])
+
+
