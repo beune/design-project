@@ -12,7 +12,7 @@ class UIAutomation:
     """
     Class which retrieves the text from the G2 speech window(Notepad for now)
     """
-    DELIMITER = "===Structured Report===\n"
+    DELIMITER = "===Structured Report==="
 
     def __init__(self, callback: Callable[[str], None]):
         self.callback = callback
@@ -44,7 +44,7 @@ class UIAutomation:
         Method used to add a textual representation of the tree to the report
         :param text: The textual representation
         """
-        window_text = self.text + self.DELIMITER + text
+        window_text = self.text.rstrip() + "\n\n\n" + self.DELIMITER + "\n\n" + text
         self.textfield.set_text(window_text)
 
     def stop(self):
