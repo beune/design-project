@@ -7,6 +7,7 @@ import view
 from ui_automation import UIAutomation
 
 model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+ui_automation = UIAutomation(model.set_text)
 
 
 @eel.expose
@@ -37,12 +38,14 @@ def add_to_db():
     model.add_to_db()
 
 
-def update_text(new_text):
+@eel.expose
+def copy_tree():
     """
-    Update the model using the new_text
-    :param new_text: The updated text
+    Method used to copy the textual tree representation into notepad/G2Speech
     """
-    model.set_text(new_text)
+    tree_text = view.get_tree_text(model)
+    print(tree_text)
+    ui_automation.write_tree_text(tree_text)
 
 
 def main():
@@ -52,7 +55,6 @@ def main():
     eel.init('web')
     eel.start('index.html', block=False)
     model.retrieve_initial_data()
-    ui_automation = UIAutomation(update_text)
     ui_automation.start()
 
 

@@ -293,3 +293,26 @@ def server_error(mess: str):
     # :param mess: The accompanying error message
     """
     eel.show_server_error(mess)
+
+
+def get_tree_text(model):
+    """
+    Create a textual representation of the tree
+    :param model: The model containing the current tree and the changes
+    :return: A textual representation of the tree
+    """
+
+    def traverse(node, indentations: int = 0) -> str:
+        change, leaf_change = model.get_change(node)
+        "identifier_value"
+        if isinstance(node, ReportNode):
+            label = change.label if change and change.label else node.category
+            return "\t" * indentations + label + ":\n" + "\n".join(traverse(child, indentations + 1) for child in node)
+        field = change.label if change and change.label else node.field
+        if isinstance(node, LabelLeaf):
+            label = leaf_change.label if leaf_change and leaf_change.label else node.label
+            return "\t" * indentations + field + ": " + label
+        else:
+            return "\t" * indentations + field + ": " + node.text
+
+    return traverse(model.tree)

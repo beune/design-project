@@ -1,7 +1,7 @@
 """
 Imports
 """
-from typing import Callable
+from typing import Callable, Tuple
 
 import jsonpickle
 import requests
@@ -154,3 +154,13 @@ class Model:
         change = self.tree_changes.setdefault(identifier, Change())
         if hasattr(change, changed_type):
             setattr(change, changed_type, value)
+
+    def get_change(self, node):
+        """
+        Method used to get a change for a certain node
+        """
+        identifier = self.tree_identifiers[id(node)]
+        if isinstance(node, ReportNode):
+            return self.tree_changes.get(identifier), None
+        else:
+            return self.tree_changes.get(identifier), self.tree_changes.get(identifier + "_value")
