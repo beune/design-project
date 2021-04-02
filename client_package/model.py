@@ -1,7 +1,7 @@
 """
 Imports
 """
-from typing import Callable, Tuple
+from typing import Callable
 
 import jsonpickle
 import requests
