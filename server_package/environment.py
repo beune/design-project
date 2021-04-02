@@ -1,7 +1,7 @@
 """
 Imports
 """
-from report_tree.report_node import ReportNode
+from reporttree.report_node import ReportNode
 from server_package.environments import hersen, mammo, mammo_fw
 from server_package.hinter import Hinter
 from typing import Callable

@@ -5,8 +5,8 @@ from typing import Callable
 
 import jsonpickle
 import requests
-from report_tree.report_node import ReportNode
-from report_tree.report_leaf import TextLeaf
+from reporttree.report_node import ReportNode
+from reporttree.report_leaf import TextLeaf
 
 # ENDPOINT = "https://docker.beune.dev/"
 from client_package.tree_changes import Change

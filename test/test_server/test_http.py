@@ -8,7 +8,7 @@ from multiprocessing import Process
 import jsonpickle
 import requests
 
-from report_tree.report_node import ReportNode
+from reporttree.report_node import ReportNode
 from server_package import server
 
 

@@ -1,8 +1,8 @@
 """
 Imports
 """
-from report_tree.report_node import ReportNode
-from report_tree.report_leaf import TextLeaf, LabelLeaf
+from reporttree.report_node import ReportNode
+from reporttree.report_leaf import TextLeaf, LabelLeaf
 
 EXPECTED = {}
 OPTIONS = {}
