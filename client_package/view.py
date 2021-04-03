@@ -1,7 +1,7 @@
 """
 Imports
 """
-from typing import Dict, List
+from typing import Dict
 
 import eel
 from client_package.model import Model
@@ -261,6 +261,7 @@ def get_tree_text(model):
             else:
                 return indentation + str(node.category) + ": " + str(node.text) + "\n"
         else:
-            return indentation + str(node.category) + ":\n" + "".join(traverse(child, indentations + 1) for child in node)
+            child_text = "".join(traverse(child, indentations + 1) for child in node)
+            return indentation + str(node.category) + ":\n" + child_text
 
     return "Environment: {}\n\n{}".format(model.environment, "".join(traverse(node) for node in model.tree))
