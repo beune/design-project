@@ -149,7 +149,6 @@ class Model:
         """
         jsonrep = json.dumps(self.tree, indent=4, cls=Node.NodeEncoder)
         data = {"jsonrep": jsonrep}
-        node = Node(**json.loads(jsonrep))
         try:
             response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
             response.raise_for_status()
