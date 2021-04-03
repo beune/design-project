@@ -20,23 +20,23 @@ def update_environment(new_environment):
 
 
 @eel.expose
-def set_back_change(identifier: str, new_label: str):
+def set_change(identifier: str, change: str, value):
     """
-    Method used to set a change relevant for the tree state
-    :param identifier: Identifier of the node that needs a changed label
-    :param new_label: The new label of the chosen node
+    Apply a user change to the model
+    :param identifier: the identifier of the node
+    :param change: the changed attribute
+    :param value: the desired value
     """
-    model.set_back_change(identifier, new_label)
+    model.change(identifier, change, value)
 
 
 @eel.expose
-def set_front_change(identifier, warning):
+def reset_node(identifier: str):
     """
-    On tree update from front end, pass changes to model
-    :param identifier: the node the change was applied to
-    :param warning: Whether the warning of the node needs to be on or off
+    Reset all changes applied to a node
+    :param identifier: the identifier of the node
     """
-    model.set_front_change(identifier, warning)
+    model.reset_node(identifier)
 
 
 @eel.expose

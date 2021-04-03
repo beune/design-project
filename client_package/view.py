@@ -31,8 +31,7 @@ def generate_tree(model: Model) -> list:
         nonlocal nodes
 
         identifier = model.tree_identifiers[id(node)]
-        change = model.front_changes.get(identifier)
-        nodes += make_node(node, identifier, parent_id, change)
+        nodes += make_node(node, identifier, parent_id, model)
         for child in node:
             if child.category != "O":
                 traverse(child, identifier)
@@ -41,19 +40,21 @@ def generate_tree(model: Model) -> list:
     return nodes
 
 
-def make_node(node: Node, identifier: str, parent_id: str, change: FrontChange) -> list:
+def make_node(node: Node, identifier: str, parent_id: str, model: Model) -> list:
     """
     Method used to create a jsontemplate from a node
-    :param leaf_change: Possible change to the actual leaf if the node is a leaf
     :param node: The node that needs to be converted into a json representation
     :param identifier: The identifier of the node
     :param parent_id: The id of the parent of the node
-    :param change: possible change accompanied with the node
+    :param model:
     :return: list of json representations of the node
     """
+    change = model.front_changes.get(identifier, FrontChange())
     tmp = json_node_template(node, identifier, parent_id, change, False)
     if node.is_leaf():
-        field = json_node_template(node, identifier, identifier, change, True)
+        value_identifier = identifier + "_value"
+        change = model.front_changes.get(value_identifier, FrontChange())
+        field = json_node_template(node, value_identifier, identifier, change, True)
         return [tmp, field]
     return [tmp]
 
@@ -70,15 +71,16 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
     """
     alternatives = None
     low_confidence = False
+    percentage = None
     if leaf:
         if isinstance(node, LabelNode):
             alternatives = node.options
             text = node.label
-            percentage = node.pred_label_conf
+            if not node.is_corrected():
+                percentage = node.pred_label_conf
             hint = node.text
         else:
             text = node.text
-            percentage = None
             hint = None
     else:
         text = node.category
@@ -135,8 +137,7 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
         "leaf": leaf,
     }
 
-    if change:
-        apply_change(jsonnode, change, leaf)
+    apply_change(jsonnode, change)
     return jsonnode
 
 
@@ -198,16 +199,15 @@ def set_leaf_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     }
 
 
-def apply_change(node, change: FrontChange, leaf: bool):
+def apply_change(node, change: FrontChange):
     """
     Given json node (to be sent to front end), apply changes to it
     :param node: the json node (actually python dict) to which change should be applied
     :param change: the Change object, containing fields that should be altered in json node
     """
-    if leaf:
-        node['lowConfidence'] = change.label_warning
-    else:
-        node['lowConfidence'] = change.text_warning
+    if change.warning is not None:
+        node['lowConfidence'] = change.warning
+
 
 def initialize(model):
     """

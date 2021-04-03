@@ -10,7 +10,7 @@ from reporttree.label_node import LabelNode
 from client_package.tree_changes import BackChange, FrontChange
 
 ENDPOINT = "http://127.0.0.1:5000/"
-FRONT = ["text_warning", "label_warning"]
+FRONT = ["warning"]
 BACK = ["label", "text"]
 
 
@@ -28,7 +28,7 @@ class Model:
         self.environment = None
         self.text = ""
         self.colours = {}
-        self.tree = Node("Root")
+        self.tree = Node("report")
         self.tree_identifiers = {}
         self.back_changes = {}
         self.front_changes = {}
@@ -55,10 +55,10 @@ class Model:
         Method used to apply a BackChange
         :param node: The node which needs to be changed
         """
+        change = self.back_changes.get(self.tree_identifiers[id(node)], BackChange())
+        node.corr_text = change.text
         if isinstance(node, LabelNode):
-            change = self.back_changes.get(self.tree_identifiers[id(node)])
-            if change:
-                node.corr_label = change.label
+            node.corr_label = change.label
 
     def retrieve_initial_data(self):
         """
@@ -177,11 +177,13 @@ class Model:
         :param changed_type: Type of the change
         :param value: Value of the change
         """
-        iden = identifier.strip("_value")
+        node_identifier = identifier.strip("_value")
         if changed_type in BACK:
-            self.set_back_change(iden, changed_type, value)
-        else:
-            self.set_front_change(iden, changed_type, value)
+            self.set_back_change(node_identifier, changed_type, value)
+            self.apply_back_changes()
+        elif changed_type in FRONT:
+            self.set_front_change(identifier, changed_type, value)
+        self.view.update(self)
 
     def set_back_change(self, identifier: str, changed_type: str, value):
         """
@@ -205,9 +207,15 @@ class Model:
         if hasattr(change, changed_type):
             setattr(change, changed_type, value)
 
-    def render_change(self):
+    def reset_node(self, identifier: str):
         """
-        Method used to render user changes
+        Reset all changes for a node
+        :param identifier: identifier of either the node or leaf
         """
-        self.apply_back_changes()
+        node_identifier = identifier.strip("_value")
+        if node_identifier in self.back_changes:
+            self.back_changes.pop(node_identifier)
+            self.apply_back_changes()
+        if identifier in self.front_changes:
+            self.front_changes.pop(identifier)
         self.view.update(self)

@@ -32,7 +32,7 @@
             <v-list-item-title>Edit</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="undoNodeLabelEdit">
+        <v-list-item @click="resetNode">
           <v-list-item-icon>
             <v-icon>undo</v-icon>
           </v-list-item-icon>
@@ -51,7 +51,7 @@
             <v-list-item-title>Ignore warning</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="deleteNodeLabel">
+        <v-list-item @click="deleteNodeText">
           <v-list-item-icon>
             <v-icon>delete</v-icon>
           </v-list-item-icon>
@@ -239,63 +239,22 @@
                 this.showNoNodeLabelAlternativesAvailableSnackbar = true;
               }
             },
-            changeLabel(nodeId, label){
-              this.treeData.forEach(function(object){
-                if (object.nodeId === nodeId) {
-                  object.label = label;
-                  object.template = "<div class=\"domStyle\"><span>" + label + "</div></span><span class=\"material-icons\">mode</span>";
-                }
-              });
-            },
-            editNodeLabel(){
-              this.toggleEditNodeLabelDialog()
-              let parentNodeId = null;
+            editNodeLabel() {
+              this.toggleEditNodeLabelDialog();
               let label = this.chosenNodeLabelAlternative;
-              this.changeLabel(this.currentNodeId, label);
-              this.renderChart(this.treeData);
-              this.treeData.forEach((object) =>{
-                if (object.nodeId === this.currentNodeId) {
-                  parentNodeId = object.parentNodeId
-                }
-              });
-              this.chosenNodeLabelAlternative = undefined;
-              window.eel.set_back_change(parentNodeId, label);
-              this.ignoreWarning(); //remove warning because of edit
+              this.set_change(this.currentNodeId, "label", label);
             },
-            undoNodeLabelEdit(){
-              let self = this;
-              let label = null;
-              this.treeData.forEach(function(object){
-                if (object.nodeId === self.currentNodeId) {
-                  object.template = object.originalTemplate;
-                  object.lowConfidence = object.originalLowConfidence;
-                  object.label = object.originalLabel;
-                  label = object.originalLabel;
-                }
-              });
-              this.renderChart(this.treeData)
-              window.eel.update_tree(this.currentNodeId, "label", label);
+            resetNode() {
+              window.eel.reset_node(this.currentNodeId);
             },
-            deleteNodeLabel(){
-              this.changeLabel(this.currentNodeId, "?");
-              this.renderChart(this.treeData);
-              let parent_node = null
-              this.treeData.forEach((object) =>{
-                if (object.nodeId === this.currentNodeId) {
-                  parent_node = object.parentNodeId
-                }
-              });
-              window.eel.set_back_change(parent_node, "?");
-              window.eel.set_front_change(this.currentNodeId, false); //remove warning because of edit
+            deleteNodeText() {
+              this.set_change(this.currentNodeId, "text", "?");
             },
-            ignoreWarning(){
-              this.treeData.forEach((object) => {
-                if (object.nodeId === this.currentNodeId) {
-                  object.lowConfidence = false;
-                }
-              });
-              this.renderChart(this.treeData)
-              window.eel.set_front_change(this.currentNodeId, false)
+            ignoreWarning() {
+              this.set_change(this.currentNodeId, "warning", false);
+            },
+            set_change(identifier, type, value) {
+              window.eel.set_change(identifier, type, value);
             },
             renderChart(data) {
               if (!this.chartReference) {
@@ -308,19 +267,19 @@
                   .backgroundColor()
                   .linkColor(this.chartArrowColor)
                   .onNodeHoverOut(() => {
-                      this.mouseHoversOnNode = false
+                      this.mouseHoversOnNode = false;
                   })
                   .onNodeHover(d => {
-                    this.mouseHoversOnNode = true
-                    this.currentNodeId = d.nodeId
-                    this.handleHintMenu(d)
+                    this.mouseHoversOnNode = true;
+                    this.currentNodeId = d.nodeId;
+                    this.handleHintMenu(d);
                   })
                   .onNodeClick(d => {
                     this.contextMenuVisible = true;
-                    let uncert = false
+                    let uncert = false;
                     this.treeData.forEach(function(object){
                       if (object.nodeId === d.nodeId) {
-                        uncert = object.lowConfidence
+                        uncert = object.lowConfidence;
                       }
                     });
                     this.uncertain = uncert;
