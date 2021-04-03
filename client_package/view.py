@@ -34,8 +34,9 @@ def generate_tree(model: Model) -> list:
         change = model.front_changes.get(identifier)
         leafchange = model.front_changes.get(identifier + "_value")
         nodes += make_node(node, identifier, parent_id, change, leafchange)
-        for child in node.children:
-            traverse(child, identifier)
+        for child in node:
+            if child.category != "O":
+                traverse(child, identifier)
 
     traverse(model.tree)
     return nodes
@@ -68,26 +69,27 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
     :param leaf:
     :return:
     """
-    if leaf:
-        if isinstance(node, LabelNode):
-            text = node.label
-        else:
-            text = node.text
-    else:
-        text = node.category
-    if not text:
-        text = "?"
-    template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
-
+    hint = None
     alternatives = None
     low_confidence = False
     percentage = None
     if leaf:
         if isinstance(node, LabelNode):
+            text = node.label
             alternatives = node.options
             percentage = node.pred_label_conf
+        else:
+            text = node.text
+            percentage = node.pred_text_conf
+        hint = node.text
     else:
         percentage = node.pred_text_conf
+        text = node.category
+        hint = node.hint
+
+    if not text:
+        text = "?"
+    template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
 
     if percentage:
         low_confidence = percentage < 75
@@ -122,7 +124,7 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
         "height": 147,
         "template": template,
         "alternatives": alternatives,
-        "hint": node.hint,
+        "hint": hint,
         "text": text,
         "speculative": node.is_speculative(),
         "backgroundColor": background_color,
@@ -175,14 +177,14 @@ def set_leaf_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     if node.is_speculative():
         return None
     label = parent_label + node.category
-    if isinstance(node, LabelNode):
+    if node.is_leaf():
         if node.category == "O":
             result_type = "other"
             colour = None
         else:
-            label = label + "/" + node.pred_label
+            label = label + "/" + node.category
             result_type = "label"
-            colour = colours.get(node.pred_label, FALLBACK_COLOUR)
+            colour = colours.get(node.category, FALLBACK_COLOUR)
     else:
         result_type = "label"
         colour = colours.get(node.category, FALLBACK_COLOUR)
