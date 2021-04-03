@@ -33,11 +33,12 @@ def parse(text: str) -> Node:
     :return: For now a stub reportnode, as hinternlp is not implemented
     """
 
-    root = Node("report")
-    pos1 = Node("positive finding")
-    mass1 = Node("mass")
-    size1 = Node("size", ("ongeveer 2, 3 cm", 75), hint="The size of the mass")
-    multifocality1 = Node("Multifocality")
+    text = "ongeveer 2, 3 cm zichtbaar ependymomas"
+    root = Node("report", (text, 96))
+    pos1 = Node("positive finding", (text, 96))
+    mass1 = Node("mass", (text, 96))
+    size1 = Node("size", ("ongeveer 2, 3 cm", 40), hint="The size of the mass")
+    multifocality1 = Node("Multifocality", ("zichtbaar ependymomas", 80))
     hin = ("Multiple tumors in the brain usually indicate metastatic disease (figure)."
            "Primary brain tumors are typically seen in a single region, but some brain tumors like lymphomas, "
            "multicentric glioblastomas and gliomatosis cerebri can be multifocal. Some tumors can be multifocal"
