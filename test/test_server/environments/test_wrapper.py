@@ -14,7 +14,7 @@ class MyTestCase(unittest.TestCase):
         actual, _, _ = make_tree([], json)
         expected = Node('a', ("dit is een test", 100))
         self.assertIsInstance(actual, Node)
-        self.assertEqual("root", actual.category)
+        self.assertEqual("report", actual.category)
         self.assertEqual(expected, actual.children[0])
 
         json = [('dit', 'B-a', 1), ('is', 'B-a', 1), ('een', 'B-a', 1), ('test', 'B-a', 1)]
@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(4, len(actual.children))
 
         actual, _, _ = make_tree([], [])
-        expected = Node("root")
+        expected = Node("report")
         self.assertEqual(expected, actual)
 
         json = [('niet', 'O', 1), ('kan', 'B-a', 1), ('niet', 'O', 1), ('dit', 'I-a', 1), ('niet', 'O', 1),

@@ -9,7 +9,6 @@ from client_package.model import Model
 
 from reporttree.label_node import LabelNode
 from reporttree.node import Node
-from client_package.tree_changes import BackChange, FrontChange
 
 
 class ViewTest(unittest.TestCase):

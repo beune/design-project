@@ -71,5 +71,3 @@ class ModelTest(unittest.TestCase):
         model.apply_back_changes()
         json_tree = view.generate_tree(model)
         self.assertEqual(change2, json_tree[4]['text'])
-
-

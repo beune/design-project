@@ -1,8 +1,6 @@
 """
 Imports
 """
-from typing import Callable
-
 import jsonpickle
 import requests
 from reporttree.node import Node
