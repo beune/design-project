@@ -1,5 +1,5 @@
 from typing import List, Tuple
-
+from json import JSONEncoder
 
 class Node:
     def __init__(self, category: str, text_prediction: Tuple[str, int] = (None, None), children: List['Node'] = None,
@@ -34,6 +34,11 @@ class Node:
 
     def is_corrected(self):
         return self.corr_text is not None
+
+    # subclass JSONEncoder
+    class NodeEncoder(JSONEncoder):
+        def default(self, o):
+            return o.__dict__
 
     # def recursive(self, call):
     #     for child in self:

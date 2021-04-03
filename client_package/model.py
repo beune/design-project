@@ -1,10 +1,12 @@
 """
 Imports
 """
+
 import jsonpickle
 import requests
 from reporttree.node import Node
 from reporttree.label_node import LabelNode
+import json
 
 # ENDPOINT = "https://docker.beune.dev/"
 from client_package.tree_changes import BackChange, FrontChange
@@ -96,9 +98,9 @@ class Model:
         Store the new_text, update the tree and notify the view.
         :param new_text: the new text.
         """
+        self.text = new_text
         if self.environment:
             self.view.show_loader(True)
-            self.text = new_text
             self.retrieve_tree()
             self.apply_back_changes()
             self.view.update(self)
@@ -110,6 +112,8 @@ class Model:
         :param new_environment: the new environment.
         """
         self.view.show_loader(True)
+        self.front_changes = {}
+        self.back_changes = {}
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
@@ -143,7 +147,9 @@ class Model:
         """
         Method used to store the current tree into the database
         """
-        data = {"jsonrep": "Teststring"}
+        jsonrep = json.dumps(self.tree, indent=4, cls=Node.NodeEncoder)
+        data = {"jsonrep": jsonrep}
+        node = Node(**json.loads(jsonrep))
         try:
             response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
             response.raise_for_status()
@@ -177,7 +183,7 @@ class Model:
         :param changed_type: Type of the change
         :param value: Value of the change
         """
-        node_identifier = identifier.strip("_value")
+        node_identifier = identifier.replace("_value", "")
         if changed_type in BACK:
             self.set_back_change(node_identifier, changed_type, value)
             self.apply_back_changes()
@@ -212,7 +218,7 @@ class Model:
         Reset all changes for a node
         :param identifier: identifier of either the node or leaf
         """
-        node_identifier = identifier.strip("_value")
+        node_identifier = identifier.replace("_value", "")
         if node_identifier in self.back_changes:
             self.back_changes.pop(node_identifier)
             self.apply_back_changes()

@@ -248,7 +248,7 @@
               window.eel.reset_node(this.currentNodeId);
             },
             deleteNodeText() {
-              this.set_change(this.currentNodeId, "text", "?");
+              this.set_change(this.currentNodeId, "label", "?");
             },
             ignoreWarning() {
               this.set_change(this.currentNodeId, "warning", false);

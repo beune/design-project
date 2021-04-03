@@ -1,8 +1,9 @@
+
 CREATE DATABASE IF NOT EXISTS db;
 USE db;
 CREATE TABLE IF NOT EXISTS reports (
     id INT UNSIGNED AUTO_INCREMENT primary key,
     environment TEXT,
-    tree_json VARCHAR(5000),
+    tree_json LONGTEXT,
     time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
