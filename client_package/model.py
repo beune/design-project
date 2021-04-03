@@ -10,6 +10,8 @@ from reporttree.label_node import LabelNode
 from client_package.tree_changes import BackChange, FrontChange
 
 ENDPOINT = "http://127.0.0.1:5000/"
+FRONT = ["text_warning", "label_warning"]
+BACK = ["label", "text"]
 
 
 class Model:
@@ -35,6 +37,7 @@ class Model:
         """
         Method used to apply changes relevant for the state of the reportstructure
         """
+
         def traverse(node: Node):
             """
 
@@ -44,6 +47,7 @@ class Model:
             for child in node:
                 traverse(child)
             self.apply_change(node)
+
         traverse(self.tree)
 
     def apply_change(self, node: Node):
@@ -166,18 +170,44 @@ class Model:
             for child in node.children:
                 self.create_identifiers(child)
 
-    def set_back_change(self, identifier: str, new_label: str):
+    def change(self, identifier, changed_type: str, value):
+        """
+        Method used to set a change
+        :param identifier: Identifier of the changed node
+        :param changed_type: Type of the change
+        :param value: Value of the change
+        """
+        iden = identifier.strip("_value")
+        if changed_type in BACK:
+            self.set_back_change(iden, changed_type, value)
+        else:
+            self.set_front_change(iden, changed_type, value)
+
+    def set_back_change(self, identifier: str, changed_type: str, value):
         """
         Method used to set changes relevant for the state of the tree
         :param identifier: identifier of the changed node
-        :param new_label: The new label for the changed node
+        :param changed_type: the type of change
+        :param value: the new value
         """
-        self.back_changes[identifier] = BackChange(new_label)
+        change = self.back_changes.setdefault(identifier, BackChange())
+        if hasattr(change, changed_type):
+            setattr(change, changed_type, value)
 
-    def set_front_change(self, identifier, warning: bool):
+    def set_front_change(self, identifier, changed_type: str, value):
         """
         Method used to set changes irrelevant for the state of the tree
         :param identifier: identifier of the changed node
-        :param warning: Whether the warning for the node needs to be on or off
+        :param changed_type: the type of change
+        :param value: the value of the change
         """
-        self.front_changes[identifier] = FrontChange(warning)
+        change = self.front_changes.setdefault(identifier, FrontChange())
+        if hasattr(change, changed_type):
+            setattr(change, changed_type, value)
+
+    def render_change(self):
+        """
+        Method used to render user changes
+        """
+        self.apply_back_changes()
+        self.view.update(self)

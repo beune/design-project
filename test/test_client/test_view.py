@@ -90,7 +90,7 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[4]["text"], leaf_a_label)  # pre change
         leaf_a_id = json_tree[3]["nodeId"]
         leaf_a_new_label = "circumscribed"
-        model.set_back_change(leaf_a_id, leaf_a_new_label)
+        model.change(leaf_a_id, "label", leaf_a_new_label)
         model.apply_back_changes()
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[4]["text"], leaf_a_new_label)  # post change
@@ -100,9 +100,9 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[4]["lowConfidence"], True)
         label_a_id = json_tree[3]["nodeId"]
         leaf_a_id = json_tree[4]["nodeId"]
-        model.set_front_change(label_a_id, False)
+        model.change(label_a_id, "text_warning", False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[3]["lowConfidence"], False)
-        model.set_front_change(leaf_a_id, False)
+        model.change(leaf_a_id, "label_warning", False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[4]["lowConfidence"], False)

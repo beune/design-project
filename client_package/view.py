@@ -32,8 +32,7 @@ def generate_tree(model: Model) -> list:
 
         identifier = model.tree_identifiers[id(node)]
         change = model.front_changes.get(identifier)
-        leafchange = model.front_changes.get(identifier + "_value")
-        nodes += make_node(node, identifier, parent_id, change, leafchange)
+        nodes += make_node(node, identifier, parent_id, change)
         for child in node:
             if child.category != "O":
                 traverse(child, identifier)
@@ -42,7 +41,7 @@ def generate_tree(model: Model) -> list:
     return nodes
 
 
-def make_node(node: Node, identifier: str, parent_id: str, change: FrontChange, leaf_change: FrontChange) -> list:
+def make_node(node: Node, identifier: str, parent_id: str, change: FrontChange) -> list:
     """
     Method used to create a jsontemplate from a node
     :param leaf_change: Possible change to the actual leaf if the node is a leaf
@@ -54,7 +53,7 @@ def make_node(node: Node, identifier: str, parent_id: str, change: FrontChange, 
     """
     tmp = json_node_template(node, identifier, parent_id, change, False)
     if node.is_leaf():
-        field = json_node_template(node, identifier + "_value", identifier, leaf_change, True)
+        field = json_node_template(node, identifier, identifier, change, True)
         return [tmp, field]
     return [tmp]
 
@@ -137,7 +136,7 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
     }
 
     if change:
-        apply_change(jsonnode, change)
+        apply_change(jsonnode, change, leaf)
     return jsonnode
 
 
@@ -199,14 +198,16 @@ def set_leaf_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     }
 
 
-def apply_change(node, change: FrontChange):
+def apply_change(node, change: FrontChange, leaf: bool):
     """
     Given json node (to be sent to front end), apply changes to it
     :param node: the json node (actually python dict) to which change should be applied
     :param change: the Change object, containing fields that should be altered in json node
     """
-    node['lowConfidence'] = change.warning
-
+    if leaf:
+        node['lowConfidence'] = change.label_warning
+    else:
+        node['lowConfidence'] = change.text_warning
 
 def initialize(model):
     """
