@@ -4,6 +4,7 @@ Imports
 import jsonpickle
 from flask import Flask, request
 from flask_restful import Api, abort
+from reporttree.node import Node
 
 from server_package import environment
 from server_package.db import DBConnector
@@ -65,11 +66,13 @@ def get(env_selected):
     """
     data = request.get_json()
 
-    # envs[environment].get(data)
-    if not data['text']:
+    if data['text'] is None:
         abort(404, message="Text needed for nlp processing")
     text = data["text"]
-    ret = jsonpickle.encode(environment.ENVS[env_selected].process(text))
+    if len(text) == 0:
+        ret = jsonpickle.encode(Node("root"))
+    else:
+        ret = jsonpickle.encode(environment.ENVS[env_selected].process(text))
     return {"Response": 200, "Data": ret}
 
 

@@ -5,7 +5,7 @@ import unittest
 
 from reporttree.node import Node
 
-from server_package.environments.mammo import make_tree, after, has_base, clean
+from server_package.environments.mammo import make_tree, after, has_base, clean, parse
 
 
 class MyTestCase(unittest.TestCase):

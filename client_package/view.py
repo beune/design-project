@@ -88,11 +88,14 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
 
     if not text:
         text = "?"
-    template = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
-
+    orgtemplate = "<div class=\"domStyle\"><span>{}</span></div>".format(text)
+    template = orgtemplate
     if percentage:
         low_confidence = percentage < 75
-        template += "<span class=\"confidence\">{}%</span>".format(percentage)  # generate confidence template
+        template = orgtemplate + "<span class=\"confidence\">{}%</span>".format(percentage)
+    if leaf:
+        if node.is_corrected():
+            template = orgtemplate + "</div></span><span class=\"material-icons\">mode</span>"
 
     if leaf:
         if node.is_speculative():
@@ -125,6 +128,7 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
         "alternatives": alternatives,
         "hint": hint,
         "text": text,
+        "isCorrected": node.is_corrected(),
         "speculative": node.is_speculative(),
         "backgroundColor": background_color,
         "textColor": text_color,

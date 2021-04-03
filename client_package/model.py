@@ -69,15 +69,13 @@ class Model:
         """
         Send the text to the server to retrieve the new tree.
         """
-        if len(self.text) > 0 and self.environment:
-            data = {"text": self.text}
-            path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
-            response = self.get_request(path, data)
-            if response:
-                self.tree = jsonpickle.decode(response.json()["Data"])
-                self.tree_identifiers = {}
-                self.create_identifiers(self.tree)
-                self.view.update(self)
+        data = {"text": self.text}
+        path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
+        response = self.get_request(path, data)
+        if response:
+            self.tree = jsonpickle.decode(response.json()["Data"])
+            self.tree_identifiers = {}
+            self.create_identifiers(self.tree)
 
     def retrieve_colours(self):
         """
@@ -94,10 +92,13 @@ class Model:
         Store the new_text, update the tree and notify the view.
         :param new_text: the new text.
         """
-        self.view.show_loader(True)
-        self.text = new_text
-        self.retrieve_tree()
-        self.view.show_loader(False)
+        if self.environment:
+            self.view.show_loader(True)
+            self.text = new_text
+            self.retrieve_tree()
+            self.apply_back_changes()
+            self.view.update(self)
+            self.view.show_loader(False)
 
     def set_environment(self, new_environment: str):
         """
@@ -108,6 +109,7 @@ class Model:
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
+        self.view.update(self)
         self.view.show_loader(False)
 
     def set_changes_map(self, tree_changes):
