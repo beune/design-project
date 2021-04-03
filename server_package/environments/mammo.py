@@ -190,7 +190,7 @@ def make_tree(base: List[str], items: list) -> Tuple[Node, List[str], float]:
             agg_text += child_agg_text
             sum_conf += child_sum_conf
 
-    category = clean(base[-1]) if base else 'root'
+    category = clean(base[-1]) if base else 'report'
     if not agg_text:
         return Node(category, children=children), agg_text, sum_conf
 
