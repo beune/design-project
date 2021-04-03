@@ -6,7 +6,7 @@ from model import Model
 import view
 from ui_automation import UIAutomation
 
-model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+model = Model(view)
 ui_automation = UIAutomation(model.set_text)
 
 
@@ -20,14 +20,23 @@ def update_environment(new_environment):
 
 
 @eel.expose
-def update_tree(identifier, changed_type, value):
+def set_back_change(identifier: str, new_label: str):
+    """
+    Method used to set a change relevant for the tree state
+    :param identifier: Identifier of the node that needs a changed label
+    :param new_label: The new label of the chosen node
+    """
+    model.set_back_change(identifier, new_label)
+
+
+@eel.expose
+def set_front_change(identifier, warning):
     """
     On tree update from front end, pass changes to model
     :param identifier: the node the change was applied to
-    :param changed_type: the type of change, i.e. what field needs to be updated
-    :param value: the value of the change field
+    :param warning: Whether the warning of the node needs to be on or off
     """
-    model.set_change(identifier, changed_type, value)
+    model.set_front_change(identifier, warning)
 
 
 @eel.expose

@@ -12,7 +12,7 @@ from reporttree.label_node import LabelNode
 class ModelTest(unittest.TestCase):
 
     def test_identifier_function(self):
-        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+        model = Model(view)
         node_1_label = 'mass'
         node_2_label = 'positive_finding'
         node_3_label = 'negative_finding'
@@ -34,7 +34,7 @@ class ModelTest(unittest.TestCase):
         self.assertEqual(len(identifiers), len(set(identifiers)))
 
     def test_set_change_function(self):
-        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+        model = Model(view)
 
         leaf_a_label = 'stervormige'
         leaf_a_label_confidence = 70

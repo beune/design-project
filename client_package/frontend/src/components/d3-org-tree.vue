@@ -249,11 +249,17 @@
             },
             editNodeLabel(){
               this.toggleEditNodeLabelDialog()
+              let parentNodeId = null;
               let label = this.chosenNodeLabelAlternative;
               this.changeLabel(this.currentNodeId, label);
               this.renderChart(this.treeData);
+              this.treeData.forEach((object) =>{
+                if (object.nodeId === this.currentNodeId) {
+                  parentNodeId = object.parentNodeId
+                }
+              });
               this.chosenNodeLabelAlternative = undefined;
-              window.eel.update_tree(this.currentNodeId, "label", label);
+              window.eel.set_back_change(parentNodeId, label);
               this.ignoreWarning(); //remove warning because of edit
             },
             undoNodeLabelEdit(){
@@ -273,8 +279,14 @@
             deleteNodeLabel(){
               this.changeLabel(this.currentNodeId, "?");
               this.renderChart(this.treeData);
-              window.eel.update_tree(this.currentNodeId, "label", "?");
-              window.eel.update_tree(this.currentNodeId, "warning", false); //remove warning because of edit
+              let parent_node = null
+              this.treeData.forEach((object) =>{
+                if (object.nodeId === this.currentNodeId) {
+                  parent_node = object.parentNodeId
+                }
+              });
+              window.eel.set_back_change(parent_node, "?");
+              window.eel.set_front_change(this.currentNodeId, false); //remove warning because of edit
             },
             ignoreWarning(){
               this.treeData.forEach((object) => {
@@ -283,7 +295,7 @@
                 }
               });
               this.renderChart(this.treeData)
-              window.eel.update_tree(this.currentNodeId, "warning", false);
+              window.eel.set_front_change(this.currentNodeId, false)
             },
             renderChart(data) {
               if (!this.chartReference) {

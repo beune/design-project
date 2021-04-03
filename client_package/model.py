@@ -19,16 +19,11 @@ class Model:
     Model contains the state of the client application.
     """
 
-    def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None],
-                 server_error: Callable[[str], None], show_loader: Callable[[bool], None]):
+    def __init__(self, viewrep):
         """
-        :param initialize_view: a callback function to initialize the view with initial data
-        :param update_view: a callback function to update the view when the model changed
+        Initializes the model
         """
-        self.initialize_view = initialize_view
-        self.update_view = update_view
-        self.server_error = server_error
-        self.show_loader = show_loader
+        self.view = viewrep
         self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
@@ -70,7 +65,7 @@ class Model:
         response = self.get_request(ENDPOINT)
         if response:
             self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
-            self.initialize_view(self)
+            self.view.initialize(self)
 
     def retrieve_tree(self):
         """
@@ -84,7 +79,7 @@ class Model:
                 self.tree = jsonpickle.decode(response.json()["Data"])
                 self.tree_identifiers = {}
                 self.create_identifiers(self.tree)
-                self.update_view(self)
+                self.view.update(self)
 
     def retrieve_colours(self):
         """
@@ -101,21 +96,21 @@ class Model:
         Store the new_text, update the tree and notify the view.
         :param new_text: the new text.
         """
-        self.show_loader(True)
+        self.view.show_loader(True)
         self.text = new_text
         self.retrieve_tree()
-        self.show_loader(False)
+        self.view.show_loader(False)
 
     def set_environment(self, new_environment: str):
         """
         Set the environment to new_environment, update the tree and notify the view.
         :param new_environment: the new environment.
         """
-        self.show_loader(True)
+        self.view.show_loader(True)
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
-        self.show_loader(False)
+        self.view.show_loader(False)
 
     def set_changes_map(self, tree_changes):
         """
@@ -135,9 +130,9 @@ class Model:
             response.raise_for_status()
             return response
         except requests.exceptions.ConnectionError as c:
-            self.server_error(c.args[0].args[0])
+            self.view.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
-            self.server_error(e.args[0])
+            self.view.server_error(e.args[0])
 
     #     TODO: CREATE JSONREPRESENTATION OF THE TREE WITH CHANGES
     def add_to_db(self):
@@ -149,9 +144,9 @@ class Model:
             response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as c:
-            self.server_error(c.args[0].args[0])
+            self.view.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
-            self.server_error(e.args[0])
+            self.view.server_error(e.args[0])
 
     def create_identifiers(self, node):
         """
@@ -179,11 +174,10 @@ class Model:
         """
         self.back_changes[identifier] = BackChange(new_label)
 
-    def set_front_change(self, identifier, text_warning: bool = None, label_warning: bool = None):
+    def set_front_change(self, identifier, warning: bool):
         """
         Method used to set changes irrelevant for the state of the tree
         :param identifier: identifier of the changed node
-        :param text_warning: new value for the text_warning of the changed node
-        :param label_warning: new value for the label_warning of the changed node
+        :param warning: Whether the warning for the node needs to be on or off
         """
-        self.front_changes[identifier] = FrontChange(text_warning, label_warning)
+        self.front_changes[identifier] = FrontChange(warning)

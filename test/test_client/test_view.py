@@ -15,7 +15,7 @@ from client_package.tree_changes import BackChange, FrontChange
 class ViewTest(unittest.TestCase):
 
     def test_build_json_tree(self):
-        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+        model = Model(view)
         leaf_a_label = 'stervormige'
         leaf_a_label_confidence = 70
         leaf_a_field = 'margin'
@@ -75,7 +75,7 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[7]["text"], spec_c_field)
 
     def test_apply_changes(self):
-        model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+        model = Model(view)
         leaf_a_label = 'stervormige'
         leaf_a_field = 'margin'
 
@@ -101,9 +101,9 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(json_tree[4]["lowConfidence"], True)
         label_a_id = json_tree[3]["nodeId"]
         leaf_a_id = json_tree[4]["nodeId"]
-        model.set_front_change(label_a_id, text_warning=False)
+        model.set_front_change(label_a_id, False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[3]["lowConfidence"], False)
-        model.set_front_change(label_a_id, text_warning=False, label_warning=False)
+        model.set_front_change(leaf_a_id, False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[4]["lowConfidence"], False)

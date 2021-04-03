@@ -15,6 +15,5 @@ class FrontChange:
     """
     Class used to store a change only relevant to the frontend
     """
-    def __init__(self, text_warning: bool, label_warning: bool):
-        self.pred_text_warning = text_warning
-        self.pred_label_warning = label_warning
+    def __init__(self, warning: bool):
+        self.warning = warning
