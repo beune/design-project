@@ -27,6 +27,9 @@ class LabelNode(Node):
                and self.label == other.label \
                and self.children == other.children
 
+    def is_corrected(self):
+        return super().is_corrected() or self.corr_label is not None
+
     @property
     def label(self):
         if self.corr_label:

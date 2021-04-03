@@ -31,6 +31,9 @@ class Node:
     def is_speculative(self):
         return self.text == None
 
+    def is_corrected(self):
+        return self.corr_text is not None
+
     # def recursive(self, call):
     #     for child in self:
     #         child.recursive(call)
