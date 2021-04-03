@@ -69,22 +69,21 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
     :param leaf:
     :return:
     """
-    hint = None
     alternatives = None
     low_confidence = False
-    percentage = None
     if leaf:
         if isinstance(node, LabelNode):
-            text = node.label
             alternatives = node.options
+            text = node.label
             percentage = node.pred_label_conf
+            hint = node.text
         else:
             text = node.text
-            percentage = node.pred_text_conf
-        hint = node.text
+            percentage = None
+            hint = None
     else:
-        percentage = node.pred_text_conf
         text = node.category
+        percentage = node.pred_text_conf
         hint = node.hint
 
     if not text:
