@@ -142,7 +142,6 @@ class Model:
         except requests.exceptions.RequestException as e:
             self.view.server_error(e.args[0])
 
-    #     TODO: CREATE JSONREPRESENTATION OF THE TREE WITH CHANGES
     def add_to_db(self):
         """
         Method used to store the current tree into the database
