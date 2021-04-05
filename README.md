@@ -38,7 +38,7 @@ The client side of our application can be compiled using the following commands 
 
 ```{.sh}
 $ .\venv\Scripts\activate
-$ cd client\frontend
+$ cd client_package\frontend
 $ npm install
 $ npm run build
 $ cd ..
