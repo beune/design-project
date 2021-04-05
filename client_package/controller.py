@@ -6,7 +6,7 @@ from model import Model
 import view
 from ui_automation import UIAutomation
 
-model = Model(view.initialize, view.update, view.server_error, view.show_loader)
+model = Model(view)
 ui_automation = UIAutomation(model.set_text)
 
 
@@ -20,14 +20,25 @@ def update_environment(new_environment):
 
 
 @eel.expose
-def update_tree(identifier, changed_type, value):
+def set_change(identifier: str, change: str, value):
     """
-    On tree update from front end, pass changes to model
-    :param identifier: the node the change was applied to
-    :param changed_type: the type of change, i.e. what field needs to be updated
-    :param value: the value of the change field
+    Apply a user change to the model
+    :param identifier: the identifier of the node
+    :param change: the changed attribute
+    :param value: the desired value
     """
-    model.set_change(identifier, changed_type, value)
+    model.change(identifier, change, value)
+    view.update(model)
+
+
+@eel.expose
+def reset_node(identifier: str):
+    """
+    Reset all changes applied to a node
+    :param identifier: the identifier of the node
+    """
+    model.reset_node(identifier)
+    view.update(model)
 
 
 @eel.expose
@@ -44,13 +55,12 @@ def copy_tree():
     Method used to copy the textual tree representation into notepad/G2Speech
     """
     tree_text = view.get_tree_text(model)
-    print(tree_text)
     ui_automation.write_tree_text(tree_text)
 
 
 def main():
     """
-    Main loop of the controller
+    Start the app and ui_automation and connect to the server.
     """
     eel.init('web')
     eel.start('index.html', block=False)

@@ -1,7 +1,8 @@
 """
 Imports
 """
-from reporttree.report_node import ReportNode
+from reporttree.node import Node
+
 from server_package.environments import hersen, mammo, mammo_fw
 from server_package.hinter import Hinter
 from typing import Callable
@@ -12,24 +13,24 @@ class Environment:
     Class for environments
     """
 
-    def __init__(self, name: str, parse: Callable, colours: dict, hinter: Hinter = None):
+    def __init__(self, name: str, parse: Callable[[str], Node], colours: dict, hinter: Hinter = None):
         """
         Initialize environment object
-        :param name: the name of the environment (as it is presented in front end)
-        :param colours:
-        :param parse:
-        :param hinter:
+        :param name: the name of the environment
+        :param parse: the text parser
+        :param colours: the colours for each category
+        :param hinter: an optional hinter
         """
         self.parse = parse
         self.colours = colours
         self.hinter = hinter
         self.name = name
 
-    def process(self, text: str) -> ReportNode:
+    def process(self, text: str) -> Node:
         """
-        Method used to process text
-        :param text:
-        :return:
+        Method used to process text and hint the resulting tree
+        :param text: the text that should be processed
+        :return: the resulting tree
         """
         processed = self.parse(text)
         if self.hinter:

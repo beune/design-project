@@ -26,7 +26,7 @@ class DBConnector:
         except Error as e:
             print(e)
 
-    def create(self, env: str, jsonrep: str) -> None:
+    def create(self, env: str, jsonrep: str):
         """
         Method which executes a given CREATE query on the current MySQL Database
         :param env: The current environment

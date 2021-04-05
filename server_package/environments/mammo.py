@@ -8,8 +8,8 @@ import os
 import xml.etree.ElementTree as ElementTree
 from xml.dom import minidom
 
-from reporttree.report_node import ReportNode
-from reporttree.report_leaf import TextLeaf, LabelLeaf
+from reporttree.label_node import LabelNode
+from reporttree.node import Node
 
 COLOURS = {
     "breast_composition": "#E71212",
@@ -64,13 +64,13 @@ EXPECTED_LEAVES = {
 }
 
 OPTIONS = {
-    "shape": {"oval", "round", "irregular"},
-    "margin": {"circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"},
-    "density": {"fat", "low", "equal", "high"},
-    "asymmetry": {"asymmetry", "global", "focal", "developing"},
-    "morphology": {"typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
-                                                                                                 "linear branching"},
-    "distribution": {"diffuse", "regional", "grouped", "linear", "segmental"},
+    "shape": ["oval", "round", "irregular"],
+    "margin": ["circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"],
+    "density": ["fat", "low", "equal", "high"],
+    "asymmetry": ["asymmetry", "global", "focal", "developing"],
+    "morphology": ["typically benign", "amorphous", "coarse heterogeneous", "fine pleiomorphic", "fine linear or fine "
+                                                                                                 "linear branching"],
+    "distribution": ["diffuse", "regional", "grouped", "linear", "segmental"],
 }
 
 
@@ -81,7 +81,7 @@ def parse(text):
     """
     make_input(text)
     run()
-    tree = make_tree([], get_list())
+    tree, _, _ = make_tree([], get_list())
     add_labels(tree)
     return tree
 
@@ -153,16 +153,17 @@ def clean(unfiltered: str) -> str:
     return unfiltered
 
 
-def make_tree(base: List[str], items: list):
+def make_tree(base: List[str], items: list) -> Tuple[Node, List[str], float]:
     """
-    Make a tree based on a linear list of items.
-    :param base:
+    Make a tree based on a linear list of items
+    :param base: the category of created Node
     :param items: items left for processing. Will be mutated!
-    :return:
+    :return: the created Node, the text of the node and the confidence
     """
     base_length = len(base)
     agg_text = []
     sum_conf = 0
+    count = 0
     children = []
     first = True
     # loop while items exist and the current label descents from the base (break statement)
@@ -179,33 +180,34 @@ def make_tree(base: List[str], items: list):
         if base_length == len(labels):
             agg_text.append(text)
             sum_conf += conf
+            count += 1
             items.pop(0)
         # the new label should not be ignored
         else:
             # make a new tree that has a base that goes one label deeper
-            child = make_tree(labels[:base_length + 1], items)
+            child, child_agg_text, child_sum_conf = make_tree(labels[:base_length + 1], items)
             children.append(child)
-        # the new label should be ignored
+            agg_text += child_agg_text
+            sum_conf += child_sum_conf
 
-    category = clean(base[-1]) if base else 'root'
-    # if text has been found create a Leaf, otherwise a node
-    if agg_text:
-        conf = sum_conf / len(agg_text)
-        text = ' '.join(agg_text)
-        if category in OPTIONS:
-            return LabelLeaf(category, OPTIONS[category], conf, text)
-        return TextLeaf(category, conf, ' '.join(agg_text))
-    return ReportNode(category, children)
+    category = clean(base[-1]) if base else 'report'
+    if not agg_text:
+        return Node(category, children=children), agg_text, sum_conf
+
+    pred_text = ' '.join(agg_text)
+    conf = int(sum_conf / len(agg_text) * 100)
+    if category in OPTIONS:
+        return LabelNode(category, OPTIONS[category], text_prediction=(pred_text, conf)), agg_text, sum_conf
+    return Node(category, text_prediction=(pred_text, conf), children=children), agg_text, sum_conf
 
 
-def add_labels(node: ReportNode):
+def add_labels(node: Node):
     """
     Add labels with confidences to the leaves in the tree.
     :type node: ReportNode
     """
     for child in node:
-        if isinstance(child, ReportNode):
-            add_labels(child)
-        elif isinstance(child, LabelLeaf) and child.field in OPTIONS:
-            child.label = child.text
-            child.label_conf = .7
+        if isinstance(child, LabelNode):
+            child.pred_label = child.text
+            child.pred_label_conf = 70
+        add_labels(child)

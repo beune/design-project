@@ -2,50 +2,51 @@
 imports
 """
 import unittest
+
+from reporttree.node import Node
+
 from server_package.environments.mammo import make_tree, after, has_base, clean
-from reporttree.report_leaf import TextLeaf
-from reporttree.report_node import ReportNode
 
 
 class MyTestCase(unittest.TestCase):
     def test_make_tree(self):
         json = [('dit', 'B-a', 1), ('is', 'I-a', 1), ('een', 'I-a', 1), ('test', 'I-a', 1)]
-        actual = make_tree([], json)
-        expected = TextLeaf('a', 1, "dit is een test")
-        self.assertIsInstance(actual, ReportNode)
-        self.assertEqual("root", actual.category)
+        actual, _, _ = make_tree([], json)
+        expected = Node('a', ("dit is een test", 100))
+        self.assertIsInstance(actual, Node)
+        self.assertEqual("report", actual.category)
         self.assertEqual(expected, actual.children[0])
 
         json = [('dit', 'B-a', 1), ('is', 'B-a', 1), ('een', 'B-a', 1), ('test', 'B-a', 1)]
-        actual = make_tree([], json)
+        actual, _, _ = make_tree([], json)
         self.assertEqual(4, len(actual.children))
 
-        actual = make_tree([], [])
-        expected = ReportNode("root")
+        actual, _, _ = make_tree([], [])
+        expected = Node("report")
         self.assertEqual(expected, actual)
 
         json = [('niet', 'O', 1), ('kan', 'B-a', 1), ('niet', 'O', 1), ('dit', 'I-a', 1), ('niet', 'O', 1),
                 ('ook?', 'I-a', 1), ('niet', 'O', 1)]
-        actual = make_tree([], json)
-        unexpected = TextLeaf('a', 1.0, "kan dit ook?")
+        actual, _, _ = make_tree([], json)
+        unexpected = Node('a', ("kan dit ook?", 100))
         self.assertNotEqual(unexpected, actual.children[0])
 
         json = [('nested', 'B-a/B-b/B-c', 1), ('attribute', 'I-a/I-b/B-d', 1), ('too', 'I-a/I-e', 1)]
-        actual = make_tree(["B-a"], json)
-        expected = ReportNode('a', [
-            ReportNode('b', [TextLeaf('c', 1, "nested"), TextLeaf('d', 1, "attribute")]),
-            TextLeaf('e', 1, "too")
+        actual, _, _ = make_tree(["B-a"], json)
+        expected = Node('a', ("nested attribute too", 100), children=[
+            Node('b', ("nested attribute", 100), children=[Node('c', ("nested", 100)), Node('d', ("attribute", 100))]),
+            Node('e', ("too", 100))
         ])
         self.assertEqual(expected, actual)
 
     def test_other(self):
         json = [('wat?', 'B-a/O', 1), ('dit', 'I-a/B-b', 1), ('is', 'I-a/I-b', 1),
                 ('een', 'I-a/O', 1), ('test', 'I-a/O', 1)]
-        actual = make_tree(["B-a"], json)
-        expected = ReportNode('a', [
-            TextLeaf('O', 1, "wat?"),
-            TextLeaf('b', 1, "dit is"),
-            TextLeaf('O', 1, "een test"),
+        actual, _, _ = make_tree(["B-a"], json)
+        expected = Node('a', ("wat? dit is een test", 100), children=[
+            Node('O', ("wat?", 100)),
+            Node('b', ("dit is", 100)),
+            Node('O', ("een test", 100))
         ])
         self.assertEqual(expected, actual)
 

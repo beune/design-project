@@ -1,9 +1,10 @@
 """
 Imports
 """
-from reporttree.report_leaf import TextLeaf, LabelLeaf
-from reporttree.report_node import ReportNode
-from typing import List, Dict, Set
+from typing import List, Dict
+
+from reporttree.label_node import LabelNode
+from reporttree.node import Node
 
 
 class Hinter:
@@ -11,35 +12,26 @@ class Hinter:
     Generic Class for addition of hints to NLP outcome
     """
 
-    def __init__(self, expected_leaves: Dict[str, List[str]], labels: Dict[str, Set[str]], hints: Dict[str, str]):
+    def __init__(self, expected_leaves: Dict[str, List[str]], labels: Dict[str, List[str]], hints: Dict[str, str]):
         self.expected_leaves = expected_leaves
         self.labels = labels
         self.hints = hints
 
-    def hint(self, node: ReportNode):
+    def hint(self, node: Node):
         """
         Method used recursively to add hints and expectations to nodes in the node structure
         :param node: The node for which the hints and expectations should be added
         """
         if node.category in self.expected_leaves:
-            found = [child.field for child in node if isinstance(child, TextLeaf)]
-            for field in self.expected_leaves[node.category]:
-                if field not in found:
-                    if field in self.labels:
-                        leaf = LabelLeaf(field, self.labels[field])
+            found = [child.category for child in node]
+            for category in self.expected_leaves[node.category]:
+                if category not in found:
+                    if category in self.labels:
+                        leaf = LabelNode(category, self.labels[category])
                     else:
-                        leaf = TextLeaf(field)
+                        leaf = Node(category)
                     node.add_child(leaf)
         for child in node:
-            if isinstance(child, ReportNode):
-                self.hint(child)
-            elif isinstance(child, TextLeaf):
-                self.hint_leaf(child)
-
-    def hint_leaf(self, leaf: TextLeaf):
-        """
-        Method used to add hints to leafs
-        :param leaf: The leaf for which the hint needs to be added
-        """
-        if leaf.field in self.hints:
-            leaf.hint = self.hints[leaf.field]
+            if child.category in self.hints:
+                child.hint = self.hints[child.category]
+            self.hint(child)

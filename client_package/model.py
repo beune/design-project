@@ -1,17 +1,16 @@
 """
 Imports
 """
-from typing import Callable
-
 import jsonpickle
 import requests
-from reporttree.report_node import ReportNode
-from reporttree.report_leaf import TextLeaf
+from reporttree.node import Node
+from reporttree.label_node import LabelNode
+from client_package.tree_changes import BackChange, FrontChange
 
-# ENDPOINT = "https://docker.beune.dev/"
-from client_package.tree_changes import Change
-
-ENDPOINT = "http://127.0.0.1:5000/"
+# SERVER = "https://docker.beune.de/"
+SERVER = "http://127.0.0.1:5000/"
+FRONT = ["warning"]
+BACK = ["label", "text"]
 
 
 class Model:
@@ -19,53 +18,76 @@ class Model:
     Model contains the state of the client application.
     """
 
-    def __init__(self, initialize_view: Callable[['Model'], None], update_view: Callable[['Model'], None],
-                 server_error: Callable[[str], None], show_loader: Callable[[bool], None]):
-        """
-        :param initialize_view: a callback function to initialize the view with initial data
-        :param update_view: a callback function to update the view when the model changed
-        """
-        self.initialize_view = initialize_view
-        self.update_view = update_view
-        self.server_error = server_error
-        self.show_loader = show_loader
+    def __init__(self, view):
+        self.view = view
         self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
         self.colours = {}
-        self.tree = ReportNode("Root")
+        self.tree = Node("report")
         self.tree_identifiers = {}
-        self.tree_changes = {}
+        self.back_changes = {}
+        self.front_changes = {}
+
+    def get_base_endpoint(self) -> str:
+        """
+        Method for retrieving the current url
+        :return: SERVER url with the current environment
+        """
+        return SERVER + "env/" + self.environments[self.environment] + "/"
+
+    def apply_back_changes(self):
+        """
+        Method used to apply changes relevant for the state of the report structure
+        """
+
+        def traverse(node: Node):
+            """
+            Recursively apply the changes to the nodes
+            :param node: current node
+            """
+            for child in node:
+                traverse(child)
+            self.apply_change(node)
+
+        traverse(self.tree)
+
+    def apply_change(self, node: Node):
+        """
+        Method used to apply a BackChange to a node
+        :param node: the node which needs to be changed
+        """
+        change = self.back_changes.get(self.tree_identifiers[id(node)], BackChange())
+        node.corr_text = change.text
+        if isinstance(node, LabelNode):
+            node.corr_label = change.label
 
     def retrieve_initial_data(self):
         """
         Retrieve initial data, i.e. data from 'home' endpoint, from the server
         """
-        response = self.get_request(ENDPOINT)
+        response = self.get_request(SERVER)
         if response:
-            self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
-            self.initialize_view(self)
+            self.environments = response.json()['Data']
+            self.view.initialize(self)
 
     def retrieve_tree(self):
         """
         Send the text to the server to retrieve the new tree.
         """
-        if len(self.text) > 0 and self.environment:
-            data = {"text": self.text}
-            path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
-            response = self.get_request(path, data)
-            if response:
-                self.tree = jsonpickle.decode(response.json()["Data"])
-                self.tree_identifiers = {}
-                self.create_identifiers(self.tree)
-                self.update_view(self)
+        data = {"text": self.text}
+        response = self.get_request(self.get_base_endpoint(), data)
+        if response:
+            self.tree = jsonpickle.decode(response.json()["Data"])
+            self.tree_identifiers = {}
+            self.create_identifiers(self.tree)
 
     def retrieve_colours(self):
         """
         Method used to retrieve the coloring scheme for the environment
         """
         if self.environment:
-            path = ENDPOINT + "env/" + self.environments[self.environment] + "/colours"
+            path = self.get_base_endpoint() + "colours"
             response = self.get_request(path)
             if response:
                 self.colours = jsonpickle.decode(response.json()["Data"])
@@ -75,21 +97,27 @@ class Model:
         Store the new_text, update the tree and notify the view.
         :param new_text: the new text.
         """
-        self.show_loader(True)
         self.text = new_text
-        self.retrieve_tree()
-        self.show_loader(False)
+        if self.environment:
+            self.view.show_loader(True)
+            self.retrieve_tree()
+            self.apply_back_changes()
+            self.view.update(self)
+            self.view.show_loader(False)
 
     def set_environment(self, new_environment: str):
         """
         Set the environment to new_environment, update the tree and notify the view.
         :param new_environment: the new environment.
         """
-        self.show_loader(True)
+        self.view.show_loader(True)
+        self.front_changes = {}
+        self.back_changes = {}
         self.environment = new_environment
         self.retrieve_colours()
         self.retrieve_tree()
-        self.show_loader(False)
+        self.view.update(self)
+        self.view.show_loader(False)
 
     def set_changes_map(self, tree_changes):
         """
@@ -109,29 +137,30 @@ class Model:
             response.raise_for_status()
             return response
         except requests.exceptions.ConnectionError as c:
-            self.server_error(c.args[0].args[0])
+            self.view.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
-            self.server_error(e.args[0])
+            self.view.server_error(e.args[0])
 
-    #     TODO: CREATE JSONREPRESENTATION OF THE TREE WITH CHANGES
     def add_to_db(self):
         """
         Method used to store the current tree into the database
         """
-        data = {"jsonrep": "Teststring"}
+        jsonrep = jsonpickle.encode(self.tree)
+        data = {"jsonrep": jsonrep}
         try:
-            response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
+            response = requests.post(self.get_base_endpoint() + "db", json=data)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as c:
-            self.server_error(c.args[0].args[0])
+            self.view.server_error(c.args[0].args[0])
         except requests.exceptions.RequestException as e:
-            self.server_error(e.args[0])
+            self.view.server_error(e.args[0])
 
     def create_identifiers(self, node):
         """
-        Recursively iterates through the given tree, creating
+        Recursively iterates through the given tree, creating identifiers
+        :param node The root of the tree
         """
-        identifier = node.field if isinstance(node, TextLeaf) else node.category
+        identifier = node.category
         if identifier not in self.tree_identifiers.values():
             self.tree_identifiers[id(node)] = identifier
         else:
@@ -140,27 +169,54 @@ class Model:
                 distinguisher += 1
             self.tree_identifiers[id(node)] = identifier + str(distinguisher)
 
-        if isinstance(node, ReportNode):
+        if not node.is_leaf():
             for child in node.children:
                 self.create_identifiers(child)
 
-    def set_change(self, identifier, changed_type, value):
+    def change(self, identifier, changed_type: str, value):
         """
-        Update tree changes map with change
-        :param identifier: identifier of node that change belongs to
-        :param changed_type: what kind of change, corresponds with attribute name in Change class
-        :param value: the value of the change
+        Method used to set a change
+        :param identifier: Identifier of the changed node
+        :param changed_type: Type of the change
+        :param value: Value of the change
         """
-        change = self.tree_changes.setdefault(identifier, Change())
+        node_identifier = identifier.replace("_value", "")
+        if changed_type in BACK:
+            self.set_back_change(node_identifier, changed_type, value)
+            self.apply_back_changes()
+        elif changed_type in FRONT:
+            self.set_front_change(identifier, changed_type, value)
+
+    def set_back_change(self, identifier: str, changed_type: str, value):
+        """
+        Method used to set changes relevant for the state of the tree
+        :param identifier: identifier of the changed node
+        :param changed_type: the type of change
+        :param value: the new value
+        """
+        change = self.back_changes.setdefault(identifier, BackChange())
         if hasattr(change, changed_type):
             setattr(change, changed_type, value)
 
-    def get_change(self, node):
+    def set_front_change(self, identifier, changed_type: str, value):
         """
-        Method used to get a change for a certain node
+        Method used to set changes irrelevant for the state of the tree
+        :param identifier: identifier of the changed node
+        :param changed_type: the type of change
+        :param value: the value of the change
         """
-        identifier = self.tree_identifiers[id(node)]
-        if isinstance(node, ReportNode):
-            return self.tree_changes.get(identifier), None
-        else:
-            return self.tree_changes.get(identifier), self.tree_changes.get(identifier + "_value")
+        change = self.front_changes.setdefault(identifier, FrontChange())
+        if hasattr(change, changed_type):
+            setattr(change, changed_type, value)
+
+    def reset_node(self, identifier: str):
+        """
+        Reset all changes for a node
+        :param identifier: identifier of either the node or leaf
+        """
+        node_identifier = identifier.replace("_value", "")
+        if node_identifier in self.back_changes:
+            self.back_changes.pop(node_identifier)
+            self.apply_back_changes()
+        if identifier in self.front_changes:
+            self.front_changes.pop(identifier)

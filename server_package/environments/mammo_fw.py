@@ -2,8 +2,8 @@
 File used to connect Shreyasi's python2 algorithm to python 3 and labels with FuzzyWuzzy
 """
 from fuzzywuzzy import process
-from reporttree.report_leaf import LabelLeaf
-from reporttree.report_node import ReportNode
+from reporttree.label_node import LabelNode
+from reporttree.node import Node
 
 import server_package.environments.mammo as mammo
 
@@ -16,26 +16,24 @@ COLOURS = mammo.COLOURS
 EXPECTED_LEAVES = mammo.EXPECTED_LEAVES
 
 
-def parse(text):
+def parse(text) -> Node:
     """
     Method used to process the new incoming text
     :param text: The new text of the model
     """
     mammo.make_input(text)
     mammo.run()
-    tree = mammo.make_tree([], mammo.get_list())
+    tree, _, _ = mammo.make_tree([], mammo.get_list())
     add_labels(tree)
     return tree
 
 
-def add_labels(node: ReportNode):
+def add_labels(node: Node):
     """
     Add labels with confidences to the leaves in the tree using FuzzyWuzzy.
-    :type node: ReportNode
+    :type node: current node which is labeled
     """
     for child in node:
-        if isinstance(child, ReportNode):
-            add_labels(child)
-        elif isinstance(child, LabelLeaf) and child.field in OPTIONS:
-            child.label, percentage = process.extractOne(child.text, OPTIONS[child.field])
-            child.label_conf = percentage/100
+        if isinstance(child, LabelNode) and child.category in OPTIONS:
+            child.pred_label, child.pred_label_conf = process.extractOne(child.text, OPTIONS[child.category])
+        add_labels(child)
