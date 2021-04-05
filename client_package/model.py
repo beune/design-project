@@ -6,7 +6,6 @@ import jsonpickle
 import requests
 from reporttree.node import Node
 from reporttree.label_node import LabelNode
-import json
 
 # ENDPOINT = "https://docker.beune.dev/"
 from client_package.tree_changes import BackChange, FrontChange
