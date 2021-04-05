@@ -34,16 +34,6 @@ class Node:
     def is_corrected(self):
         return self.corr_text is not None
 
-    # subclass JSONEncoder
-    class NodeEncoder(JSONEncoder):
-        def default(self, o):
-            return o.__dict__
-
-    # def recursive(self, call):
-    #     for child in self:
-    #         child.recursive(call)
-    #     call(self)
-
     @property
     def text(self) -> str:
         if self.corr_text:

@@ -31,10 +31,6 @@ class LabelNode(Node):
     def is_corrected(self):
         return super().is_corrected() or self.corr_label is not None
 
-    class LabelNodeEncoder(JSONEncoder):
-        def default(self, o):
-            return o.__dict__
-
     @property
     def label(self):
         if self.corr_label:
