@@ -1,6 +1,5 @@
 from typing import List, Tuple
 from reporttree.node import Node
-from json import JSONEncoder
 
 
 class LabelNode(Node):

@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from json import JSONEncoder
 
 class Node:
     def __init__(self, category: str, text_prediction: Tuple[str, int] = (None, None), children: List['Node'] = None,
