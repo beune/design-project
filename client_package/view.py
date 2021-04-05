@@ -20,7 +20,7 @@ def generate_tree(model: Model) -> list:
     Function that traverses through the given ReportNode, and uses the make_node function to create nodes and leaves
     in the right format for the UI.
     :param model The model of our application
-    :return: Structured data for the front end in Json
+    :return: front-end representation of the tree
     """
     nodes = []
 
@@ -45,11 +45,11 @@ def generate_tree(model: Model) -> list:
 
 def make_node(node: Node, identifier: str, parent_id: str, model: Model) -> list:
     """
-    Method used to create a jsontemplate from a node
+    Method used to create a json template from a node
     :param node: The node that needs to be converted into a json representation
     :param identifier: The identifier of the node
     :param parent_id: The id of the parent of the node
-    :param model:
+    :param model: The current state of the program
     :return: list of json representations of the node
     """
     change = model.front_changes.get(identifier, FrontChange())
@@ -62,14 +62,14 @@ def make_node(node: Node, identifier: str, parent_id: str, model: Model) -> list
     return [tmp]
 
 
-def json_node_template(node: Node, identifier: str, parent_id: str, change: FrontChange, leaf: bool):
+def json_node_template(node: Node, identifier: str, parent_id: str, change: FrontChange, leaf: bool) -> dict:
     """
     Method used to create a json template of any node in the tree
     :param node: The node for which
-    :param identifier:
-    :param parent_id:
-    :param change:
-    :param leaf:
+    :param identifier: The identifier of the node
+    :param parent_id: The identifier of the parent
+    :param change: the frontend changes for the node
+    :param leaf: whether the node is a the end of a branch
     :return:
     """
     alternatives = None
@@ -128,11 +128,11 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
 
 def set_node_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     """
-    Method used to create the text object with colour for nodes
+    Method used to create the coloured text objects
     :param node: The ReportNode which needs to be formed into the right format for the frontend
     :param parent_label: The label of the parent of the node
-    :param colours: The colourdictionary for the current environment
-    :return: Returns the object generated out the node for the frontend
+    :param colours: The colour dictionary for the current environment
+    :return: Returns the object generated out the node for the frontend or None if the node should be ignored
     """
     children = []
     label = parent_label + node.category
@@ -222,7 +222,6 @@ def server_error(mess: str):
     """
     Method used to display an error in the connection to the server
     :param mess: The message of the server error
-    # :param mess: The accompanying error message
     """
     eel.show_server_error(mess)
 

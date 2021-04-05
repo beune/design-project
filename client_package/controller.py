@@ -55,13 +55,12 @@ def copy_tree():
     Method used to copy the textual tree representation into notepad/G2Speech
     """
     tree_text = view.get_tree_text(model)
-    print(tree_text)
     ui_automation.write_tree_text(tree_text)
 
 
 def main():
     """
-    Main loop of the controller
+    Start the app and ui_automation and connect to the server.
     """
     eel.init('web')
     eel.start('index.html', block=False)

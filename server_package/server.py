@@ -16,7 +16,7 @@ db = None
 
 def run():
     """
-    Method used to run the server
+    Run the server
     """
     app.run(port=5000, host="0.0.0.0")
 
@@ -35,7 +35,7 @@ def home():
 def add_to_db(env_selected):
     """
     Method used to create new records in the MySQL database, sets the environment
-     and Json representation of the generated tree
+    and Json representation of the generated tree
     :param env_selected: The current environment
     """
     global db

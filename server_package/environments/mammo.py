@@ -155,10 +155,10 @@ def clean(unfiltered: str) -> str:
 
 def make_tree(base: List[str], items: list) -> Tuple[Node, List[str], float]:
     """
-    Make a tree based on a linear list of items.
-    :param base:
+    Make a tree based on a linear list of items
+    :param base: the category of created Node
     :param items: items left for processing. Will be mutated!
-    :return:
+    :return: the created Node, the text of the node and the confidence
     """
     base_length = len(base)
     agg_text = []

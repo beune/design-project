@@ -8,14 +8,15 @@ EXPECTED = {}
 OPTIONS = {}
 HINTS = {}
 
-COLOURS = {"size": "#E71212",
-           "Neurofibromatosis II": "#E77C12",
-           "margin": "#EDED12",
-           "location": "#13EBEB",
-           "morphology": "#1313EB",
-           "associated_features": "#D981D9",
-           "distribution": "#81ADD9",
-           }
+COLOURS = {
+    "size": "#E71212",
+    "Neurofibromatosis II": "#E77C12",
+    "margin": "#EDED12",
+    "location": "#13EBEB",
+    "morphology": "#1313EB",
+    "associated_features": "#D981D9",
+    "distribution": "#81ADD9",
+}
 
 
 def get_colours() -> dict:

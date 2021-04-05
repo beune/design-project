@@ -1,16 +1,14 @@
 """
 Imports
 """
-
 import jsonpickle
 import requests
 from reporttree.node import Node
 from reporttree.label_node import LabelNode
-
-# ENDPOINT = "https://docker.beune.dev/"
 from client_package.tree_changes import BackChange, FrontChange
 
-ENDPOINT = "http://127.0.0.1:5000/"
+# SERVER = "https://docker.beune.de/"
+SERVER = "http://127.0.0.1:5000/"
 FRONT = ["warning"]
 BACK = ["label", "text"]
 
@@ -20,11 +18,8 @@ class Model:
     Model contains the state of the client application.
     """
 
-    def __init__(self, viewrep):
-        """
-        Initializes the model
-        """
-        self.view = viewrep
+    def __init__(self, view):
+        self.view = view
         self.environments = {}  # Dictionary for environments {name: endpoint}
         self.environment = None
         self.text = ""
@@ -34,16 +29,22 @@ class Model:
         self.back_changes = {}
         self.front_changes = {}
 
+    def get_base_endpoint(self) -> str:
+        """
+        Method for retrieving the current url
+        :return: SERVER url with the current environment
+        """
+        return SERVER + "env/" + self.environments[self.environment] + "/"
+
     def apply_back_changes(self):
         """
-        Method used to apply changes relevant for the state of the reportstructure
+        Method used to apply changes relevant for the state of the report structure
         """
 
         def traverse(node: Node):
             """
-
-            :param node:
-            :return:
+            Recursively apply the changes to the nodes
+            :param node: current node
             """
             for child in node:
                 traverse(child)
@@ -53,8 +54,8 @@ class Model:
 
     def apply_change(self, node: Node):
         """
-        Method used to apply a BackChange
-        :param node: The node which needs to be changed
+        Method used to apply a BackChange to a node
+        :param node: the node which needs to be changed
         """
         change = self.back_changes.get(self.tree_identifiers[id(node)], BackChange())
         node.corr_text = change.text
@@ -65,9 +66,9 @@ class Model:
         """
         Retrieve initial data, i.e. data from 'home' endpoint, from the server
         """
-        response = self.get_request(ENDPOINT)
+        response = self.get_request(SERVER)
         if response:
-            self.environments = response.json()['Data']  # get environments. Form: {name: endpoint}
+            self.environments = response.json()['Data']
             self.view.initialize(self)
 
     def retrieve_tree(self):
@@ -75,8 +76,7 @@ class Model:
         Send the text to the server to retrieve the new tree.
         """
         data = {"text": self.text}
-        path = ENDPOINT + "env/" + self.environments[self.environment] + "/"
-        response = self.get_request(path, data)
+        response = self.get_request(self.get_base_endpoint(), data)
         if response:
             self.tree = jsonpickle.decode(response.json()["Data"])
             self.tree_identifiers = {}
@@ -87,7 +87,7 @@ class Model:
         Method used to retrieve the coloring scheme for the environment
         """
         if self.environment:
-            path = ENDPOINT + "env/" + self.environments[self.environment] + "/colours"
+            path = self.get_base_endpoint() + "colours"
             response = self.get_request(path)
             if response:
                 self.colours = jsonpickle.decode(response.json()["Data"])
@@ -148,7 +148,7 @@ class Model:
         jsonrep = jsonpickle.encode(self.tree)
         data = {"jsonrep": jsonrep}
         try:
-            response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
+            response = requests.post(self.get_base_endpoint() + "db", json=data)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as c:
             self.view.server_error(c.args[0].args[0])

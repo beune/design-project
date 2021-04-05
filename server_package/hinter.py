@@ -1,7 +1,7 @@
 """
 Imports
 """
-from typing import List, Dict, Set
+from typing import List, Dict
 
 from reporttree.label_node import LabelNode
 from reporttree.node import Node
@@ -12,7 +12,7 @@ class Hinter:
     Generic Class for addition of hints to NLP outcome
     """
 
-    def __init__(self, expected_leaves: Dict[str, List[str]], labels: Dict[str, Set[str]], hints: Dict[str, str]):
+    def __init__(self, expected_leaves: Dict[str, List[str]], labels: Dict[str, List[str]], hints: Dict[str, str]):
         self.expected_leaves = expected_leaves
         self.labels = labels
         self.hints = hints

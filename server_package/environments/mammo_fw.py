@@ -28,10 +28,10 @@ def parse(text) -> Node:
     return tree
 
 
-def add_labels(node: Node) -> None:
+def add_labels(node: Node):
     """
     Add labels with confidences to the leaves in the tree using FuzzyWuzzy.
-    :type node: ReportNode
+    :type node: current node which is labeled
     """
     for child in node:
         if isinstance(child, LabelNode) and child.category in OPTIONS:

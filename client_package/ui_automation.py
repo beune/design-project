@@ -20,7 +20,7 @@ class UIAutomation:
         self.textfield = None
         self.text = ""
 
-    def updateg2(self):
+    def update(self):
         """
         Updates the text to the new text in the G2 speech window (Notepad for now)
         """
@@ -62,9 +62,8 @@ class UIAutomation:
 
     def start(self):
         """
-        Starts the thread which continuously checks the G2 speech
-        window for new text
+        Starts the thread which continuously checks the G2 speech window for new text
         """
         self.app = Application().start("notepad.exe")
         self.textfield = self.app.UntitledNotepad.Edit
-        self.updateg2()
+        self.update()
