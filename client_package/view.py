@@ -11,6 +11,9 @@ from client_package.tree_changes import FrontChange
 
 FALLBACK_COLOUR = "#ADADAD"
 
+COLOUR_DICT = {True: {True: ["#E6BEBC"], False: ["#EF7104"]},   # MAPS IS_LEAF -> IS_SPECULATIVE -> COLOR
+               False: {True: ["#ADCBF8"], False: ["#5A9AFA"]}}
+
 
 def generate_tree(model: Model) -> list:
     """"
@@ -98,26 +101,8 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
         if node.is_corrected():
             template = orgtemplate + "</div></span><span class=\"material-icons\">mode</span>"
 
-    if leaf:
-        if node.is_speculative():
-            background_color = "#E6BEBC"
-            outline_color = "#E6BEBC"
-            text_color = "#FFFFFF"
-        else:
-            background_color = "#EF7104"
-            outline_color = "#EF7104"
-            text_color = "#FFFFFF"
-
-    else:
-        if node.is_speculative():
-            background_color = "#ADCBF8"
-            outline_color = "#ADCBF8"
-            text_color = "#FFFFFF"
-
-        else:
-            background_color = "#5A9AFA"
-            outline_color = "#5A9AFA"
-            text_color = "#FFFFFF"
+    background_color = COLOUR_DICT[leaf][node.is_speculative()]
+    outline_color = background_color
 
     jsonnode = {
         "nodeId": identifier,
@@ -132,7 +117,7 @@ def json_node_template(node: Node, identifier: str, parent_id: str, change: Fron
         "isCorrected": node.is_corrected(),
         "speculative": node.is_speculative(),
         "backgroundColor": background_color,
-        "textColor": text_color,
+        "textColor": "#FFFFFF",
         "outlineColor": outline_color,
         "leaf": leaf,
     }
