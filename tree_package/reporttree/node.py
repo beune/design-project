@@ -8,7 +8,6 @@ class Node:
 
         self.pred_text, self.pred_text_conf = text_prediction
         self.corr_text: str = None
-        self.var: int = None
         self.children = [] if children is None else children
 
         self.hint = hint
