@@ -146,7 +146,7 @@ class Model:
         """
         Method used to store the current tree into the database
         """
-        jsonrep = json.dumps(self.tree, indent=4, cls=Node.NodeEncoder)
+        jsonrep = jsonpickle.encode(self.tree)
         data = {"jsonrep": jsonrep}
         try:
             response = requests.post(ENDPOINT + "env/" + self.environments[self.environment] + "/db", json=data)
