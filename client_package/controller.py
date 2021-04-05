@@ -28,6 +28,7 @@ def set_change(identifier: str, change: str, value):
     :param value: the desired value
     """
     model.change(identifier, change, value)
+    view.update(model)
 
 
 @eel.expose
@@ -37,6 +38,7 @@ def reset_node(identifier: str):
     :param identifier: the identifier of the node
     """
     model.reset_node(identifier)
+    view.update(model)
 
 
 @eel.expose

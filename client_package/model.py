@@ -187,7 +187,6 @@ class Model:
             self.apply_back_changes()
         elif changed_type in FRONT:
             self.set_front_change(identifier, changed_type, value)
-        self.view.update(self)
 
     def set_back_change(self, identifier: str, changed_type: str, value):
         """
@@ -222,4 +221,3 @@ class Model:
             self.apply_back_changes()
         if identifier in self.front_changes:
             self.front_changes.pop(identifier)
-        self.view.update(self)
