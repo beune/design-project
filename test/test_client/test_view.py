@@ -97,12 +97,12 @@ class ViewTest(unittest.TestCase):
 
         # Test ignore warning
         self.assertEqual(json_tree[3]["lowConfidence"], True)  # pre change
-        self.assertEqual(json_tree[4]["lowConfidence"], True)
+        self.assertEqual(json_tree[4]["lowConfidence"], False)  # false because of edit
         label_a_id = json_tree[3]["nodeId"]
         leaf_a_id = json_tree[4]["nodeId"]
-        model.change(label_a_id, "text_warning", False)
+        model.change(label_a_id, "warning", False)
         json_tree = view.generate_tree(model)
         self.assertEqual(json_tree[3]["lowConfidence"], False)
-        model.change(leaf_a_id, "label_warning", False)
+        model.change(leaf_a_id, "warning", True)
         json_tree = view.generate_tree(model)
-        self.assertEqual(json_tree[4]["lowConfidence"], False)
+        self.assertEqual(json_tree[4]["lowConfidence"], True)
