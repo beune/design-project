@@ -147,13 +147,16 @@ class Model:
         """
         jsonrep = jsonpickle.encode(self.tree)
         data = {"jsonrep": jsonrep}
-        try:
-            response = requests.post(self.get_base_endpoint() + "db", json=data)
-            response.raise_for_status()
-        except requests.exceptions.ConnectionError as c:
-            self.view.server_error(c.args[0].args[0])
-        except requests.exceptions.RequestException as e:
-            self.view.server_error(e.args[0])
+        if not self.environment:
+            self.view.server_error("No environment has been selected")
+        else:
+            try:
+                response = requests.post(self.get_base_endpoint() + "db", json=data)
+                response.raise_for_status()
+            except requests.exceptions.ConnectionError as c:
+                self.view.server_error(c.args[0].args[0])
+            except requests.exceptions.RequestException as e:
+                self.view.server_error(e.args[0])
 
     def create_identifiers(self, node):
         """
