@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 
 class Node:
-    def __init__(self, category: str, text_prediction: Tuple[str, int] = (None, None), children: List['Node'] = None,
+    def __init__(self, path: List[str], text_prediction: Tuple[str, int] = (None, None), children: List['Node'] = None,
                  hint: str = None):
         """
         Constructor for LabelNode
@@ -12,8 +12,8 @@ class Node:
         :param children: The children of this Node
         :param hint: Hint for this Node
         """
-        self.category = category
-
+        self.__path = path
+        self.__category = path[-1]
         self.pred_text, self.pred_text_conf = text_prediction
         self.corr_text: str = None
         self.children = [] if children is None else children

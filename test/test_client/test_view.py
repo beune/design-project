@@ -27,13 +27,14 @@ class ViewTest(unittest.TestCase):
         node_2_label = 'positive_finding'
         root_label = 'root'
 
-        report_leaf_a = LabelNode(leaf_a_field, [], (leaf_a_label, leaf_a_field_confidence),
+        report_leaf_a = LabelNode([leaf_a_field], [], (leaf_a_label, leaf_a_field_confidence),
                                   (leaf_a_label, leaf_a_label_confidence))
-        report_leaf_b = Node(leaf_b_field, (leaf_b_text, leaf_b_field_confidence))
-        spec_leaf_c = Node(spec_c_field)
-        report_node_1 = Node(node_1_label, children=[report_leaf_a, report_leaf_b, spec_leaf_c])
-        report_node_2 = Node(node_2_label, children=[report_node_1])
-        root = Node(root_label, children=[report_node_2])
+        report_leaf_b = Node([leaf_b_field], (leaf_b_text, leaf_b_field_confidence))
+        spec_leaf_c = Node([spec_c_field])
+        report_node_1 = Node([root_label, node_2_label, node_1_label],
+                             children=[report_leaf_a, report_leaf_b, spec_leaf_c])
+        report_node_2 = Node([root_label, node_2_label], children=[report_node_1])
+        root = Node([root_label], children=[report_node_2])
         model.tree = root
         model.create_identifiers(root)
         json_tree = view.generate_tree(model)
@@ -78,10 +79,10 @@ class ViewTest(unittest.TestCase):
         leaf_a_label = 'stervormige'
         leaf_a_field = 'margin'
 
-        report_leaf_a = LabelNode(leaf_a_field, [], (leaf_a_label, 55), (leaf_a_label, 55))
-        report_node_1 = Node('mass', children=[report_leaf_a])
-        report_node_2 = Node('positive_finding', children=[report_node_1])
-        root = Node('root', children=[report_node_2])
+        report_leaf_a = LabelNode([leaf_a_field], [], (leaf_a_label, 55), (leaf_a_label, 55))
+        report_node_1 = Node(['root', 'positive_finding', 'mass'], children=[report_leaf_a])
+        report_node_2 = Node(['root', 'positive_finding'], children=[report_node_1])
+        root = Node(['root'], children=[report_node_2])
         model.tree = root
         model.create_identifiers(root)
         json_tree = view.generate_tree(model)

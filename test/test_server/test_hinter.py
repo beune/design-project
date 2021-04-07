@@ -16,15 +16,15 @@ class MyTestCase(unittest.TestCase):
             'a': ['e', 'f']
         }
         labels = {
-            'f': {'l1', 'l2', 'l3'}
+            'f': ['l1', 'l2', 'l3']
         }
         hints = {
             'e': "hint"
         }
         hinter = Hinter(expected, labels, hints)
-        tree = Node('a', children=[
-            Node('b', children=[Node('c', ("nested", 100)), Node('d', ("attribute", 100))]),
-            Node('e', ("too", 100))
+        tree = Node(['a'], children=[
+            Node(['a','b'], children=[Node(['a', 'b', 'c'], ("nested", 100)), Node(['a', 'b', 'd'], ("attribute", 100))]),
+            Node(['a','e'], ("too", 100))
         ])
 
         hinter.hint(tree)

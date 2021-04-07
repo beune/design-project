@@ -3,7 +3,7 @@ from reporttree.node import Node
 
 
 class LabelNode(Node):
-    def __init__(self, category: str, options: List[str], text_prediction: Tuple[str, int] = (None, None),
+    def __init__(self, path: List[str], options: List[str], text_prediction: Tuple[str, int] = (None, None),
                  label_prediction: Tuple[str, int] = (None, None), children: List['Node'] = None, hint: str = None):
         """
         Constructor for Nodes that can be labeled
@@ -14,7 +14,7 @@ class LabelNode(Node):
         :param children: The children of this Node
         :param hint: Hint for this Node
         """
-        super().__init__(category, text_prediction, children, hint)
+        super().__init__(path, text_prediction, children, hint)
         self.pred_label, self.pred_label_conf = label_prediction
         self.corr_label: str = None
         self.options = options

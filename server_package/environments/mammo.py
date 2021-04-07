@@ -59,8 +59,8 @@ HINTS = {
 }
 
 EXPECTED_LEAVES = {
-    "mass": ["shape", "margin", "density"],
-    "calcifications": ["morphology", "distribution"],
+    ["report", "positive_finding", "mass"]: ["shape", "margin", "density"],
+    ["report", "calcifications"]: ["morphology", "distribution"],
 }
 
 OPTIONS = {
@@ -197,8 +197,8 @@ def make_tree(base: List[str], items: list) -> Tuple[Node, List[str], float]:
     pred_text = ' '.join(agg_text)
     conf = int(sum_conf / len(agg_text) * 100)
     if category in OPTIONS:
-        return LabelNode(category, OPTIONS[category], text_prediction=(pred_text, conf)), agg_text, sum_conf
-    return Node(category, text_prediction=(pred_text, conf), children=children), agg_text, sum_conf
+        return LabelNode(path, OPTIONS[category], text_prediction=(pred_text, conf)), agg_text, sum_conf,
+    return Node(path, text_prediction=(pred_text, conf), children=children), agg_text, sum_conf
 
 
 def add_labels(node: Node):

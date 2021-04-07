@@ -22,14 +22,14 @@ class Hinter:
         Method used recursively to add hints and expectations to nodes in the node structure
         :param node: The node for which the hints and expectations should be added
         """
-        if node.category in self.expected_leaves:
+        if node.path in self.expected_leaves:
             found = [child.category for child in node]
             for category in self.expected_leaves[node.category]:
                 if category not in found:
                     if category in self.labels:
-                        leaf = LabelNode(category, self.labels[category])
+                        leaf = LabelNode(node.path + [category], self.labels[category])
                     else:
-                        leaf = Node(category)
+                        leaf = Node(node.path + [category])
                     node.add_child(leaf)
         for child in node:
             if child.category in self.hints:
