@@ -8,6 +8,15 @@ from reporttree.label_node import LabelNode
 from reporttree.node import Node
 from server_package.hinter import Hinter
 
+EXPECTED_LEAVES = {
+    "report": {
+        "positive_finding": {
+            "mass": ["shape", "margin", "density"],
+            "calcifications": ["morphology", "distribution"],
+        }
+    }
+}
+
 
 class MyTestCase(unittest.TestCase):
     def test_hint(self):
@@ -16,7 +25,7 @@ class MyTestCase(unittest.TestCase):
             'a': ['e', 'f']
         }
         labels = {
-            'f': {'l1', 'l2', 'l3'}
+            'f': ['l1', 'l2', 'l3']
         }
         hints = {
             'e': "hint"
@@ -27,7 +36,15 @@ class MyTestCase(unittest.TestCase):
             Node('e', ("too", 100))
         ])
 
-        hinter.hint(tree)
+        testtree = Node('report', children=[
+            Node('positive_finding', children=[
+                Node('mass', children=[Node('margin')])
+            ])
+        ])
+
+        hinter.hint(testtree, EXPECTED_LEAVES)
+
+        hinter.hint(tree, expected)
 
         self.assertEqual(3, len(tree.children), "make sure the missing LabelNode is added")
         self.assertIsInstance(tree.children[2], LabelNode)

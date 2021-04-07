@@ -20,6 +20,7 @@ COLOURS = {
     "morphology": "#1313EB",
     "associated_features": "#D981D9",
     "distribution": "#81ADD9",
+    "architectural_distortion": "#A9C9CF",
 }
 
 COMM = "python2 \"./nlp/AutomaticStructuring/CRF Model A/predict_labels.py\""
@@ -59,9 +60,14 @@ HINTS = {
 }
 
 EXPECTED_LEAVES = {
-    "mass": ["shape", "margin", "density"],
-    "calcifications": ["morphology", "distribution"],
+    "report": {
+        "positive_finding": {
+            "mass": ["shape", "margin", "density"],
+            "calcification": ["morphology", "distribution"],
+        }
+    }
 }
+
 
 OPTIONS = {
     "shape": ["oval", "round", "irregular"],

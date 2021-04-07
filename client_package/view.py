@@ -141,7 +141,7 @@ def set_node_colours(node: Node, parent_label: str, colours: Dict[str, str]):
             res = set_leaf_colours(child, label + "/", colours)
         else:
             res = set_node_colours(child, label + "/", colours)
-        if res:
+        if len(res) > 0:
             children.append(res)
     if children:
         return {
@@ -150,7 +150,7 @@ def set_node_colours(node: Node, parent_label: str, colours: Dict[str, str]):
             "label": label,
         }
     else:
-        return None
+        return ""
 
 
 def set_leaf_colours(node: Node, parent_label: str, colours: Dict[str, str]):
@@ -163,16 +163,11 @@ def set_leaf_colours(node: Node, parent_label: str, colours: Dict[str, str]):
     """
 
     if node.is_speculative():
-        return None
+        return ""
     label = parent_label + node.category
-    if node.is_leaf():
-        if node.category == "O":
-            result_type = "other"
-            colour = None
-        else:
-            label = label + "/" + node.category
-            result_type = "label"
-            colour = colours.get(node.category, FALLBACK_COLOUR)
+    if node.category == "O":
+        result_type = "other"
+        colour = None
     else:
         result_type = "label"
         colour = colours.get(node.category, FALLBACK_COLOUR)
