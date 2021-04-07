@@ -34,7 +34,7 @@ class Environment:
         """
         processed = self.parse(text)
         if self.hinter:
-            self.hinter.hint(processed)
+            self.hinter.hint(processed, self.hinter.expected_leaves)
         return processed
 
 
