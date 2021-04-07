@@ -17,7 +17,6 @@ class Node:
         self.pred_text, self.pred_text_conf = text_prediction
         self.corr_text: str = None
         self.children = [] if children is None else children
-
         self.hint = hint
 
     def __iter__(self):
@@ -56,6 +55,14 @@ class Node:
         :return: True if corr_text is set
         """
         return self.corr_text is not None
+
+    @property
+    def category(self) -> str:
+        return self.__category
+
+    @property
+    def path(self) -> List[str]:
+        return self.__path
 
     @property
     def text(self) -> str:

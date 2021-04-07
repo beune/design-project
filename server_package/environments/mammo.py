@@ -63,6 +63,14 @@ EXPECTED_LEAVES = {
     ["report", "calcifications"]: ["morphology", "distribution"],
 }
 
+EXPECTED_LEAVES = {
+    "report": {
+        "positive_finding": {
+            "mass": ["shape", "margin", "density"]
+        }
+    }
+}
+
 OPTIONS = {
     "shape": ["oval", "round", "irregular"],
     "margin": ["circumscribed", "obscured", "microlobulated", "indistinct", "spiculated"],
@@ -190,12 +198,14 @@ def make_tree(base: List[str], items: list) -> Tuple[Node, List[str], float]:
             agg_text += child_agg_text
             sum_conf += child_sum_conf
 
-    category = clean(base[-1]) if base else 'report'
+    path = map(clean, base) if base else ['report']
+    category = path[-1]
+
     if not agg_text:
-        return Node(category, children=children), agg_text, sum_conf
+        return Node(path, children=children), agg_text, sum_conf
+    conf = int(sum_conf / len(agg_text) * 100)
 
     pred_text = ' '.join(agg_text)
-    conf = int(sum_conf / len(agg_text) * 100)
     if category in OPTIONS:
         return LabelNode(path, OPTIONS[category], text_prediction=(pred_text, conf)), agg_text, sum_conf,
     return Node(path, text_prediction=(pred_text, conf), children=children), agg_text, sum_conf
