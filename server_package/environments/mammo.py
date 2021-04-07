@@ -53,7 +53,7 @@ HINTS = {
     "density": "fat-low-equal-high",
     "mass": " A Mass is a space occupying 3D lesion seen in two different projections."
             "If a potential mass is seen in only a single projection it should be called a 'asymmetry' until its three-"
-            "dimensionality is confirmed."
+            "dimensionality is confirmed.\n"
             "- Shape: oval (may include 2 or 3 lobulations), round or irregular\n"
             "- Margins: circumscribed, obscured, microlobulated, indistinct, spiculated\n"
             "- Density: high, equal, low or fat-containing.\n"
