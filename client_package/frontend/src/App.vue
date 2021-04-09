@@ -28,46 +28,24 @@
           </template>
 
           <v-list>
-            <v-list-item link>
-              <v-list-item-title>New</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-title>Open...</v-list-item-title>
-            </v-list-item>
-          </v-list>
-
-          <v-divider />
-
-          <v-list>
-            <v-list-item link>
-              <v-list-item-title>Save</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-title>Save as...</v-list-item-title>
-            </v-list-item>
-          </v-list>
-
-          <v-divider />
-
-          <v-list>
-            <v-list-item link @click="copyTextRep">
+            <v-list-item
+              link
+              @click="copyTextRep"
+            >
               <v-list-item-title>Copy to G2Speech</v-list-item-title>
             </v-list-item>
-            <v-list-item link @click="addToDB">
+          </v-list>
+          <v-divider />
+          <v-list>
+            <v-list-item
+              link
+              @click="addToDB"
+            >
               <v-list-item-title>Export to database...</v-list-item-title>
             </v-list-item>
           </v-list>
 
           <v-divider />
-
-          <v-list>
-            <v-list-item
-              to="/preferences"
-              link
-            >
-              <v-list-item-title>Preferences...</v-list-item-title>
-            </v-list-item>
-          </v-list>
         </v-menu>
         <v-btn
           style="margin-top: 10px;"
@@ -175,10 +153,6 @@
         {{ errorText }}
       </v-snackbar>
     </v-app>
-    <PreferencesDialog
-      :show-preferences-dialog="showPreferencesDialog"
-      @closePreferencesDialog="closePreferencesDialog"
-    />
   </div>
 </template>
 
@@ -201,14 +175,12 @@ html { overflow-y: auto }
 
 <script>
 import d3orgtree from "./components/d3-org-tree.vue"
-import PreferencesDialog from "./components/PreferencesDialog.vue"
 import MarkerTest from "./components/Marker.vue"
 import EmptyState from "./components/EmptyState"
 
 export default {
   components: {
     d3orgtree,
-    PreferencesDialog,
     MarkerTest,
     EmptyState
   },
@@ -224,11 +196,6 @@ export default {
     errorText: "",
     text: {}
   }),
-  computed: {
-    showPreferencesDialog() {
-      return this.$route.path.includes("preferences");
-    }
-  },
   mounted: function() {
     eel.expose(this.initializeFrontend, "initialize_frontend");
     eel.expose(this.updateFrontend, "update_frontend");
@@ -236,9 +203,6 @@ export default {
     eel.expose(this.showLoader, "show_loader");
   },
   methods: {
-    closePreferencesDialog() {
-      this.$router.push({ path: '/' });
-    },
     //initialize frontend (called from backend)
     initializeFrontend(environments) {
       this.environments = environments;
