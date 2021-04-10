@@ -3,7 +3,7 @@ Imports
 """
 from reporttree.node import Node
 
-from server_package.environments import hersen, mammo, mammo_fw
+from server_package.environments import hersen, mammo, mammo_fw, demo
 from server_package.hinter import Hinter
 from typing import Callable
 
@@ -57,4 +57,10 @@ ENVS = {
         colours=hersen.COLOURS,
         hinter=Hinter(hersen.EXPECTED, hersen.OPTIONS, hersen.HINTS)
     ),
+    "demo": Environment(
+        name="Mammography",
+        parse=demo.parse,
+        colours=demo.COLOURS,
+        hinter=Hinter(demo.EXPECTED, demo.OPTIONS, demo.HINTS)
+    )
 }
