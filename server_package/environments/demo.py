@@ -21,14 +21,10 @@ COLOURS = {
 
 
 HINTS = {
-    "breast composition": "In the BI-RADS edition 2013 the assignment of the breast composition is changed into a, b, c"
-                          "and d-categories followed by a description: \n"
-                          "- A The breast are almost entirely fatty. Mammography is highly sensitive in this setting.\n"
-                          "- B There are scattered areas of fibroglandular density. The term density describes the degr"
-                          "ee of x-ray attenuation of breast tissue but not discrete mammographic findings.\n"
-                          "- C The breasts are heterogeneously dense, which may obscure small masses."
-                          "Some areas in the breasts are sufficiently dense to obscure small masses.\n"
-                          "- D The breasts are extremely dense, which lowers the sensitivity of mammography"
+    "breast composition": "- A Entirely fatty.\n"
+                          "- B Scattered areas of fibroglandular density.\n"
+                          "- C Heterogeneously dense.\n"
+                          "- D Extremely dense."
 }
 
 
