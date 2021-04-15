@@ -6,7 +6,7 @@ from flask import Flask, request
 from flask_restful import Api, abort
 from reporttree.node import Node
 
-from server_package import environment
+from server_package.environment import ENVS
 from server_package.db import DBConnector
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ def home():
     Home endpoint
     :return: Returns HTTPResponse with available environments as data
     """
-    envs = {environment.ENVS[endpoint].name: endpoint for endpoint in environment.ENVS}
+    envs = {ENVS[endpoint].name: endpoint for endpoint in ENVS}
     return {"Response": 200, "Data": envs}
 
 
@@ -53,7 +53,7 @@ def get_colours(env_selected):
     Method used to get the color pattern of an environment
     :param env_selected: The current environment
     """
-    colours = jsonpickle.encode(environment.ENVS[env_selected].colours)
+    colours = jsonpickle.encode(ENVS[env_selected].colours)
     return {"Response": 200, "Data": colours}
 
 
@@ -72,7 +72,7 @@ def get(env_selected):
     if len(text) == 0:
         ret = jsonpickle.encode(Node("root"))
     else:
-        ret = jsonpickle.encode(environment.ENVS[env_selected].process(text))
+        ret = jsonpickle.encode(ENVS[env_selected].process(text))
     return {"Response": 200, "Data": ret}
 
 

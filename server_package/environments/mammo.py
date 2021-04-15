@@ -12,7 +12,7 @@ from reporttree.label_node import LabelNode
 from reporttree.node import Node
 
 COLOURS = {
-    "breast_composition": "#E71212",
+    "breast composition": "#E71212",
     "shape": "#E77C12",
     "margin": "#EDED12",
     "size": "#13EB13",
